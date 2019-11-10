@@ -1,0 +1,14 @@
+= Neovim Fennel
+
+Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] compile and execute it via Lua. Configure and control your Neovim through the wonders of lisp!
+This is mostly an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
+
+== Unlicenced
+
+Find the full http://unlicense.org/[unlicense] in the `UNLICENSE` file, but here's a snippet.
+
+____
+This is free and unencumbered software released into the public domain.
+
+Anyone is free to copy, modify, publish, use, compile, sell, or distribute this software, either in source code form or as a compiled binary, for any purpose, commercial or non-commercial, and by any means.
+____
