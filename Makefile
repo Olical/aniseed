@@ -12,4 +12,5 @@ compile:
 	ln -s ../../submodules/inspect.lua/inspect.lua lua/aniseed/inspect.lua
 
 test: compile
-	nvim -c "lua print(require('aniseed/inspect')(require('aniseed/compile').glob('test/fnl/**', 'test/lua')))"
+	rm -rf test/lua
+	nvim -c "lua print(require('aniseed/inspect')(require('aniseed/compile').glob('test/fnl', '**.fnl', 'test/lua'))) require('foo')"

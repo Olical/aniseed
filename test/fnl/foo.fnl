@@ -1,1 +1,3 @@
-((require :bar).say-hello "Ollie")
+(local bar (require :bar))
+
+(bar.say-hello "Ollie")

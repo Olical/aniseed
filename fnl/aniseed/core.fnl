@@ -13,5 +13,30 @@
       (table.insert result (f x)))
     result))
 
+(fn inc [n]
+  (+ n 1))
+
+(fn dec [n]
+  (- n 1))
+
+(fn slurp [path]
+  (match (io.open path "r")
+    (nil msg) (print (.. "Could not open file: " msg))
+    f (let [content (f.read f "*all")]
+        (f.close f)
+        content)))
+
+(fn spit [path content]
+  (match (io.open path "w")
+    (nil msg) (print (.. "Could not open file: " msg))
+    f (do
+        (f.write f content)
+        (f.close f)
+        nil)))
+
 {:filter filter
- :map map}
+ :map map
+ :inc inc
+ :dec dec
+ :slurp slurp
+ :spit spit}

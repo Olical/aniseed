@@ -14,4 +14,38 @@ local function map(f, xs)
   end
   return result
 end
-return {filter = filter, map = map}
+local function inc(n)
+  return (n + 1)
+end
+local function dec(n)
+  return (n - 1)
+end
+local function slurp(path)
+  local _0_0, _1_0 = io.open(path, "r")
+  if ((_0_0 == nil) and (nil ~= _1_0)) then
+    local msg = _1_0
+    return print(("Could not open file: " .. msg))
+  elseif (nil ~= _0_0) then
+    local f = _0_0
+    do
+      local content = f.read(f, "*all")
+      f.close(f)
+      return content
+    end
+  end
+end
+local function spit(path, content)
+  local _0_0, _1_0 = io.open(path, "w")
+  if ((_0_0 == nil) and (nil ~= _1_0)) then
+    local msg = _1_0
+    return print(("Could not open file: " .. msg))
+  elseif (nil ~= _0_0) then
+    local f = _0_0
+    do
+      f.write(f, content)
+      f.close(f)
+      return nil
+    end
+  end
+end
+return {dec = dec, filter = filter, inc = inc, map = map, slurp = slurp, spit = spit}
