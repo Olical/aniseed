@@ -1,4 +1,4 @@
-[submodule "Fennel"]
+[submodule "submodules/Fennel"]
 	path = submodules/Fennel
 	url = https://github.com/bakpakin/Fennel.git
 [submodule "submodules/inspect.lua"]
