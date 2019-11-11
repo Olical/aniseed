@@ -1,4 +1,4 @@
-= Aniseed Neovim
+= Aniseed
 
 == Neovim with a hint of Fennel
 
