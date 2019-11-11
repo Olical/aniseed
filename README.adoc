@@ -1,4 +1,4 @@
-= Aniseed
+= Aniseed (work in progress)
 
 == Sweeter Neovim with Fennel
 
@@ -7,6 +7,13 @@ Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] 
 This is mostly an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
 
 Your code is compiled ahead of time into Lua only if it has changed since you last compiled it. Aniseed also provides a few helper functions which I find useful, you may too!
+
+== TODO
+
+ * [ ] Only re-compile if the source file is newer than the destination.
+ * [ ] Give it a bug bash / dogfood with my own dotfiles.
+ * [ ] Write some documentation.
+ * [ ] Talk about this slightly silly experiment at https://oli.me.uk[oli.me.uk].
 
 == Unlicenced
 
