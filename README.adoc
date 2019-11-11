@@ -1,4 +1,6 @@
-= Neovim Fennel
+= Aniseed Neovim
+
+== Neovim with a hint of Fennel
 
 Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] compile and execute it via Lua. Configure and control your Neovim through the wonders of lisp!
 This is mostly an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
