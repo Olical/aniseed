@@ -1,0 +1,3 @@
+[submodule "Fennel"]
+	path = Fennel
+	url = https://github.com/bakpakin/Fennel.git
