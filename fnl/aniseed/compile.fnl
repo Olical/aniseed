@@ -1,11 +1,14 @@
 (local core (require :aniseed.core))
 (local nvim (require :aniseed.nvim))
-(local fs (require :aniseed.fs))
 (local fennel (require :aniseed.fennel))
+
+(fn ensure-parent-dirs [path]
+  (let [parent (nvim.fn.fnamemodify path ":h")]
+    (nvim.fn.mkdir parent "p")))
 
 (fn glob [src-dir src-expr dest-dir]
   (let [src-dir-len (core.inc (string.len src-dir))
-        src-paths (->> (nvim.call-function :globpath src-dir src-expr true true)
+        src-paths (->> (nvim.fn.globpath src-dir src-expr true true)
                        (core.map (fn [path]
                                    (string.sub path src-dir-len))))]
     (each [_ path (ipairs src-paths)]
@@ -20,7 +23,7 @@
                        fennel.traceback)]
         (if ok
           (do
-            (fs.ensure-parent-dirs dest)
+            (ensure-parent-dirs dest)
             (core.spit dest val))
           (io.stderr.write val))))))
 

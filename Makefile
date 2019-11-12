@@ -10,6 +10,7 @@ compile:
 	done
 	ln -s ../../submodules/Fennel/fennel.lua lua/aniseed/fennel.lua
 	ln -s ../../submodules/inspect.lua/inspect.lua lua/aniseed/inspect.lua
+	ln -s ../../submodules/nvim.lua/lua/nvim.lua lua/aniseed/nvim.lua
 
 test: compile
 	rm -rf test/lua
