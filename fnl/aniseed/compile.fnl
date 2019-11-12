@@ -4,12 +4,17 @@
 (local fennel (require :aniseed.fennel))
 
 (fn code-string [content opts]
+  "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
+  with some wrapping, returns an (ok? result) tuple."
   (xpcall
     (fn []
       (fennel.compileString content opts))
     fennel.traceback))
 
 (fn file [src dest]
+  "Compile the source file into the destination file if the source file was
+  modified more recently. Will create any required ancestor directories for the
+  destination file to exist."
   (when (> (nvim.fn.getftime src) (nvim.fn.getftime dest))
     (let [content (core.slurp src)]
       (match (code-string content {:filename src})
@@ -19,6 +24,8 @@
                         (core.spit dest result))))))
 
 (fn glob [src-expr src-dir dest-dir]
+  "Match all files against the src-expr under the src-dir then compile them
+  into the dest-dir as Lua."
   (let [src-dir-len (core.inc (string.len src-dir))
         src-paths (->> (nvim.fn.globpath src-dir src-expr true true)
                        (core.map (fn [path]

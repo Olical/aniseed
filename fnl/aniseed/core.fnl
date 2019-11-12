@@ -14,12 +14,15 @@
     result))
 
 (fn inc [n]
+  "Increment n by 1."
   (+ n 1))
 
 (fn dec [n]
+  "Decrement n by 1."
   (- n 1))
 
 (fn slurp [path]
+  "Read the file into a string."
   (match (io.open path "r")
     (nil msg) (print (.. "Could not open file: " msg))
     f (let [content (f.read f "*all")]
@@ -27,6 +30,7 @@
         content)))
 
 (fn spit [path content]
+  "Spit the string into the file."
   (match (io.open path "w")
     (nil msg) (print (.. "Could not open file: " msg))
     f (do
