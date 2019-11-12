@@ -11,11 +11,12 @@
       (fennel.compileString content opts))
     fennel.traceback))
 
-(fn file [src dest]
+(fn file [src dest opts]
   "Compile the source file into the destination file if the source file was
   modified more recently. Will create any required ancestor directories for the
   destination file to exist."
-  (when (> (nvim.fn.getftime src) (nvim.fn.getftime dest))
+  (when (or opts.force
+            (> (nvim.fn.getftime src) (nvim.fn.getftime dest)))
     (let [content (core.slurp src)]
       (match (code-string content {:filename src})
         (false err) (io.stderr.write err)
@@ -23,7 +24,7 @@
                         (fs.ensure-ancestor-dirs dest)
                         (core.spit dest result))))))
 
-(fn glob [src-expr src-dir dest-dir]
+(fn glob [src-expr src-dir dest-dir opts]
   "Match all files against the src-expr under the src-dir then compile them
   into the dest-dir as Lua."
   (let [src-dir-len (core.inc (string.len src-dir))
@@ -34,7 +35,8 @@
       (file (.. src-dir path)
             (string.gsub
               (.. dest-dir path)
-              ".fnl$" ".lua")))))
+              ".fnl$" ".lua")
+            opts))))
 
 {:glob glob
  :file file
