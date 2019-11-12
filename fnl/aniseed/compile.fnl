@@ -3,17 +3,20 @@
 (local nvim (require :aniseed.nvim))
 (local fennel (require :aniseed.fennel))
 
+(fn code-string [content opts]
+  (xpcall
+    (fn []
+      (fennel.compileString content opts))
+    fennel.traceback))
+
 (fn file [src dest]
-  (let [content (core.slurp src)
-        (ok val) (xpcall
-                   (fn []
-                     (fennel.compileString content {:filename src}))
-                   fennel.traceback)]
-    (if ok
-      (do
-        (fs.ensure-ancestor-dirs dest)
-        (core.spit dest val))
-      (io.stderr.write val))))
+  (when (> (nvim.fn.getftime src) (nvim.fn.getftime dest))
+    (let [content (core.slurp src)]
+      (match (code-string content {:filename src})
+        (false err) (io.stderr.write err)
+        (true result) (do
+                        (fs.ensure-ancestor-dirs dest)
+                        (core.spit dest result))))))
 
 (fn glob [src-expr src-dir dest-dir]
   (let [src-dir-len (core.inc (string.len src-dir))
@@ -27,4 +30,5 @@
               ".fnl$" ".lua")))))
 
 {:glob glob
- :file file}
+ :file file
+ :code-string code-string}

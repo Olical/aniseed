@@ -2,18 +2,28 @@ local core = require("aniseed.core")
 local fs = require("aniseed.fs")
 local nvim = require("aniseed.nvim")
 local fennel = require("aniseed.fennel")
-local function file(src, dest)
-  local content = core.slurp(src)
-  local ok, val = ok, val
+local function code_string(content, opts)
   local function _0_()
-    return fennel.compileString(content, {filename = src})
+    return fennel.compileString(content, opts)
   end
-  ok, val = xpcall(_0_, fennel.traceback)
-  if ok then
-    fs["ensure-ancestor-dirs"](dest)
-    return core.spit(dest, val)
-  else
-    return io.stderr.write(val)
+  return xpcall(_0_, fennel.traceback)
+end
+local function file(src, dest)
+  if (nvim.fn.getftime(src) > nvim.fn.getftime(dest)) then
+    local content = core.slurp(src)
+    do
+      local _0_0, _1_0 = code_string(content, {filename = src})
+      if ((_0_0 == false) and (nil ~= _1_0)) then
+        local err = _1_0
+        return io.stderr.write(err)
+      elseif ((_0_0 == true) and (nil ~= _1_0)) then
+        local result = _1_0
+        do
+          fs["ensure-ancestor-dirs"](dest)
+          return core.spit(dest, result)
+        end
+      end
+    end
   end
 end
 local function glob(src_expr, src_dir, dest_dir)
@@ -28,4 +38,4 @@ local function glob(src_expr, src_dir, dest_dir)
   end
   return nil
 end
-return {file = file, glob = glob}
+return {["code-string"] = code_string, file = file, glob = glob}
