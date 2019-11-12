@@ -14,4 +14,4 @@ compile:
 
 test: compile
 	rm -rf test/lua
-	nvim -c "lua print(require('aniseed/inspect')(require('aniseed/compile').glob('test/fnl', '**.fnl', 'test/lua'))) require('foo')"
+	nvim -c "lua print(require('aniseed/inspect')(require('aniseed/compile').glob('**.fnl', 'test/fnl', 'test/lua'))) require('foo')"
