@@ -9,9 +9,9 @@ compile:
 		submodules/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	ln -s ../../submodules/Fennel/fennel.lua lua/aniseed/fennel.lua
-	ln -s ../../submodules/inspect.lua/inspect.lua lua/aniseed/inspect.lua
+	ln -s ../../submodules/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
 	ln -s ../../submodules/nvim.lua/lua/nvim.lua lua/aniseed/nvim.lua
 
 test: compile
 	rm -rf test/lua
-	nvim -c "lua print(require('aniseed/inspect')(require('aniseed/compile').glob('**.fnl', 'test/fnl', 'test/lua', {force = true}))) require('foo')"
+	nvim -c "lua print(require('aniseed/view')(require('aniseed/compile').glob('**.fnl', 'test/fnl', 'test/lua', {force = true}))) require('foo')"

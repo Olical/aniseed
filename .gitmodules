@@ -1,9 +1,6 @@
 [submodule "submodules/Fennel"]
 	path = submodules/Fennel
 	url = https://github.com/bakpakin/Fennel.git
-[submodule "submodules/inspect.lua"]
-	path = submodules/inspect.lua
-	url = https://github.com/kikito/inspect.lua.git
 [submodule "submodules/nvim.lua"]
 	path = submodules/nvim.lua
 	url = https://github.com/norcalli/nvim.lua.git

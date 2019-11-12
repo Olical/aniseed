@@ -8,7 +8,11 @@ This is mostly an experiment to see if I can replace my Neovim configuration in 
 
 Your code is compiled ahead of time into Lua only if it has changed since you last compiled it. Aniseed also provides a few helper functions which I find useful, you may too!
 
-Aniseed makes Fennel (`(require :aniseed.fennel)`), https://github.com/norcalli/nvim.lua[nvim.lua] (`(require :aniseed.nvim)`) and https://github.com/kikito/inspect.lua[inspect.lua] (`(require :aniseed.inspect)`) available to require when installed.
+Aniseed makes a few Lua libraries available to you when installed.
+
+ * Fennel itself `(require :aniseed.fennel)`
+ * Fennel's view library, used to pretty-print data `(require :aniseed.view)`
+ * https://github.com/norcalli/nvim.lua[nvim.lua], functions to make Neovim interaction a breeze `(require :aniseed.nvim)`
 
 == Development
 
