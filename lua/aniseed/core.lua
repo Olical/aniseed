@@ -28,8 +28,8 @@ local function slurp(path)
   elseif (nil ~= _0_0) then
     local f = _0_0
     do
-      local content = f.read(f, "*all")
-      f.close(f)
+      local content = f:read("*all")
+      f:close()
       return content
     end
   end
@@ -42,8 +42,8 @@ local function spit(path, content)
   elseif (nil ~= _0_0) then
     local f = _0_0
     do
-      f.write(f, content)
-      f.close(f)
+      f:write(content)
+      f:close()
       return nil
     end
   end

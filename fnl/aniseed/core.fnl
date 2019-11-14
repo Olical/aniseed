@@ -25,8 +25,8 @@
   "Read the file into a string."
   (match (io.open path "r")
     (nil msg) (print (.. "Could not open file: " msg))
-    f (let [content (f.read f "*all")]
-        (f.close f)
+    f (let [content (f:read "*all")]
+        (f:close)
         content)))
 
 (fn spit [path content]
@@ -34,8 +34,8 @@
   (match (io.open path "w")
     (nil msg) (print (.. "Could not open file: " msg))
     f (do
-        (f.write f content)
-        (f.close f)
+        (f:write content)
+        (f:close)
         nil)))
 
 {:filter filter
