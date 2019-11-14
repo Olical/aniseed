@@ -6,13 +6,59 @@ Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] 
 
 This is mostly an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
 
-Your code is compiled ahead of time into Lua only if it has changed since you last compiled it. Aniseed also provides a few helper functions which I find useful, you may too!
+Your code is compiled ahead of time into Lua only if it has changed since you last compiled it.
 
-Aniseed makes a few Lua libraries available to you when installed.
+Aniseed makes a few Lua libraries available to you when installed:
 
  * Fennel itself `(require :aniseed.fennel)`
  * Fennel's view library, used to pretty-print data `(require :aniseed.view)`
  * https://github.com/norcalli/nvim.lua[nvim.lua], functions to make Neovim interaction a breeze `(require :aniseed.nvim)`
+
+== Installation
+
+Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one.
+
+_Please_ pin the plugin to a tag then subscribe to new releases through the GitHub UI. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver] any breaking changes will incur a major version bump.
+
+[source,viml]
+----
+Plug 'Olical/aniseed', { 'tag': 'v0.0.0' }
+----
+
+== Usage
+
+Aniseed provides a few modules, have a browse of the source code to see what's available or execute the following to pretty-print their contents. Let's take a look inside `aniseed/core.lua`.
+
+I'm using Fennel's view function so the output looks a bit more like Fennel than Lua.
+
+[source,viml]
+----
+:lua print(require("aniseed/view")(require("aniseed/core")))
+----
+
+Let's compile a single Fennel file to Lua to get started.
+
+[source,viml]
+----
+:lua require("aniseed/compile").file("config.fnl", "config.lua", {})
+----
+
+If the source hasn't changed since the last time it was compiled this will do nothing, you can avoid this by passing `{force = true}` as the `opts` instead of `{}`.
+
+We can also compile an entire directory with a glob, this is very useful for compiling all files under `fnl` into the `lua` directory, for example.
+
+[source,viml]
+----
+:lua require("aniseed/compile").glob("**.fnl", "fnl", "lua", {})
+----
+
+Of course, you could translate all of these VimL examples into Lua, maybe even Fennel. You could write a small bootstrap Lua file that loaded everything else as Fennel, feel free to experiment.
+
+== To-Do
+
+ * Return results about what was compiled, how long it took etc.
+ * Make `opts` an optional argument.
+ * Have some good UX for evaluating / reloading a file while you're working on it.
 
 == Development
 
