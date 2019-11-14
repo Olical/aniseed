@@ -1,3 +1,1 @@
 let &runtimepath = &runtimepath.",".expand("<sfile>:p:h").",".expand("<sfile>:p:h")."/test"
-source plugin/aniseed.vim
-nmap <localleader>a <Plug>(AniseedEval)
