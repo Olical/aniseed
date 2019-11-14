@@ -1,3 +1,3 @@
-(local bar (require :bar))
+(local baz (require :bar/baz))
 
-(bar.say-hello "Ollie")
+(baz.print-msg "Everything's okay!")
