@@ -1,4 +1,4 @@
-= Aniseed (work in progress, please ignore)
+= Aniseed
 
 == Sweeter Neovim with Fennel
 
