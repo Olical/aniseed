@@ -33,14 +33,14 @@ I'm using Fennel's view function so the output looks a bit more like Fennel than
 
 [source,viml]
 ----
-:lua print(require("aniseed/view")(require("aniseed/core")))
+:lua print(require("aniseed.view")(require("aniseed.core")))
 ----
 
 Let's compile a single Fennel file to Lua to get started.
 
 [source,viml]
 ----
-:lua require("aniseed/compile").file("config.fnl", "config.lua", {})
+:lua require("aniseed.compile").file("config.fnl", "config.lua", {})
 ----
 
 If the source hasn't changed since the last time it was compiled this will do nothing, you can avoid this by passing `{force = true}` as the `opts` instead of `{}`.
@@ -49,7 +49,7 @@ We can also compile an entire directory with a glob, this is very useful for com
 
 [source,viml]
 ----
-:lua require("aniseed/compile").glob("**.fnl", "fnl", "lua", {})
+:lua require("aniseed.compile").glob("**.fnl", "fnl", "lua", {})
 ----
 
 Of course, you could translate all of these VimL examples into Lua, maybe even Fennel. You could write a small bootstrap Lua file that loaded everything else as Fennel, feel free to experiment.
