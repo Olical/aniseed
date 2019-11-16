@@ -3,7 +3,7 @@
 (local nvim (require :aniseed.nvim))
 (local fennel (require :aniseed.fennel))
 
-(fn code-string [content opts]
+(fn str [content opts]
   "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
   with some wrapping, returns an (ok? result) tuple."
   (xpcall
@@ -18,7 +18,7 @@
   (when (or opts.force
             (> (nvim.fn.getftime src) (nvim.fn.getftime dest)))
     (let [content (core.slurp src)]
-      (match (code-string content {:filename src})
+      (match (str content {:filename src})
         (false err) (io.stderr.write err)
         (true result) (do
                         (fs.ensure-ancestor-dirs dest)
@@ -40,4 +40,4 @@
 
 {:glob glob
  :file file
- :code-string code-string}
+ :str str}
