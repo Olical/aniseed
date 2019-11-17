@@ -11,17 +11,17 @@
                  (nvim.ex.silent (.. "exe \"normal! " ... "\"")))]
 
     (nvim.ex.let "g:aniseed_reg_backup = @@")
-    (set nvim.o.selection "inclusive")
+    (set nvim.o.selection :inclusive)
 
     (if
       visual? (normal "`<" type "`>y")
       (= type :line) (normal "'[V']y")
 
       ;; TODO Block doesn't work?
-      (= type :block) (normal "`[\\<C-V>`]y")
+      (= type :block) (normal "`[`]y")
       (normal "`[v`]y"))
 
-    (let [result (fennel.eval (.. "(do " (nvim.eval "@@") "\n)"))]
+    (let [result (fennel.eval (nvim.eval "@@"))]
       (set nvim.o.selection sel-backup)
       (nvim.ex.let "@@ = g:aniseed_reg_backup")
 

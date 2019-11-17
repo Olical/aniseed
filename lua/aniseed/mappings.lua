@@ -17,12 +17,12 @@ local function eval(type, ...)
   elseif (type == "line") then
     normal("'[V']y")
   elseif (type == "block") then
-    normal("`[<C-V>`]y")
+    normal("`[<c-v>`]y")
   else
     normal("`[v`]y")
   end
   do
-    local result = fennel.eval(("(do " .. nvim.eval("@@") .. "\n)"))
+    local result = fennel.eval(nvim.eval("@@"))
     nvim.o.selection = sel_backup
     nvim.ex.let("@@ = g:aniseed_reg_backup")
     local function _3_()
@@ -35,6 +35,6 @@ end
 local function init()
   nvim.ex.function_("AniseedEval(...)\n    return luaeval(\"require('aniseed/mappings').eval(unpack(_A))\", a:000)\n    endfunction")
   nvim.set_keymap("n", "<Plug>(AniseedEval)", ":set opfunc=AniseedEval<cr>g@", {noremap = true, silent = true})
-  return nvim.set_keymap("v", "<Plug>(AniseedEvalVisual)", ":<c-u>call AniseedEval(visualmode(), v:true)<cr>", {noremap = true, silent = true})
+  return nvim.set_keymap("v", "<Plug>(AniseedEvalSelection)", ":<c-u>call AniseedEval(visualmode(), v:true)<cr>", {noremap = true, silent = true})
 end
 return {eval = eval, init = init}
