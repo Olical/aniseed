@@ -44,7 +44,7 @@
      :silent true})
 
   (nvim.set_keymap
-    :v "<Plug>(AniseedEvalVisual)"
+    :v "<Plug>(AniseedEvalSelection)"
     ":<c-u>call AniseedEval(visualmode(), v:true)<cr>"
     {:noremap true
      :silent true}))
