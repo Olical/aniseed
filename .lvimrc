@@ -2,4 +2,5 @@ let &runtimepath = &runtimepath.",".expand("<sfile>:p:h").",".expand("<sfile>:p:
 nmap <localleader>E <Plug>(AniseedEval)
 nmap <localleader>ee <Plug>(AniseedEval)af
 nmap <localleader>er <Plug>(AniseedEval)aF
+nmap <localleader>ef <Plug>(AniseedEvalCurrentFile)
 vmap <localleader>ee <Plug>(AniseedEvalSelection)

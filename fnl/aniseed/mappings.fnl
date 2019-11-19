@@ -30,6 +30,11 @@
 (fn eval-selection [...]
   (eval (selection ...)))
 
+;; TODO Replace the existing module if result contains module name?
+(fn eval-file [path]
+  (print (view (fennel.dofile path))))
+
+;; TODO AniseedEval takes a range.
 (fn init []
   (nu.fn-bridge
     :AniseedSelection
@@ -38,6 +43,10 @@
   (nu.fn-bridge
     :AniseedEval
     :aniseed.mappings :eval)
+
+  (nu.fn-bridge
+    :AniseedEvalFile
+    :aniseed.mappings :eval-file)
 
   (nu.fn-bridge
     :AniseedEvalSelection
@@ -52,6 +61,12 @@
      :silent true})
 
   (nvim.set_keymap
+    :n "<Plug>(AniseedEvalCurrentFile)"
+    ":call AniseedEvalFile(expand('%'))<cr>"
+    {:noremap true
+     :silent true})
+
+  (nvim.set_keymap
     :v "<Plug>(AniseedEvalSelection)"
     ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>"
     {:noremap true
@@ -60,4 +75,5 @@
 {:eval eval
  :selection selection
  :eval-selection eval-selection
+ :eval-file eval-file
  :init init}

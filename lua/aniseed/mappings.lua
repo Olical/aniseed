@@ -34,12 +34,17 @@ end
 local function eval_selection(...)
   return eval(selection(...))
 end
+local function eval_file(path)
+  return print(view(fennel.dofile(path)))
+end
 local function init()
   nu["fn-bridge"]("AniseedSelection", "aniseed.mappings", "selection")
   nu["fn-bridge"]("AniseedEval", "aniseed.mappings", "eval")
+  nu["fn-bridge"]("AniseedEvalFile", "aniseed.mappings", "eval-file")
   nu["fn-bridge"]("AniseedEvalSelection", "aniseed.mappings", "eval-selection")
   nvim.ex.command_("-nargs=1", "AniseedEval", "call AniseedEval(<q-args>)")
   nvim.set_keymap("n", "<Plug>(AniseedEval)", ":set opfunc=AniseedEvalSelection<cr>g@", {noremap = true, silent = true})
+  nvim.set_keymap("n", "<Plug>(AniseedEvalCurrentFile)", ":call AniseedEvalFile(expand('%'))<cr>", {noremap = true, silent = true})
   return nvim.set_keymap("v", "<Plug>(AniseedEvalSelection)", ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>", {noremap = true, silent = true})
 end
-return {["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}
+return {["eval-file"] = eval_file, ["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}
