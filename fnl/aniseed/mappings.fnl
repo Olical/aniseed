@@ -55,12 +55,11 @@
       (nvim.ex.let "@@ = g:aniseed_reg_backup")
       selection)))
 
-;; TODO Why do multi-line outputs only show the last line?
 (fn eval [code]
   (let [result (fennel.eval code)]
     (vim.schedule
       (fn []
-        (print (view result))))
+        (print (view result {:one-line true}))))
     result))
 
 (fn eval-selection [...]

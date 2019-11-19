@@ -32,7 +32,7 @@ end
 local function eval(code)
   local result = fennel.eval(code)
   local function _0_()
-    return print(view(result))
+    return print(view(result, {["one-line"] = true}))
   end
   vim.schedule(_0_)
   return result
