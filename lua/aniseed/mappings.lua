@@ -1,10 +1,8 @@
 local nvim = require("aniseed.nvim")
-local core = require("aniseed.core")
 local view = require("aniseed.view")
 local fennel = require("aniseed.fennel")
-local function normal(...)
-  print("normal:", core.str("exe \"normal! ", unpack({...}), "\""))
-  return nvim.ex.silent(core.str("exe \"normal! ", unpack({...}), "\""))
+local function normal(keys)
+  return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
 end
 local function def_viml_bridge_function(viml_name, lua_name)
   return nvim.ex.function_((viml_name .. "(...)\n              call luaeval(\"require('aniseed/mappings')['" .. lua_name .. "'](unpack(_A))\", a:000)\n              endfunction"))
@@ -16,7 +14,7 @@ local function selection(type, ...)
   nvim.ex.let("g:aniseed_reg_backup = @@")
   nvim.o.selection = "inclusive"
   if visual_3f then
-    normal("`<", type, "`>y")
+    normal(("`<" .. type .. "`>y"))
   elseif (type == "line") then
     normal("'[V']y")
   elseif (type == "block") then
