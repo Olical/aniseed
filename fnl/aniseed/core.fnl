@@ -38,9 +38,16 @@
         (f:close)
         nil)))
 
+(fn str [...]
+  (var result "")
+  (each [_ s (ipairs [...])]
+    (set result (.. result s)))
+  result)
+
 {:filter filter
  :map map
  :inc inc
  :dec dec
  :slurp slurp
- :spit spit}
+ :spit spit
+ :str str}

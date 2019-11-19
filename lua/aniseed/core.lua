@@ -48,4 +48,11 @@ local function spit(path, content)
     end
   end
 end
-return {dec = dec, filter = filter, inc = inc, map = map, slurp = slurp, spit = spit}
+local function str(...)
+  local result = ""
+  for _, s in ipairs({...}) do
+    result = (result .. s)
+  end
+  return result
+end
+return {dec = dec, filter = filter, inc = inc, map = map, slurp = slurp, spit = spit, str = str}

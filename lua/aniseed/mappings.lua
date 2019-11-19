@@ -1,11 +1,13 @@
 local nvim = require("aniseed.nvim")
+local core = require("aniseed.core")
 local view = require("aniseed.view")
 local fennel = require("aniseed.fennel")
 local function normal(...)
-  return nvim.ex.silent(("exe \"normal! " .. ... .. "\""))
+  print("normal:", core.str("exe \"normal! ", unpack({...}), "\""))
+  return nvim.ex.silent(core.str("exe \"normal! ", unpack({...}), "\""))
 end
 local function def_viml_bridge_function(viml_name, lua_name)
-  return nvim.ex.function_((viml_name .. "(...)\n              return luaeval(\"require('aniseed/mappings')['" .. lua_name .. "'](unpack(_A))\", a:000)\n              endfunction"))
+  return nvim.ex.function_((viml_name .. "(...)\n              call luaeval(\"require('aniseed/mappings')['" .. lua_name .. "'](unpack(_A))\", a:000)\n              endfunction"))
 end
 local function selection(type, ...)
   local sel_backup = nvim.o.selection
@@ -34,8 +36,7 @@ local function eval(code)
   local function _0_()
     return print(view(result, {["one-line"] = true}))
   end
-  vim.schedule(_0_)
-  return result
+  return vim.schedule(_0_)
 end
 local function eval_selection(...)
   return eval(selection(...))

@@ -1,17 +1,20 @@
 (local nvim (require :aniseed.nvim))
+(local core (require :aniseed.core))
 (local view (require :aniseed.view))
 (local fennel (require :aniseed.fennel))
 
+;; TODO Extract these into their own nvim.util module.
 (fn normal [...]
   "Execute some command as if you were in normal mode silently."
-  (nvim.ex.silent (.. "exe \"normal! " ... "\"")))
+  (print "normal:" (core.str "exe \"normal! " ... "\""))
+  (nvim.ex.silent (core.str "exe \"normal! " ... "\"")))
 
 (fn def-viml-bridge-function [viml-name lua-name]
   "Creates a VimL function that calls through to a Lua function in this file."
   (nvim.ex.function_
     (.. viml-name
         "(...)
-              return luaeval(\"require('aniseed/mappings')['" lua-name "'](unpack(_A))\", a:000)
+              call luaeval(\"require('aniseed/mappings')['" lua-name "'](unpack(_A))\", a:000)
               endfunction")))
 
 ;; Selection based upon the following VimL.
@@ -44,10 +47,7 @@
     (if
       visual? (normal "`<" type "`>y")
       (= type :line) (normal "'[V']y")
-
-      ;; TODO Block doesn't work?
       (= type :block) (normal "`[`]y")
-
       (normal "`[v`]y"))
 
     (let [selection (nvim.eval "@@")]
@@ -59,8 +59,7 @@
   (let [result (fennel.eval code)]
     (vim.schedule
       (fn []
-        (print (view result {:one-line true}))))
-    result))
+        (print (view result {:one-line true}))))))
 
 (fn eval-selection [...]
   (eval (selection ...)))
