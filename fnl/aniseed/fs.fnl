@@ -5,4 +5,6 @@
   (let [parent (nvim.fn.fnamemodify path ":h")]
     (nvim.fn.mkdir parent "p")))
 
-{:ensure-ancestor-dirs ensure-ancestor-dirs}
+{:aniseed/module :aniseed.fs
+
+ :ensure-ancestor-dirs ensure-ancestor-dirs}

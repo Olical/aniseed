@@ -58,11 +58,6 @@ Aniseed makes a few Lua libraries available to you when installed:
  * `(require :aniseed.core)` contains some helpful functions like `map` and `filter`.
  * `(require :aniseed.fs)` for things like `ensure-ancestor-dirs`.
 
-== To-Do
-
- * Return results about what was compiled, how long it took etc.
- * Make `opts` an optional argument.
-
 == Development
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!

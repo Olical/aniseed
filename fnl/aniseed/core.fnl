@@ -66,7 +66,9 @@
 (fn pr [...]
   (print (pr-str ...)))
 
-{:filter filter
+{:aniseed/module :aniseed.core
+
+ :filter filter
  :map map
  :inc inc
  :dec dec

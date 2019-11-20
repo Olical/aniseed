@@ -4,12 +4,11 @@
   "Execute some command as if you were in normal mode silently."
   (nvim.ex.silent (.. "exe \"normal! " keys "\"")))
 
-(fn fn-bridge [viml-name module lua-name ...]
+(fn fn-bridge [viml-name module lua-name opts]
   "Creates a VimL function that calls through to a Lua function in the named module.
   Takes an optional opts table, if that contains `:range true` it'll plumb the
   range start and end into the function call's first two arguments."
-  (let [[opts] [...]
-        {:range range} (or opts {})]
+  (let [{:range range} (or opts {})]
     (nvim.ex.function_
       (.. viml-name
           "(...)" 
@@ -24,5 +23,7 @@
           "unpack(_A))\", a:000)
           endfunction"))))
 
-{:normal normal
+{:aniseed/module :aniseed.nvim.util
+
+ :normal normal
  :fn-bridge fn-bridge}

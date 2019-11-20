@@ -9,7 +9,7 @@ local function str(content, opts)
   return xpcall(_0_, fennel.traceback)
 end
 local function file(src, dest, opts)
-  if (opts.force or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
+  if ((opts and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
     local content = core.slurp(src)
     do
       local _0_0, _1_0 = str(content, {filename = src})

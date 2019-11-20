@@ -87,7 +87,9 @@
     {:noremap true
      :silent true}))
 
-{:eval eval
+{:aniseed/module :aniseed.mappings
+
+ :eval eval
  :selection selection
  :eval-selection eval-selection
  :eval-range eval-range

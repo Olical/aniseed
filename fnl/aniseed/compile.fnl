@@ -15,7 +15,7 @@
   "Compile the source file into the destination file if the source file was
   modified more recently. Will create any required ancestor directories for the
   destination file to exist."
-  (when (or opts.force
+  (when (or (and opts opts.force)
             (> (nvim.fn.getftime src) (nvim.fn.getftime dest)))
     (let [content (core.slurp src)]
       (match (str content {:filename src})
@@ -38,6 +38,8 @@
               ".fnl$" ".lua")
             opts))))
 
-{:glob glob
+{:aniseed/module :aniseed.compile
+
+ :glob glob
  :file file
  :str str}
