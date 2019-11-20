@@ -65,6 +65,9 @@ end
 local function nil_3f(x)
   return ("nil" == type(x))
 end
+local function table_3f(x)
+  return ("table" == type(x))
+end
 local function pr_str(...)
   local function _0_(x)
     return view(x, {["one-line"] = true})
@@ -74,4 +77,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["nil?"] = nil_3f, ["pr-str"] = pr_str, ["string?"] = string_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}
+return {["nil?"] = nil_3f, ["pr-str"] = pr_str, ["string?"] = string_3f, ["table?"] = table_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}

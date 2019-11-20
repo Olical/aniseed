@@ -2,12 +2,14 @@
 (local str (require :aniseed.string))
 (local nvim (require :aniseed.nvim))
 (local nu (require :aniseed.nvim.util))
-(local view (require :aniseed.view))
 (local fennel (require :aniseed.fennel))
 
-;; TODO Replace the existing module if any result contains module name?
+(fn handle-result [x]
+  (when (and (core.table? x)
+             (. x :aniseed/module))
+    (tset package.loaded (. x :aniseed/module)
+          x))
 
-(fn show [x]
   (vim.schedule
     (fn []
       (core.pr x))))
@@ -31,7 +33,7 @@
       selection)))
 
 (fn eval [code]
-  (show (fennel.eval code)))
+  (handle-result (fennel.eval code)))
 
 (fn eval-selection [...]
   (eval (selection ...)))
@@ -40,7 +42,7 @@
   (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
 
 (fn eval-file [path]
-  (show (fennel.dofile path)))
+  (handle-result (fennel.dofile path)))
 
 (fn init []
   (nu.fn-bridge

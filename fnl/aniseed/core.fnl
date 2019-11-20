@@ -54,6 +54,9 @@
 (fn nil? [x]
   (= "nil" (type x)))
 
+(fn table? [x]
+  (= "table" (type x)))
+
 (fn pr-str [...]
   (.. (unpack
         (map (fn [x]
@@ -71,7 +74,10 @@
  :spit spit
  :first first
  :second second
+
  :string? string?
  :nil? nil?
+ :table? table?
+
  :pr-str pr-str
  :pr pr}

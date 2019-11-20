@@ -2,13 +2,15 @@ local core = require("aniseed.core")
 local str = require("aniseed.string")
 local nvim = require("aniseed.nvim")
 local nu = require("aniseed.nvim.util")
-local view = require("aniseed.view")
 local fennel = require("aniseed.fennel")
-local function show(x)
-  local function _0_()
+local function handle_result(x)
+  if (core["table?"](x) and x["aniseed/module"]) then
+    package.loaded[x["aniseed/module"]] = x
+  end
+  local function _1_()
     return core.pr(x)
   end
-  return vim.schedule(_0_)
+  return vim.schedule(_1_)
 end
 local function selection(type, ...)
   local sel_backup = nvim.o.selection
@@ -33,7 +35,7 @@ local function selection(type, ...)
   end
 end
 local function eval(code)
-  return show(fennel.eval(code))
+  return handle_result(fennel.eval(code))
 end
 local function eval_selection(...)
   return eval(selection(...))
@@ -42,7 +44,7 @@ local function eval_range(first_line, last_line)
   return eval(str.join("\n", nvim.fn.getline(first_line, last_line)))
 end
 local function eval_file(path)
-  return show(fennel.dofile(path))
+  return handle_result(fennel.dofile(path))
 end
 local function init()
   nu["fn-bridge"]("AniseedSelection", "aniseed.mappings", "selection")
