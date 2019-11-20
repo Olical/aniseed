@@ -1,4 +1,4 @@
-(local baz (require :bar/baz))
+(local baz (require :bar.baz))
 
 (+ 10 20)
 {:foo :bar}
