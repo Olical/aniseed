@@ -1,3 +1,4 @@
+local view = require("aniseed.view")
 local function filter(f, xs)
   local result = {}
   for _, x in ipairs(xs) do
@@ -48,4 +49,29 @@ local function spit(path, content)
     end
   end
 end
-return {dec = dec, filter = filter, inc = inc, map = map, slurp = slurp, spit = spit}
+local function first(xs)
+  if xs then
+    return xs[1]
+  end
+end
+local function second(xs)
+  if xs then
+    return xs[2]
+  end
+end
+local function string_3f(x)
+  return ("string" == type(x))
+end
+local function nil_3f(x)
+  return ("nil" == type(x))
+end
+local function pr_str(...)
+  local function _0_(x)
+    return view(x, {["one-line"] = true})
+  end
+  return unpack(map(_0_, {...}))
+end
+local function pr(...)
+  return print(pr_str(...))
+end
+return {["nil?"] = nil_3f, ["pr-str"] = pr_str, ["string?"] = string_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}

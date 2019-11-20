@@ -1,3 +1,5 @@
+(local view (require :aniseed.view))
+
 (fn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
@@ -38,9 +40,38 @@
         (f:close)
         nil)))
 
+(fn first [xs]
+  (when xs
+    (. xs 1)))
+
+(fn second [xs]
+  (when xs
+    (. xs 2)))
+
+(fn string? [x]
+  (= "string" (type x)))
+
+(fn nil? [x]
+  (= "nil" (type x)))
+
+(fn pr-str [...]
+  (.. (unpack
+        (map (fn [x]
+               (view x {:one-line true}))
+             [...]))))
+
+(fn pr [...]
+  (print (pr-str ...)))
+
 {:filter filter
  :map map
  :inc inc
  :dec dec
  :slurp slurp
- :spit spit}
+ :spit spit
+ :first first
+ :second second
+ :string? string?
+ :nil? nil?
+ :pr-str pr-str
+ :pr pr}

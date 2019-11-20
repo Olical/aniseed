@@ -1,7 +1,16 @@
+(local core (require :aniseed.core))
+(local str (require :aniseed.string))
 (local nvim (require :aniseed.nvim))
 (local nu (require :aniseed.nvim.util))
 (local view (require :aniseed.view))
 (local fennel (require :aniseed.fennel))
+
+;; TODO Replace the existing module if any result contains module name?
+
+(fn show [x]
+  (vim.schedule
+    (fn []
+      (core.pr x))))
 
 (fn selection [type ...]
   (let [sel-backup nvim.o.selection
@@ -22,19 +31,17 @@
       selection)))
 
 (fn eval [code]
-  (let [result (fennel.eval code)]
-    (vim.schedule
-      (fn []
-        (print (view result {:one-line true}))))))
+  (show (fennel.eval code)))
 
 (fn eval-selection [...]
   (eval (selection ...)))
 
-;; TODO Replace the existing module if result contains module name?
-(fn eval-file [path]
-  (print (view (fennel.dofile path))))
+(fn eval-range [first-line last-line]
+  (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
 
-;; TODO AniseedEval takes a range.
+(fn eval-file [path]
+  (show (fennel.dofile path)))
+
 (fn init []
   (nu.fn-bridge
     :AniseedSelection
@@ -49,10 +56,16 @@
     :aniseed.mappings :eval-file)
 
   (nu.fn-bridge
+    :AniseedEvalRange
+    :aniseed.mappings :eval-range
+    {:range true})
+
+  (nu.fn-bridge
     :AniseedEvalSelection
     :aniseed.mappings :eval-selection)
 
   (nvim.ex.command_ :-nargs=1 :AniseedEval "call AniseedEval(<q-args>)")
+  (nvim.ex.command_ :-range :AniseedEvalRange "<line1>,<line2>call AniseedEvalRange()")
 
   (nvim.set_keymap
     :n "<Plug>(AniseedEval)"
@@ -75,5 +88,6 @@
 {:eval eval
  :selection selection
  :eval-selection eval-selection
+ :eval-range eval-range
  :eval-file eval-file
  :init init}
