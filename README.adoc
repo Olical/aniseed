@@ -62,7 +62,6 @@ Aniseed makes a few Lua libraries available to you when installed:
 
  * Return results about what was compiled, how long it took etc.
  * Make `opts` an optional argument.
- * Have some good UX for evaluating / reloading a file while you're working on it.
 
 == Development
 
