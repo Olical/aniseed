@@ -19,50 +19,25 @@ _Please_ pin the plugin to a tag then subscribe to new releases through the GitH
 Plug 'Olical/aniseed', { 'tag': 'v0.0.0' }
 ----
 
-== Usage
+== Compiling ahead of time
 
-Aniseed provides a few modules, have a browse of the source code to see what's available or execute the following to pretty-print their contents. Let's take a look inside `aniseed/core.lua`.
+TODO
 
-I'm using Fennel's view function so the output looks a bit more like Fennel than Lua.
+== Evaluating at runtime
 
-[source,viml]
-----
-lua print(require("aniseed.view")(require("aniseed.core")))
-----
+TODO
 
-Let's compile a single Fennel file to Lua to get started.
+== Module reloading
 
-[source,viml]
-----
-lua require("aniseed.compile").file("config.fnl", "config.lua", {})
-----
-
-If the source hasn't changed since the last time it was compiled this will do nothing, you can avoid this by passing `{force = true}` as the `opts` instead of `{}`.
-
-We can also compile an entire directory with a glob, this is very useful for compiling all files under `fnl` into the `lua` directory, for example.
-
-[source,viml]
-----
-lua require("aniseed.compile").glob("**/*.fnl", "fnl", "lua", {})
-----
-
-Of course, you could translate all of these VimL examples into Lua, maybe even Fennel. You could write a small bootstrap Lua file that loaded everything else as Fennel, feel free to experiment.
-
-== Extras
-
-Aniseed makes a few Lua libraries available to you when installed:
-
- * Fennel itself `(require :aniseed.fennel)`
- * Fennel's view library, used to pretty-print data `(require :aniseed.view)`
- * https://github.com/norcalli/nvim.lua[nvim.lua], functions to make Neovim interaction a breeze `(require :aniseed.nvim)`
- * `(require :aniseed.core)` contains some helpful functions like `map` and `filter`.
- * `(require :aniseed.fs)` for things like `ensure-ancestor-dirs`.
+TODO
 
 == Development
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!
 
-You can use `make test` to ensure the Fennel files in the `test` directory can be compiled and executed without error. It's a _very_ light test that won't catch much though.
+If you have https://github.com/embear/vim-localvimrc[vim-localvimrc] installed you'll have access to the mappings mentioned above (check out `.lvimrc`). By using these you can tweak Aniseed's source then try your changes out without restarting Neovim.
+
+You can use `make test` to ensure the Fennel files in the `test` directory can be compiled and executed without error. It's a _very_ light test that won't catch much but it's better than nothing as a high level smoke test.
 
 == Unlicenced
 
