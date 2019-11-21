@@ -26,4 +26,4 @@ local function join(...)
   end
   return result
 end
-return {join = join}
+return {["aniseed/module"] = "aniseed.string", join = join}

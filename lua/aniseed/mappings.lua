@@ -58,4 +58,4 @@ local function init()
   nvim.set_keymap("n", "<Plug>(AniseedEvalCurrentFile)", ":call AniseedEvalFile(expand('%'))<cr>", {noremap = true, silent = true})
   return nvim.set_keymap("v", "<Plug>(AniseedEvalSelection)", ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>", {noremap = true, silent = true})
 end
-return {["eval-file"] = eval_file, ["eval-range"] = eval_range, ["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}
+return {["aniseed/module"] = "aniseed.mappings", ["eval-file"] = eval_file, ["eval-range"] = eval_range, ["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}

@@ -24,6 +24,5 @@
           endfunction"))))
 
 {:aniseed/module :aniseed.nvim.util
-
  :normal normal
  :fn-bridge fn-bridge}

@@ -21,4 +21,4 @@ local function fn_bridge(viml_name, module, lua_name, opts)
   end
   return nvim.ex.function_((viml_name .. "(...)" .. _1_() .. "\n          call luaeval(\"require('" .. module .. "')['" .. lua_name .. "'](" .. _2_() .. "unpack(_A))\", a:000)\n          endfunction"))
 end
-return {["fn-bridge"] = fn_bridge, normal = normal}
+return {["aniseed/module"] = "aniseed.nvim.util", ["fn-bridge"] = fn_bridge, normal = normal}

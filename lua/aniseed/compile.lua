@@ -38,4 +38,4 @@ local function glob(src_expr, src_dir, dest_dir, opts)
   end
   return nil
 end
-return {file = file, glob = glob, str = str}
+return {["aniseed/module"] = "aniseed.compile", file = file, glob = glob, str = str}

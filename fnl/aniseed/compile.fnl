@@ -39,7 +39,6 @@
             opts))))
 
 {:aniseed/module :aniseed.compile
-
  :glob glob
  :file file
  :str str}

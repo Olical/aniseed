@@ -67,7 +67,6 @@
   (print (pr-str ...)))
 
 {:aniseed/module :aniseed.core
-
  :filter filter
  :map map
  :inc inc
@@ -76,10 +75,8 @@
  :spit spit
  :first first
  :second second
-
  :string? string?
  :nil? nil?
  :table? table?
-
  :pr-str pr-str
  :pr pr}

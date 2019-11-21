@@ -23,5 +23,4 @@
     result))
 
 {:aniseed/module :aniseed.string
-
  :join join}

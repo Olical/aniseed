@@ -6,5 +6,4 @@
     (nvim.fn.mkdir parent "p")))
 
 {:aniseed/module :aniseed.fs
-
  :ensure-ancestor-dirs ensure-ancestor-dirs}

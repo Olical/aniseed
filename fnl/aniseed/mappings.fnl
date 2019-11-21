@@ -88,7 +88,6 @@
      :silent true}))
 
 {:aniseed/module :aniseed.mappings
-
  :eval eval
  :selection selection
  :eval-selection eval-selection
