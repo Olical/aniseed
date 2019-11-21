@@ -21,7 +21,7 @@ Plug 'Olical/aniseed', { 'tag': 'v0.0.0' }
 
 == Compiling ahead of time
 
-We can compile a single Fennel file to Lua through the `:aniseed.compile` module.
+We can compile a single Fennel file to Lua through the `aniseed.compile` module.
 
 [source,viml]
 ----
