@@ -46,6 +46,10 @@ lua require("aniseed.compile").file("config.fnl", "config.lua", {force = true})
 
 == Evaluating with mappings
 
+Ahead of time compiling covers most bases, but if you've ever written a Lisp you know how great REPL integration is. Aniseed provides a level of interactive evaluation, it's not quite https://github.com/Olical/conjure[Conjure] but it's still useful.
+
+Given a simple Fennel program...
+
 TODO
 
 == Extras
