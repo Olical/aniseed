@@ -21,13 +21,40 @@ Plug 'Olical/aniseed', { 'tag': 'v0.0.0' }
 
 == Compiling ahead of time
 
+We can compile a single Fennel file to Lua through the `:aniseed.compile` module.
+
+[source,viml]
+----
+lua require("aniseed.compile").file("config.fnl", "config.lua")
+----
+
+You'll probably want to compile your plugin or configuration's entire Fennel collection to Lua in one go though, for that, that's `glob`.
+
+[source,viml]
+----
+lua require("aniseed.compile").glob("**/*.fnl", "fnl", "lua")
+----
+
+This will compile all Fennel files found under the `fnl` directory into Lua and spit them out into the `lua` directory under the same directory structures as their source.
+
+These functions will _not_ compile the files they're given unless the source is newer than the destination. If you wish to bypass this check you can pass an `opts` of `{force = true}` to either function as the last argument.
+
+[source,viml]
+----
+lua require("aniseed.compile").file("config.fnl", "config.lua", {force = true})
+----
+
+== Evaluating with mappings
+
 TODO
 
-== Evaluating at runtime
+== Extras
+
+=== Module reloading
 
 TODO
 
-== Module reloading
+=== Clojure inspired utility functions
 
 TODO
 
