@@ -196,6 +196,14 @@ There's also `aniseed.string`, `aniseed.fs` and `aniseed.nvim.util`. The last of
 
 If you require more and you think the community would benefit from more ported Clojure functions, why not submit a pull request adding them.
 
+=== Bundled libraries
+
+There's a few submodules which map to some symbolic links in the `lua/aniseed` directory, they're extremely useful, Aniseed relies on them internally but you also have access to them.
+
+ * `aniseed.fennel` - https://fennel-lang.org/[Fennel] itself, the entire compiler.
+ * `aniseed.view` - the view function from https://fennel-lang.org/[Fennel], I'd recommend accessing it through `aniseed.core` and the `pr` or `pr-str` functions though.
+ * `aniseed.nvim` - https://github.com/norcalli/nvim.lua[nvim.lua] is a collection of extremely helpful mappings to `vim.api.*`, I find it a lot easier to read than vanilla API access.
+
 == Development
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!
