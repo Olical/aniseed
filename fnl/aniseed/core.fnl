@@ -15,10 +15,28 @@
       (table.insert result (f x)))
     result))
 
+(fn reduce [f init xs]
+  "Reduce xs into a result by passing each subsequent value into the fn with
+  the previous value as the first arg. Starting with init."
+  (var result init)
+  (each [_ x (ipairs xs)]
+    (set result (f result x)))
+  result)
+
+;; TODO Implement most loops in terms of this.
 (fn run! [f xs]
   "Execute the function (for side effects) for every xs."
   (each [_ x (ipairs xs)]
     (f x)))
+
+(fn concat [...]
+  "Concatinats the sequential table arguments together."
+  (let [result []]
+    (run! (fn [xs]
+            (each [_ x (ipairs xs)]
+              (table.insert result x)))
+      [...])
+    result))
 
 (fn inc [n]
   "Increment n by 1."

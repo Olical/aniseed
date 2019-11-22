@@ -15,11 +15,29 @@ local function map(f, xs)
   end
   return result
 end
+local function reduce(f, init, xs)
+  local result = init
+  for _, x in ipairs(xs) do
+    result = f(result, x)
+  end
+  return result
+end
 local function run_21(f, xs)
   for _, x in ipairs(xs) do
     f(x)
   end
   return nil
+end
+local function concat(...)
+  local result = {}
+  local function _0_(xs)
+    for _, x in ipairs(xs) do
+      table.insert(result, x)
+    end
+    return nil
+  end
+  run_21(_0_, {...})
+  return result
 end
 local function inc(n)
   return (n + 1)
