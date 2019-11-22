@@ -93,6 +93,8 @@
  :filter filter
  :map map
  :run! run!
+ :reduce reduce
+ :concat concat
  :inc inc
  :dec dec
  :slurp slurp

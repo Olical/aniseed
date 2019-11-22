@@ -101,4 +101,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}
+return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, spit = spit}
