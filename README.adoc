@@ -134,9 +134,6 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
 (plug-map! :v :ee :AniseedEvalSelection)
 
 (nvim.ex.augroup :END)
-
-;; Reload the current file, just in case we opened a Fennel file and the mappings didn't fire.
-(nvim.ex.edit)
 ----
 
 === Example usage
