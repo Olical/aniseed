@@ -70,7 +70,7 @@ To set up the mappings you'll need to require `aniseed.mapping` and execute the 
 |Executes the Fennel in the given range, such as `:%AniseedEvalRange` or `:1,5AniseedEvalRange`. There's a function of the same name that this maps to.
 
 |Command
-|`AniseedEvalFile(path)`
+|`AniseedEvalFile`
 |Executes the Fennel contained in the file specified by the given path, won't AOT compile for future calls so it's really best suited to small one off things. There's a function of the same name that this maps to.
 
 |Normal mapping
