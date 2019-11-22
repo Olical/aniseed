@@ -4,7 +4,7 @@
 
 Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] compile and execute it via Lua. Configure and control your Neovim through the wonders of Lisp!
 
-The project started as an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
+The project started as an experiment to see if I could replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
 
 == Installation
 
@@ -57,6 +57,7 @@ To set up the mappings you'll need to require `aniseed.mapping` and execute the 
 ;; lua require("aniseed.mapping").init()
 ----
 
+[cols="1,2,3"]
 .Mappings
 |===
 |Type |Name |Description
@@ -110,6 +111,7 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
     (.. to (or suffix ""))))
 
 (fn plug-map! [mode from to suffix]
+  "Adds a map in terms of map! but wraps the target command in <Plug>(...)."
   (map! mode from (.. "<Plug>(" to ")") suffix))
 
 (nvim.ex.augroup :aniseed)
@@ -184,9 +186,7 @@ For example, if we had the `add` module from above which we wished to change and
 
 Now when you evaluate the file the global `add` module will be updated with your changes as you see them in your buffer. Remember to then go re-evaluate any other modules that require this one, they'll be holding the _old_ version of the module in their local variables.
 
-____
 This is another thing I might be able to improve with a hypothetical namespace system akin to Clojure's.
-____
 
 === Clojure inspired utility functions
 

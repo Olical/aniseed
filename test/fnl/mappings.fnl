@@ -15,6 +15,7 @@
     (.. to (or suffix ""))))
 
 (fn plug-map! [mode from to suffix]
+  "Adds a map in terms of map! but wraps the target command in <Plug>(...)."
   (map! mode from (.. "<Plug>(" to ")") suffix))
 
 (nvim.ex.augroup :aniseed)
