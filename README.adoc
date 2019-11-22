@@ -48,7 +48,7 @@ Ahead of time compiling covers most bases, but if you've ever written a Lisp you
 
 To set up the mappings you'll need to require `aniseed.mapping` and execute the `init` function contained within it. Then you can map your own keys to the `<Plug>` mappings it defined.
 
-[source,lisp]
+[source,clojure]
 ----
 (local mapping (require :aniseed.mapping))
 (mapping.init)
@@ -91,7 +91,7 @@ You can even map to `<Plug>(AniseedEval)af` to create a mapping that evaluates y
 
 Here's the mappings I use written in Fennel, feel free to take what you want or just write your own in VimL!
 
-[source,lisp]
+[source,clojure]
 ----
 ;; We have access to https://github.com/norcalli/nvim.lua
 ;; Aniseed is really just combining cool things to be greater than the sum of it's parts.
@@ -140,7 +140,7 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
 
 Given a simple Fennel program and the mappings I described above, we could evaluate the following with `,ef` or `,eb` to evaluate the file from disk or the buffer.
 
-[source,lisp]
+[source,clojure]
 ----
 (fn add [a b]
   (+ a b))
@@ -166,7 +166,7 @@ If you would like your module to be redefined interactively while you work on it
 
 For example, if we had the `add` module from above which we wished to change and reload without restarting Neovim, we could add the following to it.
 
-[source,lisp]
+[source,clojure]
 ----
 (local core (require :aniseed.core))
 
