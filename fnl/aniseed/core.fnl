@@ -15,6 +15,11 @@
       (table.insert result (f x)))
     result))
 
+(fn run! [f xs]
+  "Execute the function (for side effects) for every xs."
+  (each [_ x (ipairs xs)]
+    (f x)))
+
 (fn inc [n]
   "Increment n by 1."
   (+ n 1))
@@ -69,6 +74,7 @@
 {:aniseed/module :aniseed.core
  :filter filter
  :map map
+ :run! run!
  :inc inc
  :dec dec
  :slurp slurp

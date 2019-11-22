@@ -15,6 +15,12 @@ local function map(f, xs)
   end
   return result
 end
+local function run_21(f, xs)
+  for _, x in ipairs(xs) do
+    f(x)
+  end
+  return nil
+end
 local function inc(n)
   return (n + 1)
 end
@@ -77,4 +83,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["string?"] = string_3f, ["table?"] = table_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}
+return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, second = second, slurp = slurp, spit = spit}
