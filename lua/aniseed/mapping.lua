@@ -47,15 +47,16 @@ local function eval_file(path)
   return handle_result(fennel.dofile(path))
 end
 local function init()
-  nu["fn-bridge"]("AniseedSelection", "aniseed.mappings", "selection")
-  nu["fn-bridge"]("AniseedEval", "aniseed.mappings", "eval")
-  nu["fn-bridge"]("AniseedEvalFile", "aniseed.mappings", "eval-file")
-  nu["fn-bridge"]("AniseedEvalRange", "aniseed.mappings", "eval-range", {range = true})
-  nu["fn-bridge"]("AniseedEvalSelection", "aniseed.mappings", "eval-selection")
+  nu["fn-bridge"]("AniseedSelection", "aniseed.mapping", "selection")
+  nu["fn-bridge"]("AniseedEval", "aniseed.mapping", "eval")
+  nu["fn-bridge"]("AniseedEvalFile", "aniseed.mapping", "eval-file")
+  nu["fn-bridge"]("AniseedEvalRange", "aniseed.mapping", "eval-range", {range = true})
+  nu["fn-bridge"]("AniseedEvalSelection", "aniseed.mapping", "eval-selection")
   nvim.ex.command_("-nargs=1", "AniseedEval", "call AniseedEval(<q-args>)")
+  nvim.ex.command_("-nargs=1", "AniseedEvalFile", "call AniseedEvalFile(<q-args>)")
   nvim.ex.command_("-range", "AniseedEvalRange", "<line1>,<line2>call AniseedEvalRange()")
   nvim.set_keymap("n", "<Plug>(AniseedEval)", ":set opfunc=AniseedEvalSelection<cr>g@", {noremap = true, silent = true})
   nvim.set_keymap("n", "<Plug>(AniseedEvalCurrentFile)", ":call AniseedEvalFile(expand('%'))<cr>", {noremap = true, silent = true})
   return nvim.set_keymap("v", "<Plug>(AniseedEvalSelection)", ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>", {noremap = true, silent = true})
 end
-return {["aniseed/module"] = "aniseed.mappings", ["eval-file"] = eval_file, ["eval-range"] = eval_range, ["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}
+return {["aniseed/module"] = "aniseed.mapping", ["eval-file"] = eval_file, ["eval-range"] = eval_range, ["eval-selection"] = eval_selection, eval = eval, init = init, selection = selection}

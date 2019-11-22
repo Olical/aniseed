@@ -1,7 +1,3 @@
 let &runtimepath = &runtimepath.",".expand("<sfile>:p:h").",".expand("<sfile>:p:h")."/test"
-lua require("aniseed.mappings").init()
-nmap <localleader>E <Plug>(AniseedEval)
-nmap <localleader>ee <Plug>(AniseedEval)af
-nmap <localleader>er <Plug>(AniseedEval)aF
-nmap <localleader>ef <Plug>(AniseedEvalCurrentFile)
-vmap <localleader>ee <Plug>(AniseedEvalSelection)
+lua require("aniseed.mapping").init()
+AniseedEvalFile test/fnl/mappings.fnl

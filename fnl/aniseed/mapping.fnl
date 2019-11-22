@@ -47,26 +47,27 @@
 (fn init []
   (nu.fn-bridge
     :AniseedSelection
-    :aniseed.mappings :selection)
+    :aniseed.mapping :selection)
 
   (nu.fn-bridge
     :AniseedEval
-    :aniseed.mappings :eval)
+    :aniseed.mapping :eval)
 
   (nu.fn-bridge
     :AniseedEvalFile
-    :aniseed.mappings :eval-file)
+    :aniseed.mapping :eval-file)
 
   (nu.fn-bridge
     :AniseedEvalRange
-    :aniseed.mappings :eval-range
+    :aniseed.mapping :eval-range
     {:range true})
 
   (nu.fn-bridge
     :AniseedEvalSelection
-    :aniseed.mappings :eval-selection)
+    :aniseed.mapping :eval-selection)
 
   (nvim.ex.command_ :-nargs=1 :AniseedEval "call AniseedEval(<q-args>)")
+  (nvim.ex.command_ :-nargs=1 :AniseedEvalFile "call AniseedEvalFile(<q-args>)")
   (nvim.ex.command_ :-range :AniseedEvalRange "<line1>,<line2>call AniseedEvalRange()")
 
   (nvim.set_keymap
@@ -87,7 +88,7 @@
     {:noremap true
      :silent true}))
 
-{:aniseed/module :aniseed.mappings
+{:aniseed/module :aniseed.mapping
  :eval eval
  :selection selection
  :eval-selection eval-selection

@@ -4,15 +4,13 @@
 
 Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] compile and execute it via Lua. Configure and control your Neovim through the wonders of Lisp!
 
-This is mostly an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
-
-Your code is compiled ahead of time into Lua only if it has changed since you last compiled it.
+The project started as an experiment to see if I can replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
 
 == Installation
 
-Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one.
+Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
 
-_Please_ pin the plugin to a tag then subscribe to new releases through the GitHub UI. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver] any breaking changes will incur a major version bump.
+Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver] any breaking changes will incur a major version bump, breaking changes and upgrade steps will be listed in the release notes.
 
 [source,viml]
 ----
@@ -28,7 +26,7 @@ We can compile a single Fennel file to Lua through the `aniseed.compile` module.
 lua require("aniseed.compile").file("config.fnl", "config.lua")
 ----
 
-You'll probably want to compile your plugin or configuration's entire Fennel collection to Lua in one go though, for that, that's `glob`.
+To compile an entire directory of files matching a glob, such as your Neovim configuration or plugin source code, we can use the `glob` function in the same module.
 
 [source,viml]
 ----
@@ -37,7 +35,7 @@ lua require("aniseed.compile").glob("**/*.fnl", "fnl", "lua")
 
 This will compile all Fennel files found under the `fnl` directory into Lua and spit them out into the `lua` directory under the same directory structures as their source.
 
-These functions will _not_ compile the files they're given unless the source is newer than the destination. If you wish to bypass this check you can pass an `opts` of `{force = true}` to either function as the last argument.
+These functions will skip any source files which haven't changed since you last compiled them. If you wish to bypass this check you can pass an `opts` of `{force = true}` to either function as the last argument.
 
 [source,viml]
 ----
@@ -46,21 +44,160 @@ lua require("aniseed.compile").file("config.fnl", "config.lua", {force = true})
 
 == Evaluating with mappings
 
-Ahead of time compiling covers most bases, but if you've ever written a Lisp you know how great REPL integration is. Aniseed provides a level of interactive evaluation, it's not quite https://github.com/Olical/conjure[Conjure] but it's still useful.
+Ahead of time compiling covers most bases, but if you've ever written a Lisp you know how great REPL integration is. Aniseed provides some interactive evaluation, it's not quite https://github.com/Olical/conjure[Conjure] but it's still useful.
 
-Given a simple Fennel program...
+To set up the mappings you'll need to require `aniseed.mapping` and execute the `init` function contained within it. Then you can map your own keys to the `<Plug>` mappings it defined.
 
-TODO
+[source,lisp]
+----
+(local mapping (require :aniseed.mapping))
+(mapping.init)
+
+;; You can do this through regular Lua if you want.
+;; lua require("aniseed.mapping").init()
+----
+
+.Mappings
+|===
+|Type |Name |Description
+
+|Command
+|`AniseedEval`
+|Executes the Fennel passed to it, such as `:AniseedEval (+ 10 20)`. There's a function of the same name that this maps to.
+
+|Command
+|`AniseedEvalRange`
+|Executes the Fennel in the given range, such as `:%AniseedEvalRange` or `:1,5AniseedEvalRange`. There's a function of the same name that this maps to.
+
+|Command
+|`AniseedEvalFile(path)`
+|Executes the Fennel contained in the file specified by the given path, won't AOT compile for future calls so it's really best suited to small one off things. There's a function of the same name that this maps to.
+
+|Normal mapping
+|`<Plug>(AniseedEval)`
+|Should be followed by a motion to indicate what you want evaluated. Triggering this mapping with `10j` would evaluate the next 10 lines, for example.
+If you have https://github.com/guns/vim-sexp[vim-sexp] you could use `af` to indicate your current form or `aF` for the outer most form.
+You can even map to `<Plug>(AniseedEval)af` to create a mapping that evaluates your current form quickly.
+
+|Normal mapping
+|`<Plug>(AniseedEvalCurrentFile)`
+|Evaluates the current file from disk.
+
+|Visual mapping
+|`<Plug>(AniseedEvalSelection)`
+|Evaluates whatever you have visually selected.
+
+|===
+
+Here's the mappings I use written in Fennel, feel free to take what you want or just write your own in VimL!
+
+[source,lisp]
+----
+;; We have access to https://github.com/norcalli/nvim.lua
+;; Aniseed is really just combining cool things to be greater than the sum of it's parts.
+(local nvim (require :aniseed.nvim))
+
+;; Where <localleader> is bound to comma.
+;; I'm using the colon syntax which translates to strings just to be fancy.
+;; Imagine each :keyword as "keyword".
+
+(fn map! [mode from to suffix]
+  "Map some keys (prefixed by <localleader>) to a command."
+  (nvim.ex.autocmd
+    :FileType :fennel
+    (.. mode :map) :<buffer>
+    (.. :<localleader> from)
+    (.. to (or suffix ""))))
+
+(fn plug-map! [mode from to suffix]
+  (map! mode from (.. "<Plug>(" to ")") suffix))
+
+(nvim.ex.augroup :aniseed)
+(nvim.ex.autocmd_)
+
+;; ,E<motion> - evaluate a motion.
+(plug-map! :n :E :AniseedEval)
+
+;; ,ee - evaluate the current form.
+(plug-map! :n :ee :AniseedEval :af)
+
+;; ,er - evaluate the outermost form.
+(plug-map! :n :er :AniseedEval :aF)
+
+;; ,ef - evaluate the current file from disk.
+(plug-map! :n :ef :AniseedEvalCurrentFile)
+
+;; ,eb - evaluate the buffer from Neovim.
+(map! :n :eb ":%AniseedEvalRange<cr>")
+
+;; ,ee - evaluate the current visual selection.
+(plug-map! :v :ee :AniseedEvalSelection)
+
+(nvim.ex.augroup :END)
+
+;; Reload the current file, just in case we opened a Fennel file and the mappings didn't fire.
+(nvim.ex.edit)
+----
+
+=== Example usage
+
+Given a simple Fennel program and the mappings I described above, we could evaluate the following with `,ef` or `,eb` to evaluate the file from disk or the buffer.
+
+[source,lisp]
+----
+(fn add [a b]
+  (+ a b))
+
+(print (add 10 20))
+
+{:add add}
+----
+
+Sadly we can't evaluate the `add` function and then the call to it like we would in https://clojure.org/[Clojure] with https://github.com/Olical/conjure[Conjure], that would require a concept of namespaces to give the evaluation some context.
+
+I actually considered bundling my own namespace macro system in with Aniseed to allow this, I may well still do that some day if I can work out various issues with the concept.
+
+The last line in the file defines the return value for the module. Modules, by convention, return a table of functions to expose, you could now call `add` from other Fennel or Lua (they're the same really) modules by requiring your file.
 
 == Extras
 
 === Module reloading
 
-TODO
+Lua may not have namespaces, but it's module system will be enough for most purposes. One annoying thing about the system is that when you require a module it gets cached in a table. Subsequent requires return that cached value, not your new changes to the file.
+
+If you would like your module to be redefined interactively while you work on it, simply put an `:aniseed/module` key in the table returned from your module. Aniseed will update your modules reference in the table for the name you give it.
+
+For example, if we had the `add` module from above which we wished to change and reload without restarting Neovim, we could add the following to it.
+
+[source,lisp]
+----
+(local core (require :aniseed.core))
+
+(fn add [a b]
+  (+ a b))
+
+;; Pretty print the output.
+;; Just like Clojure's pr function.
+;; There's a pr-str too!
+(core.pr (add 10 20))
+
+{:aniseed/module :add
+ :add add}
+----
+
+Now when you evaluate the file the global `add` module will be updated with your changes as you see them in your buffer. Remember to then go re-evaluate any other modules that require this one, they'll be holding the _old_ version of the module in their local variables.
+
+____
+This is another thing I might be able to improve with a hypothetical namespace system akin to Clojure's.
+____
 
 === Clojure inspired utility functions
 
-TODO
+For now, the best documentation of the internal functions and API is the code. You'll find a bunch of Clojure like functions in `aniseed.core`, you can find that in `fnl/aniseed/core.fnl`.
+
+There's also `aniseed.string`, `aniseed.fs` and `aniseed.nvim.util`. The last of which contains some helpful functions for creating bridge functions between VimL and Lua which is really useful for defining mappings, for example.
+
+If you require more and you think the community would benefit from more ported Clojure functions, why not submit a pull request adding them.
 
 == Development
 
