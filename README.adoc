@@ -10,7 +10,7 @@ The project started as an experiment to see if I could replace my Neovim configu
 
 Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
 
-Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver] any breaking changes will incur a major version bump, breaking changes and upgrade steps will be listed in the release notes.
+Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate to accidentally break your entire configuration through a bad release or breaking change. I follow https://semver.org/[semver], any breaking changes will incur a major version bump, breaking changes and upgrade steps will be listed in the release notes.
 
 [source,viml]
 ----
@@ -30,7 +30,7 @@ To compile an entire directory of files matching a glob, such as your Neovim con
 
 [source,viml]
 ----
-lua require("aniseed.compile").glob("**/*.fnl", "fnl", "lua")
+lua require("aniseed.compile").glob("**/*.fnl", "~/.config/nvim/fnl", "~/.config/nvim/lua")
 ----
 
 This will compile all Fennel files found under the `fnl` directory into Lua and spit them out into the `lua` directory under the same directory structures as their source.
