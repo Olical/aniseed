@@ -8,7 +8,9 @@
   "Creates a VimL function that calls through to a Lua function in the named module.
   Takes an optional opts table, if that contains `:range true` it'll plumb the
   range start and end into the function call's first two arguments."
-  (let [{:range range} (or opts {})]
+  (let [{:range range
+         :return return}
+        (or opts {})]
     (nvim.ex.function_
       (.. viml-name
           "(...)" 
@@ -16,7 +18,11 @@
             " range"
             "")
           "
-          call luaeval(\"require('" module "')['" lua-name "']("
+          "
+          (if return
+            :return
+            :call)
+          " luaeval(\"require('" module "')['" lua-name "']("
           (if range
             "\" . a:firstline . \", \" . a:lastline . \", "
             "")
