@@ -14,7 +14,7 @@ Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate 
 
 [source,viml]
 ----
-Plug 'Olical/aniseed', { 'tag': 'v0.0.0' }
+Plug 'Olical/aniseed', { 'tag': 'v1.0.0' }
 ----
 
 == Compiling ahead of time
