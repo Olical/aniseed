@@ -33,19 +33,12 @@
         (table.insert result x)))
     result))
 
-(fn map-indexed [f xs]
-  "Map xs to a new sequential table by calling (f n x) on each item."
-  (let [result []]
-    (each [n x (ipairs xs)]
-      (table.insert result (f n x)))
-    result))
-
 (fn map [f xs]
   "Map xs to a new sequential table by calling (f x) on each item."
-  (map-indexed
-    (fn [_ x]
-      (f x))
-    xs))
+  (let [result []]
+    (each [_ x (ipairs xs)]
+      (table.insert result (f x)))
+    result))
 
 (fn identity [x]
   "Returns what you pass it."
@@ -53,11 +46,17 @@
 
 (fn keys [t]
   "Get all keys of a table."
-  (map-indexed (fn [k _] k) t))
+  (let [result []]
+    (each [k _ (pairs t)]
+      (table.insert result k))
+    result))
 
 (fn vals [t]
   "Get all values of a table."
-  (map identity t))
+  (let [result []]
+    (each [_ v (pairs t)]
+      (table.insert result v))
+    result))
 
 (fn reduce [f init xs]
   "Reduce xs into a result by passing each subsequent value into the fn with
@@ -128,7 +127,6 @@
  :inc inc
  :dec dec
  :filter filter
- :map-indexed map-indexed
  :map map
  :identity identity
  :keys keys

@@ -33,30 +33,29 @@ local function filter(f, xs)
   end
   return result
 end
-local function map_indexed(f, xs)
+local function map(f, xs)
   local result = {}
-  for n, x in ipairs(xs) do
-    table.insert(result, f(n, x))
+  for _, x in ipairs(xs) do
+    table.insert(result, f(x))
   end
   return result
-end
-local function map(f, xs)
-  local function _0_(_, x)
-    return f(x)
-  end
-  return map_indexed(_0_, xs)
 end
 local function identity(x)
   return x
 end
 local function keys(t)
-  local function _0_(k, _)
-    return k
+  local result = {}
+  for k, _ in pairs(t) do
+    table.insert(result, k)
   end
-  return map_indexed(_0_, t)
+  return result
 end
 local function vals(t)
-  return map(identity, t)
+  local result = {}
+  for _, v in pairs(t) do
+    table.insert(result, v)
+  end
+  return result
 end
 local function reduce(f, init, xs)
   local result = init
@@ -131,4 +130,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["map-indexed"] = map_indexed, ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}
+return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}
