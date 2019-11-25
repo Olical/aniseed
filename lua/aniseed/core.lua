@@ -46,6 +46,18 @@ local function map(f, xs)
   end
   return map_indexed(_0_)
 end
+local function identity(x)
+  return x
+end
+local function keys(t)
+  local function _0_(k, _)
+    return k
+  end
+  return map_indexed(_0_)
+end
+local function vals(t)
+  return map(identity, t)
+end
 local function reduce(f, init, xs)
   local result = init
   for _, x in ipairs(xs) do
@@ -119,4 +131,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["map-indexed"] = map_indexed, ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit}
+return {["aniseed/module"] = "aniseed.core", ["map-indexed"] = map_indexed, ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, identity = identity, inc = inc, keys = keys, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit, vals = vals}

@@ -46,6 +46,18 @@
     (fn [_ x]
       (f x))))
 
+(fn identity [x]
+  "Returns what you pass it."
+  x)
+
+(fn keys [t]
+  "Get all keys of a table."
+  (map-indexed (fn [k _] k)))
+
+(fn vals [t]
+  "Get all values of a table."
+  (map identity t))
+
 (fn reduce [f init xs]
   "Reduce xs into a result by passing each subsequent value into the fn with
   the previous value as the first arg. Starting with init."
@@ -117,6 +129,9 @@
  :filter filter
  :map-indexed map-indexed
  :map map
+ :identity identity
+ :keys keys
+ :vals vals
  :run! run!
  :reduce reduce
  :some some
