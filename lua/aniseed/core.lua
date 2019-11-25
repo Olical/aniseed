@@ -44,7 +44,7 @@ local function map(f, xs)
   local function _0_(_, x)
     return f(x)
   end
-  return map_indexed(_0_)
+  return map_indexed(_0_, xs)
 end
 local function identity(x)
   return x

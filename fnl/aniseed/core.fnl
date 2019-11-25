@@ -44,7 +44,8 @@
   "Map xs to a new sequential table by calling (f x) on each item."
   (map-indexed
     (fn [_ x]
-      (f x))))
+      (f x))
+    xs))
 
 (fn identity [x]
   "Returns what you pass it."
