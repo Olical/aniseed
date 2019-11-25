@@ -23,6 +23,16 @@
     (set result (f result x)))
   result)
 
+(fn some [f xs]
+  "Return the first truthy result from (f x) or nil."
+  (var result nil)
+  (var n 1)
+  (while (and (not result) (<= n (length xs)))
+    (let [candidate (f (. xs n))]
+      (when candidate
+        (set result candidate))))
+  result)
+
 ;; TODO Implement most loops in terms of this.
 (fn run! [f xs]
   "Execute the function (for side effects) for every xs."
@@ -94,6 +104,7 @@
  :map map
  :run! run!
  :reduce reduce
+ :some some
  :concat concat
  :inc inc
  :dec dec

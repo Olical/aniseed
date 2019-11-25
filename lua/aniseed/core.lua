@@ -22,6 +22,17 @@ local function reduce(f, init, xs)
   end
   return result
 end
+local function some(f, xs)
+  local result = nil
+  local n = 1
+  while (not result and (n <= #xs)) do
+    local candidate = f(xs[n])
+    if candidate then
+      result = candidate
+    end
+  end
+  return result
+end
 local function run_21(f, xs)
   for _, x in ipairs(xs) do
     f(x)
@@ -101,4 +112,4 @@ end
 local function pr(...)
   return print(pr_str(...))
 end
-return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, spit = spit}
+return {["aniseed/module"] = "aniseed.core", ["nil?"] = nil_3f, ["pr-str"] = pr_str, ["run!"] = run_21, ["string?"] = string_3f, ["table?"] = table_3f, concat = concat, dec = dec, filter = filter, first = first, inc = inc, map = map, pr = pr, reduce = reduce, second = second, slurp = slurp, some = some, spit = spit}
