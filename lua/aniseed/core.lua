@@ -53,7 +53,7 @@ local function keys(t)
   local function _0_(k, _)
     return k
   end
-  return map_indexed(_0_)
+  return map_indexed(_0_, t)
 end
 local function vals(t)
   return map(identity, t)
