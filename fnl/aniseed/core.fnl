@@ -1,5 +1,30 @@
 (local view (require :aniseed.view))
 
+(fn first [xs]
+  (when xs
+    (. xs 1)))
+
+(fn second [xs]
+  (when xs
+    (. xs 2)))
+
+(fn string? [x]
+  (= "string" (type x)))
+
+(fn nil? [x]
+  (= nil x))
+
+(fn table? [x]
+  (= "table" (type x)))
+
+(fn inc [n]
+  "Increment n by 1."
+  (+ n 1))
+
+(fn dec [n]
+  "Decrement n by 1."
+  (- n 1))
+
 (fn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
@@ -30,7 +55,8 @@
   (while (and (not result) (<= n (length xs)))
     (let [candidate (f (. xs n))]
       (when candidate
-        (set result candidate))))
+        (set result candidate))
+      (set n (inc n))))
   result)
 
 ;; TODO Implement most loops in terms of this.
@@ -47,14 +73,6 @@
               (table.insert result x)))
       [...])
     result))
-
-(fn inc [n]
-  "Increment n by 1."
-  (+ n 1))
-
-(fn dec [n]
-  "Decrement n by 1."
-  (- n 1))
 
 (fn slurp [path]
   "Read the file into a string."
@@ -73,23 +91,6 @@
         (f:close)
         nil)))
 
-(fn first [xs]
-  (when xs
-    (. xs 1)))
-
-(fn second [xs]
-  (when xs
-    (. xs 2)))
-
-(fn string? [x]
-  (= "string" (type x)))
-
-(fn nil? [x]
-  (= "nil" (type x)))
-
-(fn table? [x]
-  (= "table" (type x)))
-
 (fn pr-str [...]
   (.. (unpack
         (map (fn [x]
@@ -100,20 +101,20 @@
   (print (pr-str ...)))
 
 {:aniseed/module :aniseed.core
+ :first first
+ :second second
+ :string? string?
+ :nil? nil?
+ :table? table?
+ :inc inc
+ :dec dec
  :filter filter
  :map map
  :run! run!
  :reduce reduce
  :some some
  :concat concat
- :inc inc
- :dec dec
  :slurp slurp
  :spit spit
- :first first
- :second second
- :string? string?
- :nil? nil?
- :table? table?
  :pr-str pr-str
  :pr pr}

@@ -1,4 +1,29 @@
 local view = require("aniseed.view")
+local function first(xs)
+  if xs then
+    return xs[1]
+  end
+end
+local function second(xs)
+  if xs then
+    return xs[2]
+  end
+end
+local function string_3f(x)
+  return ("string" == type(x))
+end
+local function nil_3f(x)
+  return (nil == x)
+end
+local function table_3f(x)
+  return ("table" == type(x))
+end
+local function inc(n)
+  return (n + 1)
+end
+local function dec(n)
+  return (n - 1)
+end
 local function filter(f, xs)
   local result = {}
   for _, x in ipairs(xs) do
@@ -30,6 +55,7 @@ local function some(f, xs)
     if candidate then
       result = candidate
     end
+    n = inc(n)
   end
   return result
 end
@@ -49,12 +75,6 @@ local function concat(...)
   end
   run_21(_0_, {...})
   return result
-end
-local function inc(n)
-  return (n + 1)
-end
-local function dec(n)
-  return (n - 1)
 end
 local function slurp(path)
   local _0_0, _1_0 = io.open(path, "r")
@@ -83,25 +103,6 @@ local function spit(path, content)
       return nil
     end
   end
-end
-local function first(xs)
-  if xs then
-    return xs[1]
-  end
-end
-local function second(xs)
-  if xs then
-    return xs[2]
-  end
-end
-local function string_3f(x)
-  return ("string" == type(x))
-end
-local function nil_3f(x)
-  return ("nil" == type(x))
-end
-local function table_3f(x)
-  return ("table" == type(x))
 end
 local function pr_str(...)
   local function _0_(x)
