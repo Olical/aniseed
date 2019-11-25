@@ -52,7 +52,7 @@
 
 (fn keys [t]
   "Get all keys of a table."
-  (map-indexed (fn [k _] k)))
+  (map-indexed (fn [k _] k) t))
 
 (fn vals [t]
   "Get all values of a table."
