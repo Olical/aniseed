@@ -33,12 +33,18 @@
         (table.insert result x)))
     result))
 
+(fn map-indexed [f xs]
+  "Map xs to a new sequential table by calling (f n x) on each item."
+  (let [result []]
+    (each [n x (ipairs xs)]
+      (table.insert result (f n x)))
+    result))
+
 (fn map [f xs]
   "Map xs to a new sequential table by calling (f x) on each item."
-  (let [result []]
-    (each [_ x (ipairs xs)]
-      (table.insert result (f x)))
-    result))
+  (map-indexed
+    (fn [_ x]
+      (f x))))
 
 (fn reduce [f init xs]
   "Reduce xs into a result by passing each subsequent value into the fn with
@@ -109,6 +115,7 @@
  :inc inc
  :dec dec
  :filter filter
+ :map-indexed map-indexed
  :map map
  :run! run!
  :reduce reduce
