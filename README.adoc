@@ -2,6 +2,10 @@
 
 == Sweeter Neovim with Fennel
 
+____
+Read my post, https://oli.me.uk/neovim-configuration-and-plugins-in-fennel-lisp/[Neovim configuration and plugins in Fennel (Lisp)], to get some more background on Aniseed.
+____
+
 Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] compile and execute it via Lua. Configure and control your Neovim through the wonders of Lisp!
 
 The project started as an experiment to see if I could replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
