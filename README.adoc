@@ -6,6 +6,8 @@ Write https://fennel-lang.org/[Fennel] code and have https://neovim.io/[Neovim] 
 
 The project started as an experiment to see if I could replace my Neovim configuration in my https://github.com/Olical/dotfiles[dotfiles] as well as parts of https://github.com/Olical/conjure[Conjure] with Fennel.
 
+If you're interested in Aniseed, you may find https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] really useful too! It compiles and executes `.lnvim.fnl` files from your current working directory and above, allowing you to write machine or project local configuration in Fennel extremely easily. It also acts as a good example of how you can use Aniseed to develop your own plugins.
+
 == Installation
 
 Use your favourite plugin manager, I highly recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
