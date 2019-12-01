@@ -15,11 +15,11 @@
   "Compile the source file into the destination file if the source file was
   modified more recently. Will create any required ancestor directories for the
   destination file to exist."
-  (when (or (and opts opts.force)
+  (when (or (and (core.table? opts) (. opts :force))
             (> (nvim.fn.getftime src) (nvim.fn.getftime dest)))
     (let [content (core.slurp src)]
       (match (str content {:filename src})
-        (false err) (io.stderr.write err)
+        (false err) (nvim.err_writeln err)
         (true result) (do
                         (fs.ensure-ancestor-dirs dest)
                         (core.spit dest result))))))

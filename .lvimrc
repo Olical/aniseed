@@ -1,3 +1,0 @@
-let &runtimepath = &runtimepath.",".expand("<sfile>:p:h").",".expand("<sfile>:p:h")."/test"
-lua require("aniseed.mapping").init()
-AniseedEvalFile test/fnl/mappings.fnl

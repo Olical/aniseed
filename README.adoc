@@ -212,8 +212,6 @@ There's a few submodules which map to some symbolic links in the `lua/aniseed` d
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!
 
-If you have https://github.com/embear/vim-localvimrc[vim-localvimrc] installed you'll have access to the mappings mentioned above (check out `.lvimrc`). By using these you can tweak Aniseed's source then try your changes out without restarting Neovim.
-
 You can use `make test` to ensure the Fennel files in the `test` directory can be compiled and executed without error. It's a _very_ light test that won't catch much but it's better than nothing as a high level smoke test.
 
 == Unlicenced

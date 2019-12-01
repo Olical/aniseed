@@ -9,13 +9,13 @@ local function str(content, opts)
   return xpcall(_0_, fennel.traceback)
 end
 local function file(src, dest, opts)
-  if ((opts and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
+  if ((core["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
     local content = core.slurp(src)
     do
       local _0_0, _1_0 = str(content, {filename = src})
       if ((_0_0 == false) and (nil ~= _1_0)) then
         local err = _1_0
-        return io.stderr.write(err)
+        return nvim.err_writeln(err)
       elseif ((_0_0 == true) and (nil ~= _1_0)) then
         local result = _1_0
         do
