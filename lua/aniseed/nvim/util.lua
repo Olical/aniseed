@@ -4,8 +4,8 @@ local function normal(keys)
 end
 local function fn_bridge(viml_name, module, lua_name, opts)
   local _0_ = (opts or {})
-  local range = _0_["range"]
   local _return = _0_["return"]
+  local range = _0_["range"]
   local function _1_()
     if range then
       return " range"
