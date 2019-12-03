@@ -1,178 +1,195 @@
-;; A pretty-printer that outputs tables in Fennel syntax.
-;; Loosely based on inspect.lua: http://github.com/kikito/inspect.lua
-
-(fn view-quote [str] (.. "\"" (: str :gsub "\"" "\\\"") "\""))
-
-(local short-control-char-escapes
-       {"\a" "\\a" "\b" "\\b" "\f" "\\f" "\n" "\\n"
-        "\r" "\\r" "\t" "\\t" "\v" "\\v"})
-
-(local long-control-char-escapes
-       (let [long {}]
-         (for [i 0 31]
-           (let [ch (string.char i)]
-             (when (not (. short-control-char-escapes ch))
-               (tset short-control-char-escapes ch (.. "\\" i))
-               (tset long ch (: "\\%03d" :format i)))))
-         long))
-
-(fn escape [str]
-  (let [str (: str :gsub "\\" "\\\\")
-        str (: str :gsub "(%c)%f[0-9]" long-control-char-escapes)]
-    (: str :gsub "%c" short-control-char-escapes)))
-
-(fn sequence-key? [k len]
-  (and (= (type k) "number")
-       (<= 1 k)
-       (<= k len)
-       (= (math.floor k) k)))
-
-(local type-order {:number 1 :boolean 2 :string 3 :table 4
-                   :function 5 :userdata 6 :thread 7})
-
-(fn sort-keys [a b]
-  (let [ta (type a) tb (type b)]
-    (if (and (= ta tb) (not= ta "boolean")
-             (or (= ta "string") (= ta "number")))
-        (< a b)
-        (let [dta (. type-order a)
-              dtb (. type-order b)]
-          (if (and dta dtb)
-              (< dta dtb)
-              dta true
-              dtb false
-              :else (< ta tb))))))
-
-(fn get-sequence-length [t]
-  (var len 1)
-  (each [i (ipairs t)] (set len i))
-  len)
-
-(fn get-nonsequential-keys [t]
-  (let [keys {}
-        sequence-length (get-sequence-length t)]
-    (each [k (pairs t)]
-      (when (not (sequence-key? k sequence-length))
-        (table.insert keys k)))
-    (table.sort keys sort-keys)
-    (values keys sequence-length)))
-
-(fn count-table-appearances [t appearances]
-  (if (= (type t) "table")
-      (when (not (. appearances t))
-        (tset appearances t 1)
-        (each [k v (pairs t)]
-          (count-table-appearances k appearances)
-          (count-table-appearances v appearances)))
-      (when (and t (= t t)) ; no nans please
-        (tset appearances t (+ (or (. appearances t) 0) 1))))
-  appearances)
-
-
-
-(var put-value nil) ; mutual recursion going on; defined below
-
-(fn puts [self ...]
-  (each [_ v (ipairs [...])]
-    (table.insert self.buffer v)))
-
-(fn tabify [self] (puts self "\n" (: self.indent :rep self.level)))
-
-(fn already-visited? [self v] (not= (. self.ids v) nil))
-
-(fn get-id [self v]
-  (var id (. self.ids v))
-  (when (not id)
-    (let [tv (type v)]
-      (set id (+ (or (. self.max-ids tv) 0) 1))
-      (tset self.max-ids tv id)
-      (tset self.ids v id)))
-  (tostring id))
-
-(fn put-sequential-table [self t len]
-  (puts self "[")
-  (set self.level (+ self.level 1))
-  (for [i 1 len]
-    (puts self " ")
-    (put-value self (. t i)))
-  (set self.level (- self.level 1))
-  (puts self " ]"))
-
-(fn put-key [self k]
-  (if (and (= (type k) "string")
-           (: k :find "^[-%w?\\^_!$%&*+./@:|<=>]+$"))
-      (puts self ":" k)
-      (put-value self k)))
-
-(fn put-kv-table [self t ordered-keys]
-  (puts self "{")
-  (set self.level (+ self.level 1))
-  ;; first, output sorted nonsequential keys
-  (each [_ k (ipairs ordered-keys)]
-    (tabify self)
-    (put-key self k)
-    (puts self " ")
-    (put-value self (. t k)))
-  ;; next, output any sequential keys
-  (each [i v (ipairs t)]
-    (tabify self)
-    (put-key self i)
-    (puts self " ")
-    (put-value self v))
-  (set self.level (- self.level 1))
-  (tabify self)
-  (puts self "}"))
-
-(fn put-table [self t]
-  (if (and (already-visited? self t) self.detect-cycles?)
-      (puts self "#<table " (get-id self t) ">")
-      (>= self.level self.depth)
-      (puts self "{...}")
-      :else
-      (let [(non-seq-keys len) (get-nonsequential-keys t)
-            id (get-id self t)]
-        ;; fancy metatable stuff can result in self.appearances not including a
-        ;; table, so if it's not found, assume we haven't seen it; we can't do
-        ;; cycle detection in that case.
-        (if (and (< 1 (or (. self.appearances t) 0)) self.detect-cycles?)
-            (puts self "#<table" id ">")
-            (and (= (length non-seq-keys) 0) (= (length t) 0))
-            (puts self "{}")
-            (= (length non-seq-keys) 0)
-            (put-sequential-table self t len)
-            :else
-            (put-kv-table self t non-seq-keys)))))
-
-(set put-value (fn [self v]
-                 (let [tv (type v)]
-                   (if (= tv "string")
-                       (puts self (view-quote (escape v)))
-                       (or (= tv "number") (= tv "boolean") (= tv "nil"))
-                       (puts self (tostring v))
-                       (= tv "table")
-                       (put-table self v)
-                       :else
-                       (puts self "#<" (tostring v) ">")))))
-
-
-
-(fn one-line [str]
-  ;; save return value as local to ignore gsub's extra return value
-  (let [ret (-> str
-                (: :gsub "\n" " ")
-                (: :gsub "%[ " "[") (: :gsub " %]" "]")
-                (: :gsub "%{ " "{") (: :gsub " %}" "}")
-                (: :gsub "%( " "(") (: :gsub " %)" ")"))]
-    ret))
-
-(fn fennelview [x options]
-  "Return a string representation of x."
-  (let [options (or options {})
-        inspector {:appearances (count-table-appearances x {})
-                   :depth (or options.depth 128)
-                   :level 0 :buffer {} :ids {} :max-ids {}
-                   :indent (or options.indent (if options.one-line "" "  "))
-                   :detect-cycles? (not (= false options.detect-cycles?))}]
-    (put-value inspector x)
-    (let [str (table.concat inspector.buffer)]
-      (if options.one-line (one-line str) str))))
+local function view_quote(str)
+  return ("\"" .. str:gsub("\"", "\\\"") .. "\"")
+end
+local short_control_char_escapes = {["\11"] = "\\v", ["\12"] = "\\f", ["\13"] = "\\r", ["\7"] = "\\a", ["\8"] = "\\b", ["\9"] = "\\t", ["\n"] = "\\n"}
+local long_control_char_escapes = nil
+do
+  local long = {}
+  for i = 0, 31 do
+    local ch = string.char(i)
+    if not short_control_char_escapes[ch] then
+      short_control_char_escapes[ch] = ("\\" .. i)
+      long[ch] = ("\\%03d"):format(i)
+    end
+  end
+  long_control_char_escapes = long
+end
+local function escape(str)
+  local str = str:gsub("\\", "\\\\")
+  local str = str:gsub("(%c)%f[0-9]", long_control_char_escapes)
+  return str:gsub("%c", short_control_char_escapes)
+end
+local function sequence_key_3f(k, len)
+  return ((type(k) == "number") and (1 <= k) and (k <= len) and (math.floor(k) == k))
+end
+local type_order = {["function"] = 5, boolean = 2, number = 1, string = 3, table = 4, thread = 7, userdata = 6}
+local function sort_keys(a, b)
+  local ta = type(a)
+  local tb = type(b)
+  if ((ta == tb) and (ta ~= "boolean") and ((ta == "string") or (ta == "number"))) then
+    return (a < b)
+  else
+    local dta = type_order[a]
+    local dtb = type_order[b]
+    if (dta and dtb) then
+      return (dta < dtb)
+    elseif dta then
+      return true
+    elseif dtb then
+      return false
+    elseif "else" then
+      return (ta < tb)
+    end
+  end
+end
+local function get_sequence_length(t)
+  local len = 1
+  for i in ipairs(t) do
+    len = i
+  end
+  return len
+end
+local function get_nonsequential_keys(t)
+  local keys = {}
+  local sequence_length = get_sequence_length(t)
+  for k in pairs(t) do
+    if not sequence_key_3f(k, sequence_length) then
+      table.insert(keys, k)
+    end
+  end
+  table.sort(keys, sort_keys)
+  return keys, sequence_length
+end
+local function count_table_appearances(t, appearances)
+  if (type(t) == "table") then
+    if not appearances[t] then
+      appearances[t] = 1
+      for k, v in pairs(t) do
+        count_table_appearances(k, appearances)
+        count_table_appearances(v, appearances)
+      end
+    end
+  else
+    if (t and (t == t)) then
+      appearances[t] = ((appearances[t] or 0) + 1)
+    end
+  end
+  return appearances
+end
+local put_value = nil
+local function puts(self, ...)
+  for _, v in ipairs({...}) do
+    table.insert(self.buffer, v)
+  end
+  return nil
+end
+local function tabify(self)
+  return puts(self, "\n", (self.indent):rep(self.level))
+end
+local function already_visited_3f(self, v)
+  return (self.ids[v] ~= nil)
+end
+local function get_id(self, v)
+  local id = self.ids[v]
+  if not id then
+    local tv = type(v)
+    id = ((self["max-ids"][tv] or 0) + 1)
+    self["max-ids"][tv] = id
+    self.ids[v] = id
+  end
+  return tostring(id)
+end
+local function put_sequential_table(self, t, len)
+  puts(self, "[")
+  self.level = (self.level + 1)
+  for i = 1, len do
+    puts(self, " ")
+    put_value(self, t[i])
+  end
+  self.level = (self.level - 1)
+  return puts(self, " ]")
+end
+local function put_key(self, k)
+  if ((type(k) == "string") and k:find("^[-%w?\\^_!$%&*+./@:|<=>]+$")) then
+    return puts(self, ":", k)
+  else
+    return put_value(self, k)
+  end
+end
+local function put_kv_table(self, t, ordered_keys)
+  puts(self, "{")
+  self.level = (self.level + 1)
+  for _, k in ipairs(ordered_keys) do
+    tabify(self)
+    put_key(self, k)
+    puts(self, " ")
+    put_value(self, t[k])
+  end
+  for i, v in ipairs(t) do
+    tabify(self)
+    put_key(self, i)
+    puts(self, " ")
+    put_value(self, v)
+  end
+  self.level = (self.level - 1)
+  tabify(self)
+  return puts(self, "}")
+end
+local function put_table(self, t)
+  if (already_visited_3f(self, t) and self["detect-cycles?"]) then
+    return puts(self, "#<table ", get_id(self, t), ">")
+  elseif (self.level >= self.depth) then
+    return puts(self, "{...}")
+  elseif "else" then
+    local non_seq_keys, len = get_nonsequential_keys(t)
+    local id = get_id(self, t)
+    if ((1 < (self.appearances[t] or 0)) and self["detect-cycles?"]) then
+      return puts(self, "#<table", id, ">")
+    elseif ((#non_seq_keys == 0) and (#t == 0)) then
+      return puts(self, "{}")
+    elseif (#non_seq_keys == 0) then
+      return put_sequential_table(self, t, len)
+    elseif "else" then
+      return put_kv_table(self, t, non_seq_keys)
+    end
+  end
+end
+local function _0_(self, v)
+  local tv = type(v)
+  if (tv == "string") then
+    return puts(self, view_quote(escape(v)))
+  elseif ((tv == "number") or (tv == "boolean") or (tv == "nil")) then
+    return puts(self, tostring(v))
+  elseif (tv == "table") then
+    return put_table(self, v)
+  elseif "else" then
+    return puts(self, "#<", tostring(v), ">")
+  end
+end
+put_value = _0_
+local function one_line(str)
+  local ret = str:gsub("\n", " "):gsub("%[ ", "["):gsub(" %]", "]"):gsub("%{ ", "{"):gsub(" %}", "}"):gsub("%( ", "("):gsub(" %)", ")")
+  return ret
+end
+local function fennelview(x, options)
+  local options = (options or {})
+  local inspector = inspector
+  local function _1_()
+    if options["one-line"] then
+      return ""
+    else
+      return "  "
+    end
+  end
+  inspector = {["detect-cycles?"] = not (false == options["detect-cycles?"]), ["max-ids"] = {}, appearances = count_table_appearances(x, {}), buffer = {}, depth = (options.depth or 128), ids = {}, indent = (options.indent or _1_()), level = 0}
+  put_value(inspector, x)
+  do
+    local str = table.concat(inspector.buffer)
+    if options["one-line"] then
+      return one_line(str)
+    else
+      return str
+    end
+  end
+end
+return fennelview

@@ -9,7 +9,7 @@ compile: deps
 		deps/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	cp deps/Fennel/fennel.lua lua/aniseed/fennel.lua
-	cp deps/Fennel/fennelview.fnl lua/aniseed/view.lua
+	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/nvim.lua
 
 deps:
