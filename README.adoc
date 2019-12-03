@@ -20,7 +20,7 @@ Pin the plugin to a tag then subscribe to new releases through GitHub. I'd hate 
 
 [source,viml]
 ----
-Plug 'Olical/aniseed', { 'tag': 'v1.1.0' }
+Plug 'Olical/aniseed', { 'tag': 'v1.2.0' }
 ----
 
 == Compiling ahead of time
@@ -202,7 +202,7 @@ If you require more and you think the community would benefit from more ported C
 
 === Bundled libraries
 
-There's a few projects in `deps` (when you run `make compile` while working on Aniseed itself) which have some files copied into the `lua/aniseed` directory, they're extremely useful, Aniseed relies on them internally but you also have access to them.
+There's a few dependencies which have some files copied into the `lua/aniseed` directory, they're extremely useful, Aniseed relies on them internally but you also have access to them.
 
  * `aniseed.fennel` - https://fennel-lang.org/[Fennel] itself, the entire compiler.
  * `aniseed.view` - the view function from https://fennel-lang.org/[Fennel], I'd recommend accessing it through `aniseed.core` and the `pr` or `pr-str` functions though.
