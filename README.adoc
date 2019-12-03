@@ -202,7 +202,7 @@ If you require more and you think the community would benefit from more ported C
 
 === Bundled libraries
 
-There's a few submodules which map to some symbolic links in the `lua/aniseed` directory, they're extremely useful, Aniseed relies on them internally but you also have access to them.
+There's a few projects in `deps` (when you run `make compile` while working on Aniseed itself) which have some files copied into the `lua/aniseed` directory, they're extremely useful, Aniseed relies on them internally but you also have access to them.
 
  * `aniseed.fennel` - https://fennel-lang.org/[Fennel] itself, the entire compiler.
  * `aniseed.view` - the view function from https://fennel-lang.org/[Fennel], I'd recommend accessing it through `aniseed.core` and the `pr` or `pr-str` functions though.
@@ -215,6 +215,14 @@ Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read 
 You can use `make test` to ensure the Fennel files in the `test` directory can be compiled and executed without error. It's a _very_ light test that won't catch much but it's better than nothing as a high level smoke test.
 
 == Unlicenced
+
+The following files are excluded from my license and ownership:
+
+ * `lua/aniseed/fennel.lua`
+ * `lua/aniseed/view.lua`
+ * `lua/aniseed/nvim.lua`
+
+These files come from https://fennel-lang.org/[Fennel] and https://github.com/norcalli/nvim.lua[nvim.lua], *I did not write them*, all other files are from me and unlicenced. The aforementioned files should be considered under their respective project licences. They are copied into this repo to allow the plugin to work with systems that don't support symlinks correctly.
 
 Find the full http://unlicense.org/[unlicense] in the `UNLICENSE` file, but here's a snippet.
 
