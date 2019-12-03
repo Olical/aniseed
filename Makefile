@@ -17,7 +17,7 @@ deps:
 	if [ ! -d "deps/Fennel" ]; then git clone https://github.com/bakpakin/Fennel.git deps/Fennel; fi
 	cd deps/Fennel && git checkout 0.3.0
 	if [ ! -d "deps/nvim.lua" ]; then git clone https://github.com/norcalli/nvim.lua.git deps/nvim.lua; fi
-	cd deps/nvim.lua && git checkout eef6138d13629643577aa4c56f3151247b9fe9bb
+	cd deps/nvim.lua && git checkout ceb76105a8d715eec898c692ba41c2d8dbdc6dbd
 
 test: compile
 	rm -rf test/lua
