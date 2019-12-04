@@ -19,7 +19,7 @@ local function file(src, dest, opts)
       elseif ((_0_0 == true) and (nil ~= _1_0)) then
         local result = _1_0
         do
-          fs["ensure-ancestor-dirs"](dest)
+          fs.mkdirp(fs.basename(dest))
           return core.spit(dest, result)
         end
       end

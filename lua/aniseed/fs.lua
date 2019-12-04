@@ -1,6 +1,8 @@
 local nvim = require("aniseed.nvim")
-local function ensure_ancestor_dirs(path)
-  local parent = nvim.fn.fnamemodify(path, ":h")
-  return nvim.fn.mkdir(parent, "p")
+local function basename(path)
+  return nvim.fn.fnamemodify(path, ":h")
 end
-return {["aniseed/module"] = "aniseed.fs", ["ensure-ancestor-dirs"] = ensure_ancestor_dirs}
+local function mkdirp(dir)
+  return nvim.fn.mkdir(dir, "p")
+end
+return {["aniseed/module"] = "aniseed.fs", basename = basename, mkdirp = mkdirp}

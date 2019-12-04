@@ -7,12 +7,16 @@
 (fn handle-result [x]
   (when (and (core.table? x)
              (. x :aniseed/module))
-    (tset package.loaded (. x :aniseed/module)
-          x))
+    (let [module (. x :aniseed/module)]
+      (when (= nil (. package.loaded module))
+        (tset package.loaded module {}))
+
+      (each [k v (pairs x)]
+        (tset (. package.loaded module) k v)))
 
   (vim.schedule
     (fn []
-      (core.pr x))))
+      (core.pr x)))))
 
 (fn selection [type ...]
   (let [sel-backup nvim.o.selection

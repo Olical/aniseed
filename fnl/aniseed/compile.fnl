@@ -21,7 +21,7 @@
       (match (str content {:filename src})
         (false err) (nvim.err_writeln err)
         (true result) (do
-                        (fs.ensure-ancestor-dirs dest)
+                        (-> dest fs.basename fs.mkdirp)
                         (core.spit dest result))))))
 
 (fn glob [src-expr src-dir dest-dir opts]

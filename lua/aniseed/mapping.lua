@@ -5,12 +5,20 @@ local nu = require("aniseed.nvim.util")
 local fennel = require("aniseed.fennel")
 local function handle_result(x)
   if (core["table?"](x) and x["aniseed/module"]) then
-    package.loaded[x["aniseed/module"]] = x
+    do
+      local module = x["aniseed/module"]
+      if (nil == package.loaded[module]) then
+        package.loaded[module] = {}
+      end
+      for k, v in pairs(x) do
+        package.loaded[module][k] = v
+      end
+    end
+    local function _0_()
+      return core.pr(x)
+    end
+    return vim.schedule(_0_)
   end
-  local function _1_()
-    return core.pr(x)
-  end
-  return vim.schedule(_1_)
 end
 local function selection(type, ...)
   local sel_backup = nvim.o.selection
