@@ -118,24 +118,33 @@
 (fn pr [...]
   (print (pr-str ...)))
 
-{:aniseed/module :aniseed.core
- :first first
- :second second
- :string? string?
- :nil? nil?
- :table? table?
- :inc inc
- :dec dec
- :filter filter
- :map map
- :identity identity
- :keys keys
- :vals vals
- :run! run!
- :reduce reduce
- :some some
- :concat concat
- :slurp slurp
- :spit spit
- :pr-str pr-str
- :pr pr}
+(fn module [name bindings]
+  (setmetatable
+    bindings
+    {:aniseed/module name
+     :aniseed/env (getfenv)})
+  bindings)
+
+(module
+  :aniseed.core
+  {:first first
+   :second second
+   :string? string?
+   :nil? nil?
+   :table? table?
+   :inc inc
+   :dec dec
+   :filter filter
+   :map map
+   :identity identity
+   :keys keys
+   :vals vals
+   :run! run!
+   :reduce reduce
+   :some some
+   :concat concat
+   :slurp slurp
+   :spit spit
+   :pr-str pr-str
+   :pr pr
+   :module module})

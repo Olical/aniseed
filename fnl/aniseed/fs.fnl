@@ -1,3 +1,4 @@
+(local core (require :aniseed.core))
 (local nvim (require :aniseed.nvim))
 
 (fn basename [path]
@@ -6,6 +7,7 @@
 (fn mkdirp [dir]
   (nvim.fn.mkdir dir "p"))
 
-{:aniseed/module :aniseed.fs
- :basename basename
- :mkdirp mkdirp}
+(core.module
+  :aniseed.fs
+  {:basename basename
+   :mkdirp mkdirp})

@@ -5,18 +5,18 @@
 (local fennel (require :aniseed.fennel))
 
 (fn handle-result [x]
-  (when (and (core.table? x)
-             (. x :aniseed/module))
-    (let [module (. x :aniseed/module)]
+  (let [meta (and (core.table? x) (getmetatable x))
+        module (and meta (. meta :aniseed/module))]
+    (when module
       (when (= nil (. package.loaded module))
         (tset package.loaded module {}))
 
       (each [k v (pairs x)]
-        (tset (. package.loaded module) k v)))
+        (tset (. package.loaded module) k v))))
 
   (vim.schedule
     (fn []
-      (core.pr x)))))
+      (core.pr x))))
 
 (fn selection [type ...]
   (let [sel-backup nvim.o.selection
@@ -92,10 +92,11 @@
     {:noremap true
      :silent true}))
 
-{:aniseed/module :aniseed.mapping
- :eval eval
- :selection selection
- :eval-selection eval-selection
- :eval-range eval-range
- :eval-file eval-file
- :init init}
+(core.module
+  :aniseed.mapping
+  {:eval eval
+   :selection selection
+   :eval-selection eval-selection
+   :eval-range eval-range
+   :eval-file eval-file
+   :init init})

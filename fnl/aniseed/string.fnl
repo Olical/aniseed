@@ -17,10 +17,11 @@
            (.. result
                (if
                  (core.string? x) x
-                 (nil? x) ""
+                 (core.nil? x) ""
                  (core.pr-str x)))))
 
     result))
 
-{:aniseed/module :aniseed.string
- :join join}
+(core.module
+  :aniseed.string
+  {:join join})
