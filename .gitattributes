@@ -1,1 +1,5 @@
 *.fnl linguist-language=Clojure
+lua/** linguist-generated
+lua/aniseed/fennel.lua linguist-vendored
+lua/aniseed/view.lua linguist-vendored
+lua/aniseed/nvim.lua linguist-vendored
