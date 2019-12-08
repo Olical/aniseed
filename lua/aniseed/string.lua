@@ -16,7 +16,7 @@ local function join(...)
     local function _2_(...)
       if core["string?"](x) then
         return x
-      elseif __fnl_global__nil_3f(x) then
+      elseif core["nil?"](x) then
         return ""
       else
         return core["pr-str"](x)

@@ -158,8 +158,6 @@ Given a simple Fennel program and the mappings I described above, we could evalu
 
 Sadly we can't evaluate the `add` function and then the call to it like we would in https://clojure.org/[Clojure] with https://github.com/Olical/conjure[Conjure], that would require a concept of namespaces to give the evaluation some context.
 
-I actually considered bundling my own namespace macro system in with Aniseed to allow this, I may well still do that some day if I can work out various issues with the concept.
-
 The last line in the file defines the return value for the module. Modules, by convention, return a table of functions to expose, you could now call `add` from other Fennel or Lua (they're the same really) modules by requiring your file.
 
 == Extras
@@ -168,7 +166,7 @@ The last line in the file defines the return value for the module. Modules, by c
 
 Lua may not have namespaces, but it's module system will be enough for most purposes. One annoying thing about the system is that when you require a module it gets cached in a table. Subsequent requires return that cached value, not your new changes to the file.
 
-If you would like your module to be redefined interactively while you work on it, simply put an `:aniseed/module` key in the table returned from your module. Aniseed will update your modules reference in the table for the name you give it.
+If you would like your module to be updated interactively while you work on it, simply wrap the returned table in a call to `module` from `:aniseed.core`. Aniseed will now update the module globally when you load the entire file or buffer.
 
 For example, if we had the `add` module from above which we wished to change and reload without restarting Neovim, we could add the following to it.
 
@@ -184,13 +182,16 @@ For example, if we had the `add` module from above which we wished to change and
 ;; There's a pr-str too!
 (core.pr (add 10 20))
 
-{:aniseed/module :add
- :add add}
+(core.module
+  :add
+  {:add add})
 ----
 
-Now when you evaluate the file the global `add` module will be updated with your changes as you see them in your buffer. Remember to then go re-evaluate any other modules that require this one, they'll be holding the _old_ version of the module in their local variables.
+Now when you evaluate the file the global `add` module will be updated with your changes as you see them in your buffer.
 
-This is another thing I might be able to improve with a hypothetical namespace system akin to Clojure's.
+The locals at the time of the module definition are also captured by `core.module`. When you evaluate a form in your module it'll have access to all of the previously defined locals, this allows you to call internal module functions without exposing the globally! In practice, this means we can evaluate the `(core.pr (add 10 20))` line on it's own and it'll know to call the `add` function which is only visible as a local at that time as well as have access to the `core` require.
+
+Be careful though, to redefine one of those locals you'll have to evaluate the entire file again, recapturing the locals at the point of entire module evaluation. Simply evaluating a function hidden within a module won't capture it for future evaluations or expose it to the world.
 
 === Clojure inspired utility functions
 

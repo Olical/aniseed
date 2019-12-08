@@ -7,7 +7,6 @@
 (fn mkdirp [dir]
   (nvim.fn.mkdir dir "p"))
 
-(core.module
-  :aniseed.fs
-  {:basename basename
-   :mkdirp mkdirp})
+{:aniseed/module :aniseed.fs
+ :basename basename
+ :mkdirp mkdirp}

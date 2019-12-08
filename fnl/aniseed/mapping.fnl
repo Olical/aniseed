@@ -5,8 +5,7 @@
 (local fennel (require :aniseed.fennel))
 
 (fn handle-result [x]
-  (let [meta (and (core.table? x) (getmetatable x))
-        module (and meta (. meta :aniseed/module))]
+  (let [module (and (core.table? x) (. x :aniseed/module))]
     (when module
       (when (= nil (. package.loaded module))
         (tset package.loaded module {}))
@@ -37,7 +36,8 @@
       selection)))
 
 (fn eval [code]
-  (handle-result (fennel.eval code)))
+  (handle-result
+    (fennel.eval code opts)))
 
 (fn eval-selection [...]
   (eval (selection ...)))
@@ -46,7 +46,7 @@
   (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
 
 (fn eval-file [path]
-  (handle-result (fennel.dofile path)))
+  (handle-result (fennel.dofile path opts)))
 
 (fn init []
   (nu.fn-bridge
@@ -92,11 +92,10 @@
     {:noremap true
      :silent true}))
 
-(core.module
-  :aniseed.mapping
-  {:eval eval
-   :selection selection
-   :eval-selection eval-selection
-   :eval-range eval-range
-   :eval-file eval-file
-   :init init})
+{:aniseed/module :aniseed.mapping
+ :eval eval
+ :selection selection
+ :eval-selection eval-selection
+ :eval-range eval-range
+ :eval-file eval-file
+ :init init}

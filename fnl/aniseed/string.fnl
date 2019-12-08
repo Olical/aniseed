@@ -22,6 +22,5 @@
 
     result))
 
-(core.module
-  :aniseed.string
-  {:join join})
+{:aniseed/module :aniseed.string
+ :join join}

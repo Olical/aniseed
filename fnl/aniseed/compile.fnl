@@ -38,8 +38,7 @@
               ".fnl$" ".lua")
             opts))))
 
-(core.module
-  :aniseed.compile
-  {:glob glob
-   :file file
-   :str str})
+{:aniseed/module :aniseed.compile
+ :glob glob
+ :file file
+ :str str}
