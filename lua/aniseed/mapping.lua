@@ -43,7 +43,7 @@ local function selection(type, ...)
   end
 end
 local function eval(code)
-  return handle_result(fennel.eval(code, opts))
+  return handle_result(fennel.eval(code))
 end
 local function eval_selection(...)
   return eval(selection(...))
@@ -52,7 +52,7 @@ local function eval_range(first_line, last_line)
   return eval(str.join("\n", nvim.fn.getline(first_line, last_line)))
 end
 local function eval_file(path)
-  return handle_result(fennel.dofile(path, opts))
+  return handle_result(fennel.dofile(path))
 end
 local function init()
   nu["fn-bridge"]("AniseedSelection", "aniseed.mapping", "selection")

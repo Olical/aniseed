@@ -36,8 +36,7 @@
       selection)))
 
 (fn eval [code]
-  (handle-result
-    (fennel.eval code opts)))
+  (handle-result (fennel.eval code)))
 
 (fn eval-selection [...]
   (eval (selection ...)))
@@ -46,7 +45,7 @@
   (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
 
 (fn eval-file [path]
-  (handle-result (fennel.dofile path opts)))
+  (handle-result (fennel.dofile path)))
 
 (fn init []
   (nu.fn-bridge
