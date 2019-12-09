@@ -3,6 +3,5 @@
 (fn print-msg [msg]
   (print (.. "Message: " msg)))
 
-(core.module
-  :bar.baz
-  {:print-msg print-msg})
+{:aniseed/module :bar.baz
+ :print-msg print-msg}
