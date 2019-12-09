@@ -1,4 +1,4 @@
-*.fnl linguist-language=Clojure
+*.fnl linguist-language=Lisp
 lua/* linguist-generated
 lua/aniseed/fennel.lua linguist-vendored
 lua/aniseed/view.lua linguist-vendored
