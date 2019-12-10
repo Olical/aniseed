@@ -16,7 +16,7 @@ test: compile
 	rm -rf test/lua
 	nvim -u NONE \
 		-c "let &runtimepath = expand('<sfile>:p:h').','.expand('<sfile>:p:h').'/test,'.&runtimepath" \
-		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true}) require('aniseed.mapping').init() require('foo')" \
+		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true}) require('aniseed.mapping').init() require('foo') require('aniseed.test')['run-all']()" \
 		test/fnl/foo.fnl
 
 deps:

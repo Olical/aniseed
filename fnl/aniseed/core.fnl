@@ -25,9 +25,10 @@
   "Decrement n by 1."
   (- n 1))
 
-(fn update [x k f]
-  "Swap the value under key `k` in table `x` using function `f`."
-  (tset x k (f (. x k))))
+(fn update [tbl k f]
+  "Swap the value under key `k` in table `tbl` using function `f`."
+  (tset tbl k (f (. tbl k)))
+  tbl)
 
 (fn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
@@ -41,7 +42,12 @@
   "Map xs to a new sequential table by calling (f x) on each item."
   (let [result []]
     (each [_ x (ipairs xs)]
-      (table.insert result (f x)))
+      (let [mapped (f x)]
+        (table.insert
+          result
+          (if (= 0 (select "#" mapped))
+            nil
+            mapped))))
     result))
 
 (fn identity [x]
@@ -81,7 +87,6 @@
       (set n (inc n))))
   result)
 
-;; TODO Implement most loops in terms of this.
 (fn run! [f xs]
   "Execute the function (for side effects) for every xs."
   (each [_ x (ipairs xs)]

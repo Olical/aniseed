@@ -24,9 +24,9 @@ end
 local function dec(n)
   return (n - 1)
 end
-local function update(x, k, f)
-  x[k] = f(x[k])
-  return nil
+local function update(tbl, k, f)
+  tbl[k] = f(tbl[k])
+  return tbl
 end
 local function filter(f, xs)
   local result = {}
@@ -40,7 +40,15 @@ end
 local function map(f, xs)
   local result = {}
   for _, x in ipairs(xs) do
-    table.insert(result, f(x))
+    local mapped = f(x)
+    local function _0_()
+      if (0 == select("#", mapped)) then
+        return nil
+      else
+        return mapped
+      end
+    end
+    table.insert(result, _0_())
   end
   return result
 end
