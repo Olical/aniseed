@@ -25,6 +25,10 @@
   "Decrement n by 1."
   (- n 1))
 
+(fn update [x k f]
+  "Swap the value under key `k` in table `x` using function `f`."
+  (tset x k (f (. x k))))
+
 (fn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
@@ -126,6 +130,7 @@
  :table? table?
  :inc inc
  :dec dec
+ :update update
  :filter filter
  :map map
  :identity identity
