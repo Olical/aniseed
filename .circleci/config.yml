@@ -8,5 +8,9 @@ jobs:
       - checkout
 
       - run:
-          name: Tests
+          name: Install make
+          command: apt-get install make
+
+      - run:
+          name: Run all tests
           command: make test
