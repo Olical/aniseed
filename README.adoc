@@ -101,44 +101,35 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
 ;; We have access to https://github.com/norcalli/nvim.lua
 ;; Aniseed is really just combining cool things to be greater than the sum of it's parts.
 (local nvim (require :aniseed.nvim))
+(local mapping (require :aniseed.mapping))
 
-;; Where <localleader> is bound to comma.
-;; I'm using the colon syntax which translates to strings just to be fancy.
-;; Imagine each :keyword as "keyword".
+;; Initialise all of Aniseed's mappings.
+(mapping.init)
 
-(fn map! [mode from to suffix]
-  "Map some keys (prefixed by <localleader>) to a command."
+;; Helper function to make mapping into filetypes easier.
+(fn ft-map [ft mode from to]
+  "Map some keys (prefixed by <localleader>) to a command for a filetype."
   (nvim.ex.autocmd
-    :FileType :fennel
+    :FileType ft
     (.. mode :map) :<buffer>
     (.. :<localleader> from)
-    (.. to (or suffix ""))))
+    to))
 
-(fn plug-map! [mode from to suffix]
-  "Adds a map in terms of map! but wraps the target command in <Plug>(...)."
-  (map! mode from (.. "<Plug>(" to ")") suffix))
+;; Helper for <Plug> mappings.
+(fn plug [cmd]
+  "Wraps the given command in <Plug>(...)"
+  (.. "<Plug>(" cmd ")"))
 
+;; Define some custom mappings to Aniseed commands.
 (nvim.ex.augroup :aniseed)
 (nvim.ex.autocmd_)
-
-;; ,E<motion> - evaluate a motion.
-(plug-map! :n :E :AniseedEval)
-
-;; ,ee - evaluate the current form.
-(plug-map! :n :ee :AniseedEval :af)
-
-;; ,er - evaluate the outermost form.
-(plug-map! :n :er :AniseedEval :aF)
-
-;; ,ef - evaluate the current file from disk.
-(plug-map! :n :ef :AniseedEvalCurrentFile)
-
-;; ,eb - evaluate the buffer from Neovim.
-(map! :n :eb ":%AniseedEvalRange<cr>")
-
-;; ,ee - evaluate the current visual selection.
-(plug-map! :v :ee :AniseedEvalSelection)
-
+(ft-map :fennel :n :E (plug :AniseedEval))
+(ft-map :fennel :n :ee (.. (plug :AniseedEval) :af))
+(ft-map :fennel :n :er (.. (plug :AniseedEval) :aF))
+(ft-map :fennel :n :ef (plug :AniseedEvalCurrentFile))
+(ft-map :fennel :v :ee (plug :AniseedEvalSelection))
+(ft-map :fennel :n :eb ":%AniseedEvalRange<cr>")
+(ft-map :fennel :n :ta (plug :AniseedRunAllTests))
 (nvim.ex.augroup :END)
 ----
 
