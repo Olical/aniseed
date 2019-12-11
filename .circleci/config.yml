@@ -2,10 +2,8 @@ version: 2
 jobs:
   build:
     docker:
-      - image: debian:stretch
-
+      - image: archlinux/base
     steps:
       - checkout
-      - run: apt-get update
-      - run: apt-get --assume-yes install make neovim
-      # - run: make test
+      - run: pacman -Sy --noconfirm install make neovim
+      - run: make test
