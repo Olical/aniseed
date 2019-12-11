@@ -15,9 +15,13 @@ compile:
 test: compile
 	rm -rf test/lua
 	nvim -u NONE \
-		-c "let &runtimepath = expand('<sfile>:p:h').','.expand('<sfile>:p:h').'/test,'.&runtimepath" \
-		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true}) require('aniseed.mapping').init() require('foo') require('aniseed.test')['run-all']()" \
-		test/fnl/foo.fnl
+		-c "let &runtimepath = &runtimepath . ',' . getcwd() . ',' . getcwd() . '/test'" \
+		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true}) " \
+		-c "lua require('aniseed.test-suite').main()" \
+		test/fnl/foo.fnl; \
+		EXIT_CODE=$$?; \
+		cat test/results.txt; \
+		exit $$EXIT_CODE
 
 deps:
 	mkdir -p deps

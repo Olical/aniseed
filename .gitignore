@@ -1,2 +1,4 @@
 /test/lua/
 /deps/
+/.lnvim.lua
+/test/results.txt

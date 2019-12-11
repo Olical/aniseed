@@ -208,7 +208,7 @@ There's a few dependencies which have some files copied into the `lua/aniseed` d
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!
 
-You can use `make test` to ensure the Fennel files in the `test` directory can be compiled and executed without error. It's a _very_ light test that won't catch much but it's better than nothing as a high level smoke test.
+You can use `make test` to run Aniseed's test suite with `aniseed.test`, it should be a good way to smoke test your changes despite the tests being quite sparse.
 
 == Unlicenced
 
