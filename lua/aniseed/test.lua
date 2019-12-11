@@ -1,17 +1,17 @@
 local core = require("aniseed.core")
 local function ok_3f(_0_0)
   local _1_ = _0_0
-  local tests = _1_["tests"]
   local tests_passed = _1_["tests-passed"]
+  local tests = _1_["tests"]
   return (tests == tests_passed)
 end
 local function display_results(results, prefix)
   do
     local _1_ = results
-    local assertions = _1_["assertions"]
-    local assertions_passed = _1_["assertions-passed"]
     local tests_passed = _1_["tests-passed"]
     local tests = _1_["tests"]
+    local assertions_passed = _1_["assertions-passed"]
+    local assertions = _1_["assertions"]
     local function _2_()
       if ok_3f(results) then
         return "OK"

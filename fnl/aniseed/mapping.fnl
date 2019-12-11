@@ -77,7 +77,7 @@
     :aniseed.mapping :eval-selection)
 
   (nu.fn-bridge
-    :AniseedRunTest
+    :AniseedRunTests
     :aniseed.mapping :run-tests)
 
   (nu.fn-bridge
