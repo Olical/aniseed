@@ -6,7 +6,7 @@ compile:
 	rm -rf lua
 	for f in $(SRC_FILES); do \
 		mkdir -p lua/$$(dirname $$f); \
-		deps/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
+		luajit deps/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	cp deps/Fennel/fennel.lua lua/aniseed/fennel.lua
 	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
