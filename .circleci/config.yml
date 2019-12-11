@@ -7,6 +7,6 @@ jobs:
     steps:
       - checkout
       - run: apt-get update
-      - run: apt-get install make neovim
+      - run: apt-get install make git neovim
       - run: make deps
       - run: make test
