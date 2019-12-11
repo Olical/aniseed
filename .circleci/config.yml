@@ -7,6 +7,5 @@ jobs:
     steps:
       - checkout
       - run: apt-get update
-      - run: apt-get --assume-yes install make git neovim luajit
-      - run: make deps
-      - run: make test
+      - run: apt-get --assume-yes install make neovim
+      # - run: make test

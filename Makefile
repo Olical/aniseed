@@ -12,7 +12,7 @@ compile:
 	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/nvim.lua
 
-test: compile
+test:
 	rm -rf test/lua
 	nvim -u NONE \
 		-c "let &runtimepath = &runtimepath . ',' . getcwd() . ',' . getcwd() . '/test'" \
