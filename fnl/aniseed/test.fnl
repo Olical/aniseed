@@ -17,6 +17,7 @@
                assertions-passed "/" assertions " assertions passed.")))
   results)
 
+;; TODO Much better testing tools with descriptions etc.
 (fn run [module-name]
   (let [module (. package.loaded module-name)
         tests (and (core.table? module) (. module :aniseed/tests))]

@@ -5,6 +5,7 @@
   (nvim.ex.redir_ "> test/results.txt")
 
   (require :aniseed.core-test)
+  (require :aniseed.compile-test)
 
   (let [results (test.run-all)]
     (if (test.ok? results)
