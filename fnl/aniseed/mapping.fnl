@@ -3,8 +3,7 @@
 (local nvim (require :aniseed.nvim))
 (local nu (require :aniseed.nvim.util))
 (local fennel (require :aniseed.fennel))
-
-;; TODO Add mappings to evaluate tests.
+(local test (require :aniseed.test))
 
 (fn handle-result [x]
   (let [module (and (core.table? x) (. x :aniseed/module))]
@@ -49,6 +48,12 @@
 (fn eval-file [path]
   (handle-result (fennel.dofile path)))
 
+(fn run-tests [name]
+  (test.run name))
+
+(fn run-all-tests []
+  (test.run-all))
+
 (fn init []
   (nu.fn-bridge
     :AniseedSelection
@@ -70,6 +75,14 @@
   (nu.fn-bridge
     :AniseedEvalSelection
     :aniseed.mapping :eval-selection)
+
+  (nu.fn-bridge
+    :AniseedRunTest
+    :aniseed.mapping :run-tests)
+
+  (nu.fn-bridge
+    :AniseedRunAllTests
+    :aniseed.mapping :run-all-tests)
 
   (nvim.ex.command_ :-nargs=1 :AniseedEval "call AniseedEval(<q-args>)")
   (nvim.ex.command_ :-nargs=1 :AniseedEvalFile "call AniseedEvalFile(<q-args>)")
@@ -99,4 +112,6 @@
  :eval-selection eval-selection
  :eval-range eval-range
  :eval-file eval-file
+ :run-tests run-tests
+ :run-all-tests run-all-tests
  :init init}
