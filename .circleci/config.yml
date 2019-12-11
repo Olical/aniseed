@@ -6,11 +6,6 @@ jobs:
 
     steps:
       - checkout
-
-      - run:
-          name: Install make
-          command: apt-get install make
-
-      - run:
-          name: Run all tests
-          command: make test
+      - run: sudo apt-get update
+      - run: sudo apt-get install make
+      - run: make test
