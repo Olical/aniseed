@@ -129,7 +129,7 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
 (ft-map :fennel :n :ef (plug :AniseedEvalCurrentFile))
 (ft-map :fennel :v :ee (plug :AniseedEvalSelection))
 (ft-map :fennel :n :eb ":%AniseedEvalRange<cr>")
-(ft-map :fennel :n :ta (plug :AniseedRunAllTests))
+(ft-map :fennel :n :t ":AniseedRunAllTests<cr>")
 (nvim.ex.augroup :END)
 ----
 
