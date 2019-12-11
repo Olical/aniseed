@@ -4,6 +4,8 @@
 (local nu (require :aniseed.nvim.util))
 (local fennel (require :aniseed.fennel))
 
+;; TODO Add mappings to evaluate tests.
+
 (fn handle-result [x]
   (let [module (and (core.table? x) (. x :aniseed/module))]
     (when module
