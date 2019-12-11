@@ -87,6 +87,8 @@
   (nvim.ex.command_ :-nargs=1 :AniseedEval "call AniseedEval(<q-args>)")
   (nvim.ex.command_ :-nargs=1 :AniseedEvalFile "call AniseedEvalFile(<q-args>)")
   (nvim.ex.command_ :-range :AniseedEvalRange "<line1>,<line2>call AniseedEvalRange()")
+  (nvim.ex.command_ :-nargs=1 :AniseedRunTests "call AniseedRunTests(<q-args>)")
+  (nvim.ex.command_ :-nargs=0 :AniseedRunAllTests "call AniseedRunAllTests()")
 
   (nvim.set_keymap
     :n "<Plug>(AniseedEval)"
