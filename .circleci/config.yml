@@ -8,4 +8,5 @@ jobs:
       - checkout
       - run: apt-get update
       - run: apt-get install make
+      - run: make deps
       - run: make test
