@@ -37,14 +37,14 @@
                             (let [args [...]]
                               (var assertion-failed false)
                               (match args
-                                [x y] (when (not= x y)
+                                [e r] (when (not= e r)
                                         (set assertion-failed true)
                                         (set test-failed true)
-                                        (print (.. prefix " Expected '" (core.pr-str x) "' to equal '" (core.pr-str y) "'.")))
-                                [x] (when (not x)
+                                        (print (.. prefix " Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'.")))
+                                [r] (when (not r)
                                       (set assertion-failed true)
                                       (set test-failed true)
-                                      (print (.. prefix " Expected '" (core.pr-str x) "' to be truthy."))))
+                                      (print (.. prefix " Expected truthy result but received '" (core.pr-str r) "'."))))
                               (when (not assertion-failed)
                                 (core.update results :assertions-passed core.inc)))))))
               (false err) (do

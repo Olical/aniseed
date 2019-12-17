@@ -44,19 +44,19 @@ local function run(module_name)
                 do
                   local _5_0 = args
                   if ((type(_5_0) == "table") and (nil ~= _5_0[1]) and (nil ~= _5_0[2])) then
-                    local x = _5_0[1]
-                    local y = _5_0[2]
-                    if (x ~= y) then
+                    local e = _5_0[1]
+                    local r = _5_0[2]
+                    if (e ~= r) then
                       assertion_failed = true
                       test_failed = true
-                      print((prefix .. " Expected '" .. core["pr-str"](x) .. "' to equal '" .. core["pr-str"](y) .. "'."))
+                      print((prefix .. " Expected '" .. core["pr-str"](e) .. "' but received '" .. core["pr-str"](r) .. "'."))
                     end
                   elseif ((type(_5_0) == "table") and (nil ~= _5_0[1])) then
-                    local x = _5_0[1]
-                    if not x then
+                    local r = _5_0[1]
+                    if not r then
                       assertion_failed = true
                       test_failed = true
-                      print((prefix .. " Expected '" .. core["pr-str"](x) .. "' to be truthy."))
+                      print((prefix .. " Expected truthy result but received '" .. core["pr-str"](r) .. "'."))
                     end
                   end
                 end
