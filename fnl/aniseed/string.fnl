@@ -11,14 +11,19 @@
                    ["" (core.first args)])]
 
     (var result "")
+    (var first? true)
 
     (each [_ x (ipairs xs)]
       (set result
            (.. result
+               (if first?
+                 ""
+                 sep)
                (if
                  (core.string? x) x
                  (core.nil? x) ""
-                 (core.pr-str x)))))
+                 (core.pr-str x))))
+      (set first? false))
 
     result))
 
