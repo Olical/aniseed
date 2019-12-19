@@ -28,28 +28,31 @@
                      :assertions-passed 0}]
         (each [label f (pairs tests)]
           (var test-failed false)
+          (var description nil)
           (core.update results :tests core.inc)
-          (let [prefix (.. "[" module-name "/" label "]")]
+          (let [prefix (.. "[" module-name "/" label "]")
+                fail (fn [...]
+                       (set test-failed true)
+                       (print (.. prefix " " ...)))
+                is (fn [...]
+                     (core.update results :assertions core.inc)
+                     (let [args [...]]
+                       (var assertion-failed false)
+                       (match args
+                         [e r] (when (not= e r)
+                                 (set assertion-failed true)
+                                 (fail "Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'."))
+                         [r] (when (not r)
+                               (set assertion-failed true)
+                               (fail "Expected truthy result but received '" (core.pr-str r) "'.")))
+                       (when (not assertion-failed)
+                         (core.update results :assertions-passed core.inc))))
+                testing (fn [desc]
+                          (set description desc))]
             (match (pcall
                      (fn []
-                       (f (fn [...]
-                            (core.update results :assertions core.inc)
-                            (let [args [...]]
-                              (var assertion-failed false)
-                              (match args
-                                [e r] (when (not= e r)
-                                        (set assertion-failed true)
-                                        (set test-failed true)
-                                        (print (.. prefix " Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'.")))
-                                [r] (when (not r)
-                                      (set assertion-failed true)
-                                      (set test-failed true)
-                                      (print (.. prefix " Expected truthy result but received '" (core.pr-str r) "'."))))
-                              (when (not assertion-failed)
-                                (core.update results :assertions-passed core.inc)))))))
-              (false err) (do
-                            (set test-failed true)
-                            (print (.. prefix " Exception: " err)))))
+                       (f is)))
+              (false err) (fail "Exception: " err)))
           (when (not test-failed)
             (core.update results :tests-passed core.inc)))
         (display-results results (.. "[" module-name "]"))))))
