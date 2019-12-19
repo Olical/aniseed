@@ -135,7 +135,7 @@ Here's the mappings I use written in Fennel, feel free to take what you want or 
 
 === Example usage
 
-Given a simple Fennel program and the mappings I described above, we could evaluate the following with `,ef` or `,eb` to evaluate the file from disk or the buffer.
+Given a simple Fennel program and the mappings I described above, we could evaluate the following with `,ef` or `,eb` to evaluate the file from disk or the buffer. (my `+<localleader>+` is mapped to `+,+`, yours may differ!)
 
 [source,clojure]
 ----
