@@ -41,20 +41,18 @@
                 pass (fn []
                        (core.update results :assertions-passed core.inc)) 
 
-                ;; TODO Negated fns
-                ;; TODO pr-str comparisons (s= like serialised=?)
                 t {:= (fn [e r desc]
                         (begin)
                         (if (= e r)
                           (pass)
                           (fail desc "Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'")))
                    :pr= (fn [e r desc]
-                         (begin)
-                         (let [se (core.pr-str e)
-                               sr (core.pr-str r)]
-                           (if (= se sr)
-                             (pass)
-                             (fail desc "Expected (with pr) '" se "' but received '" sr "'"))))
+                          (begin)
+                          (let [se (core.pr-str e)
+                                sr (core.pr-str r)]
+                            (if (= se sr)
+                              (pass)
+                              (fail desc "Expected (with pr) '" se "' but received '" sr "'"))))
                    :ok? (fn [r desc]
                           (begin)
                           (if r

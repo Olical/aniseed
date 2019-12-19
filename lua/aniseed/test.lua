@@ -58,31 +58,43 @@ local function run(module_name)
         end
         pass = _3_
         local t = t
-        local function _4_(e, r, d)
+        local function _4_(e, r, desc)
           begin()
           if (e == r) then
             return pass()
           else
-            return fail(d, "Expected '", core["pr-str"](e), "' but received '", core["pr-str"](r), "'")
+            return fail(desc, "Expected '", core["pr-str"](e), "' but received '", core["pr-str"](r), "'")
           end
         end
-        local function _5_(r, d)
+        local function _5_(r, desc)
           begin()
           if r then
             return pass()
           else
-            return fail(d, "Expected truthy result but received '", core["pr-str"](r), "'")
+            return fail(desc, "Expected truthy result but received '", core["pr-str"](r), "'")
           end
         end
-        t = {["="] = _4_, ["ok?"] = _5_}
+        local function _6_(e, r, desc)
+          begin()
+          do
+            local se = core["pr-str"](e)
+            local sr = core["pr-str"](r)
+            if (se == sr) then
+              return pass()
+            else
+              return fail(desc, "Expected (with pr) '", se, "' but received '", sr, "'")
+            end
+          end
+        end
+        t = {["="] = _4_, ["ok?"] = _5_, ["pr="] = _6_}
         do
-          local _6_0, _7_0 = nil, nil
-          local function _8_()
+          local _7_0, _8_0 = nil, nil
+          local function _9_()
             return f(t)
           end
-          _6_0, _7_0 = pcall(_8_)
-          if ((_6_0 == false) and (nil ~= _7_0)) then
-            local err = _7_0
+          _7_0, _8_0 = pcall(_9_)
+          if ((_7_0 == false) and (nil ~= _8_0)) then
+            local err = _8_0
             fail("Exception: ", err)
           end
         end
