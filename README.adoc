@@ -195,6 +195,58 @@ There's a few dependencies which have some files copied into the `lua/aniseed` d
  * `aniseed.view` - the view function from https://fennel-lang.org/[Fennel], I'd recommend accessing it through `aniseed.core` and the `pr` or `pr-str` functions though.
  * `aniseed.nvim` - https://github.com/norcalli/nvim.lua[nvim.lua] is a collection of extremely helpful mappings to `vim.api.*`, I find it a lot easier to read than vanilla API access.
 
+== Testing
+
+Aniseed provides testing tools under `aniseed.test`, you can see how Aniseed executes it's own test suite (in CirclCI upon git push) in the `Makefile` under the `test` command. Check out the files in `+test/fnl/aniseed+` for further real world examples of Aniseed based testing.
+
+The core of Aniseed's own suite is `test/fnl/aniseed/test-suite.fnl`.
+
+[source,clojure]
+----
+(local nvim (require :aniseed.nvim))
+(local test (require :aniseed.test))
+
+(fn main []
+  (nvim.ex.redir_ "> test/results.txt")
+
+  (require :aniseed.core-test)
+  (require :aniseed.compile-test)
+  (require :aniseed.fs-test)
+  (require :aniseed.string-test)
+
+  (let [results (test.run-all)]
+    (if (test.ok? results)
+      (nvim.ex.q)
+      (nvim.ex.cq))))
+
+{:aniseed/module :aniseed.test-suite
+ :main main}
+----
+
+It's ensuring all output is captured in a file, loading all of the test modules and then executing them with `+(test.run-all)+` (you can use `+(test.run :my.module)+` to run the tests for a specific module).
+
+Your tests don't need to be in a specific directory like mine, they simply need to be in your module definition table under the `+:aniseed/tests+` key. Here's Aniseed's string test functions as an example. These could just as easily be in the `+aniseed.string+` module itself but I want to keep them out of the plugin's compiled output for your sake.
+
+[source,clojure]
+----
+(local str (require :aniseed.string))
+
+{:aniseed/module :aniseed.string-test
+ :aniseed/tests
+ {:join
+  (fn [t]
+    (t.= "foo, bar, baz" (str.join ", " ["foo" "bar" "baz"]))
+    (t.= "foobarbaz" (str.join ["foo" "bar" "baz"])))}}
+----
+
+So your tests are named by keys in the `+aniseed/tests+` table, your test functions are called with a `t` table that contains the following assertion functions.
+
+ * `t.ok?` checks if the result you give it is truthy.
+ * `t.=` checks if the _expected_ and _actual_ (in that order) values are the same.
+ * `t.pr=` is the same as `t.=` but will run the values through `core.pr-str`, this is handy for comparing tables.
+
+All of these functions take an optional last argument that acts as a description on failure.
+
 == Development
 
 Aniseed is written in Fennel and compiled to Lua by the `Makefile` (please read it before executing it!), the compiled files are committed to the repository. Bear this in mind when considering a contribution!
