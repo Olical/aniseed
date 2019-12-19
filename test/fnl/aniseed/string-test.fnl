@@ -3,6 +3,6 @@
 {:aniseed/module :aniseed.string-test
  :aniseed/tests
  {:join
-  (fn [is]
-    (is "foo, bar, baz" (str.join ", " ["foo" "bar" "baz"]))
-    (is "foobarbaz" (str.join ["foo" "bar" "baz"])))}}
+  (fn [t]
+    (t.= "foo, bar, baz" (str.join ", " ["foo" "bar" "baz"]))
+    (t.= "foobarbaz" (str.join ["foo" "bar" "baz"])))}}

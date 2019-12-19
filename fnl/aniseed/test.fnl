@@ -1,4 +1,5 @@
 (local core (require :aniseed.core))
+(local str (require :aniseed.string))
 
 (fn ok? [{: tests : tests-passed}]
   (= tests tests-passed))
@@ -14,10 +15,9 @@
                  "OK"
                  "FAILED")
                " " tests-passed "/" tests " tests and "
-               assertions-passed "/" assertions " assertions passed.")))
+               assertions-passed "/" assertions " assertions passed")))
   results)
 
-;; TODO Much better testing tools with descriptions etc.
 (fn run [module-name]
   (let [module (. package.loaded module-name)
         tests (and (core.table? module) (. module :aniseed/tests))]
@@ -28,30 +28,34 @@
                      :assertions-passed 0}]
         (each [label f (pairs tests)]
           (var test-failed false)
-          (var description nil)
           (core.update results :tests core.inc)
           (let [prefix (.. "[" module-name "/" label "]")
-                fail (fn [...]
+                fail (fn [desc ...]
                        (set test-failed true)
-                       (print (.. prefix " " ...)))
-                is (fn [...]
-                     (core.update results :assertions core.inc)
-                     (let [args [...]]
-                       (var assertion-failed false)
-                       (match args
-                         [e r] (when (not= e r)
-                                 (set assertion-failed true)
-                                 (fail "Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'."))
-                         [r] (when (not r)
-                               (set assertion-failed true)
-                               (fail "Expected truthy result but received '" (core.pr-str r) "'.")))
-                       (when (not assertion-failed)
-                         (core.update results :assertions-passed core.inc))))
-                testing (fn [desc]
-                          (set description desc))]
+                       (print (.. (str.join [prefix " " ...])
+                                  (if desc
+                                    (.. " (" desc ")")
+                                    ""))))
+                begin (fn []
+                        (core.update results :assertions core.inc))
+                pass (fn []
+                       (core.update results :assertions-passed core.inc)) 
+
+                ;; TODO Negated fns
+                ;; TODO pr-str comparisons (s= like serialised=?)
+                t {:= (fn [e r desc]
+                        (begin)
+                        (if (= e r)
+                          (pass)
+                          (fail desc "Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'")))
+                   :ok? (fn [r desc]
+                          (begin)
+                          (if r
+                            (pass)
+                            (fail desc "Expected truthy result but received '" (core.pr-str r) "'")))}]
             (match (pcall
                      (fn []
-                       (f is)))
+                       (f t)))
               (false err) (fail "Exception: " err)))
           (when (not test-failed)
             (core.update results :tests-passed core.inc)))

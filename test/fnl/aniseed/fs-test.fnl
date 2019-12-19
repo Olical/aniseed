@@ -3,5 +3,5 @@
 {:aniseed/module :aniseed.fs-test
  :aniseed/tests
  {:basename
-  (fn [is]
-    (is "foo" (fs.basename "foo/bar.fnl")))}}
+  (fn [t]
+    (t.= "foo" (fs.basename "foo/bar.fnl")))}}

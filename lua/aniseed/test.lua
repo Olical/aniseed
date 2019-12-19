@@ -1,4 +1,5 @@
 local core = require("aniseed.core")
+local str = require("aniseed.string")
 local function ok_3f(_0_0)
   local _1_ = _0_0
   local tests = _1_["tests"]
@@ -19,7 +20,7 @@ local function display_results(results, prefix)
         return "FAILED"
       end
     end
-    print((prefix .. " " .. _2_() .. " " .. tests_passed .. "/" .. tests .. " tests and " .. assertions_passed .. "/" .. assertions .. " assertions passed."))
+    print((prefix .. " " .. _2_() .. " " .. tests_passed .. "/" .. tests .. " tests and " .. assertions_passed .. "/" .. assertions .. " assertions passed"))
   end
   return results
 end
@@ -33,47 +34,56 @@ local function run(module_name)
       core.update(results, "tests", core.inc)
       do
         local prefix = ("[" .. module_name .. "/" .. label .. "]")
-        do
-          local _1_0, _2_0 = nil, nil
-          local function _3_()
-            local function _4_(...)
-              core.update(results, "assertions", core.inc)
-              do
-                local args = {...}
-                local assertion_failed = false
-                do
-                  local _5_0 = args
-                  if ((type(_5_0) == "table") and (nil ~= _5_0[1]) and (nil ~= _5_0[2])) then
-                    local e = _5_0[1]
-                    local r = _5_0[2]
-                    if (e ~= r) then
-                      assertion_failed = true
-                      test_failed = true
-                      print((prefix .. " Expected '" .. core["pr-str"](e) .. "' but received '" .. core["pr-str"](r) .. "'."))
-                    end
-                  elseif ((type(_5_0) == "table") and (nil ~= _5_0[1])) then
-                    local r = _5_0[1]
-                    if not r then
-                      assertion_failed = true
-                      test_failed = true
-                      print((prefix .. " Expected truthy result but received '" .. core["pr-str"](r) .. "'."))
-                    end
-                  end
-                end
-                if not assertion_failed then
-                  return core.update(results, "assertions-passed", core.inc)
-                end
-              end
+        local fail = fail
+        local function _1_(desc, ...)
+          test_failed = true
+          local function _2_(...)
+            if desc then
+              return (" (" .. desc .. ")")
+            else
+              return ""
             end
-            return f(_4_)
           end
-          _1_0, _2_0 = pcall(_3_)
-          if ((_1_0 == false) and (nil ~= _2_0)) then
-            local err = _2_0
-            do
-              test_failed = true
-              print((prefix .. " Exception: " .. err))
-            end
+          return print((str.join({prefix, " ", ...}) .. _2_(...)))
+        end
+        fail = _1_
+        local begin = begin
+        local function _2_()
+          return core.update(results, "assertions", core.inc)
+        end
+        begin = _2_
+        local pass = pass
+        local function _3_()
+          return core.update(results, "assertions-passed", core.inc)
+        end
+        pass = _3_
+        local t = t
+        local function _4_(e, r, d)
+          begin()
+          if (e == r) then
+            return pass()
+          else
+            return fail(d, "Expected '", core["pr-str"](e), "' but received '", core["pr-str"](r), "'")
+          end
+        end
+        local function _5_(r, d)
+          begin()
+          if r then
+            return pass()
+          else
+            return fail(d, "Expected truthy result but received '", core["pr-str"](r), "'")
+          end
+        end
+        t = {["="] = _4_, ["ok?"] = _5_}
+        do
+          local _6_0, _7_0 = nil, nil
+          local function _8_()
+            return f(t)
+          end
+          _6_0, _7_0 = pcall(_8_)
+          if ((_6_0 == false) and (nil ~= _7_0)) then
+            local err = _7_0
+            fail("Exception: ", err)
           end
         end
       end
