@@ -4,6 +4,10 @@
   (when xs
     (. xs 1)))
 
+(fn last [xs]
+  (when xs
+    (. xs (length xs))))
+
 (fn second [xs]
   (when xs
     (. xs 2)))
@@ -129,6 +133,7 @@
 
 {:aniseed/module :aniseed.core
  :first first
+ :last last
  :second second
  :string? string?
  :nil? nil?
