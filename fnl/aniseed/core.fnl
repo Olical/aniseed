@@ -39,24 +39,36 @@
   (tset tbl k (f (. tbl k)))
   tbl)
 
+(fn run! [f xs]
+  "Execute the function (for side effects) for every xs."
+  (when xs
+    (let [nxs (count xs)]
+      (when (> nxs 0)
+        (for [i 1 nxs]
+          (f (. xs i)))))))
+
 (fn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
-    (each [_ x (ipairs xs)]
-      (when (f x)
-        (table.insert result x)))
+    (run!
+      (fn [x]
+        (when (f x)
+          (table.insert result x)))
+      xs)
     result))
 
 (fn map [f xs]
   "Map xs to a new sequential table by calling (f x) on each item."
   (let [result []]
-    (each [_ x (ipairs xs)]
-      (let [mapped (f x)]
-        (table.insert
-          result
-          (if (= 0 (select "#" mapped))
-            nil
-            mapped))))
+    (run!
+      (fn [x]
+        (let [mapped (f x)]
+          (table.insert
+            result
+            (if (= 0 (select "#" mapped))
+              nil
+              mapped))))
+      xs)
     result))
 
 (fn identity [x]
@@ -81,8 +93,10 @@
   "Reduce xs into a result by passing each subsequent value into the fn with
   the previous value as the first arg. Starting with init."
   (var result init)
-  (each [_ x (ipairs xs)]
-    (set result (f result x)))
+  (run!
+    (fn [x]
+      (set result (f result x)))
+    xs)
   result)
 
 (fn some [f xs]
@@ -96,17 +110,14 @@
       (set n (inc n))))
   result)
 
-(fn run! [f xs]
-  "Execute the function (for side effects) for every xs."
-  (each [_ x (ipairs xs)]
-    (f x)))
-
 (fn concat [...]
   "Concatinats the sequential table arguments together."
   (let [result []]
     (run! (fn [xs]
-            (each [_ x (ipairs xs)]
-              (table.insert result x)))
+            (run!
+              (fn [x]
+                (table.insert result x))
+              xs))
       [...])
     result))
 
@@ -147,12 +158,12 @@
  :inc inc
  :dec dec
  :update update
+ :run! run!
  :filter filter
  :map map
  :identity identity
  :keys keys
  :vals vals
- :run! run!
  :reduce reduce
  :some some
  :concat concat

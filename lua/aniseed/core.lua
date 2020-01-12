@@ -40,28 +40,41 @@ local function update(tbl, k, f)
   tbl[k] = f(tbl[k])
   return tbl
 end
-local function filter(f, xs)
-  local result = {}
-  for _, x in ipairs(xs) do
-    if f(x) then
-      table.insert(result, x)
+local function run_21(f, xs)
+  if xs then
+    local nxs = count(xs)
+    if (nxs > 0) then
+      for i = 1, nxs do
+        f(xs[i])
+      end
+      return nil
     end
   end
+end
+local function filter(f, xs)
+  local result = {}
+  local function _0_(x)
+    if f(x) then
+      return table.insert(result, x)
+    end
+  end
+  run_21(_0_, xs)
   return result
 end
 local function map(f, xs)
   local result = {}
-  for _, x in ipairs(xs) do
+  local function _0_(x)
     local mapped = f(x)
-    local function _0_()
+    local function _1_()
       if (0 == select("#", mapped)) then
         return nil
       else
         return mapped
       end
     end
-    table.insert(result, _0_())
+    return table.insert(result, _1_())
   end
+  run_21(_0_, xs)
   return result
 end
 local function identity(x)
@@ -83,9 +96,11 @@ local function vals(t)
 end
 local function reduce(f, init, xs)
   local result = init
-  for _, x in ipairs(xs) do
+  local function _0_(x)
     result = f(result, x)
+    return nil
   end
+  run_21(_0_, xs)
   return result
 end
 local function some(f, xs)
@@ -100,19 +115,13 @@ local function some(f, xs)
   end
   return result
 end
-local function run_21(f, xs)
-  for _, x in ipairs(xs) do
-    f(x)
-  end
-  return nil
-end
 local function concat(...)
   local result = {}
   local function _0_(xs)
-    for _, x in ipairs(xs) do
-      table.insert(result, x)
+    local function _1_(x)
+      return table.insert(result, x)
     end
-    return nil
+    return run_21(_1_, xs)
   end
   run_21(_0_, {...})
   return result
