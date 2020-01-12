@@ -38,4 +38,14 @@
   :last
   (fn [t]
     (t.= 3 (core.last [1 2 3]) "3 is last")
-    (t.= nil (core.last nil) "last of nil is nil"))}}
+    (t.= nil (core.last nil) "last of nil is nil"))
+  
+  :count
+  (fn [t]
+    (t.= 3 (core.count [1 2 3]) "three values")
+    (t.= 0 (core.count []) "empty")
+    (t.= 0 (core.count nil) "nil")
+    (t.= 0 (core.count nil) "no arg")
+    (t.= 3 (core.count [1 nil 3]) "nil gap")
+    (t.= 4 (core.count [nil nil nil :a]) "mostly nils")
+    (t.= 0 (core.count {:a 1 :b 2}) "associative doesn't work"))}}

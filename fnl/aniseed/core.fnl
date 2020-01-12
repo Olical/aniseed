@@ -12,6 +12,11 @@
   (when xs
     (. xs 2)))
 
+(fn count [xs]
+  (if xs
+    (table.maxn xs)
+    0))
+
 (fn string? [x]
   (= "string" (type x)))
 
@@ -135,6 +140,7 @@
  :first first
  :last last
  :second second
+ :count count
  :string? string?
  :nil? nil?
  :table? table?

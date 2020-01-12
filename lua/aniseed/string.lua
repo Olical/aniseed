@@ -11,27 +11,29 @@ local function join(...)
   local _1_ = _0_(...)
   local sep = _1_[1]
   local xs = _1_[2]
+  local count = core.count(xs)
   local result = ""
-  local first_3f = true
-  for _, x in ipairs(xs) do
-    local function _2_(...)
-      if first_3f then
-        return ""
-      else
-        return sep
+  if (count > 0) then
+    for i = 1, count do
+      local x = xs[i]
+      local function _2_(...)
+        if (1 == i) then
+          return ""
+        else
+          return sep
+        end
       end
-    end
-    local function _3_(...)
-      if core["string?"](x) then
-        return x
-      elseif core["nil?"](x) then
-        return ""
-      else
-        return core["pr-str"](x)
+      local function _3_(...)
+        if core["string?"](x) then
+          return x
+        elseif core["nil?"](x) then
+          return ""
+        else
+          return core["pr-str"](x)
+        end
       end
+      result = (result .. _2_(...) .. _3_(...))
     end
-    result = (result .. _2_(...) .. _3_(...))
-    first_3f = false
   end
   return result
 end

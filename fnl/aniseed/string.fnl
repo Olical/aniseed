@@ -8,22 +8,23 @@
   (let [args [...]
         [sep xs] (if (= 2 (length args))
                    args
-                   ["" (core.first args)])]
+                   ["" (core.first args)])
+        count (core.count xs)]
 
     (var result "")
-    (var first? true)
 
-    (each [_ x (ipairs xs)]
-      (set result
-           (.. result
-               (if first?
-                 ""
-                 sep)
-               (if
-                 (core.string? x) x
-                 (core.nil? x) ""
-                 (core.pr-str x))))
-      (set first? false))
+    (when (> count 0)
+      (for [i 1 count]
+        (let [x (. xs i)]
+          (set result
+               (.. result
+                   (if (= 1 i)
+                     ""
+                     sep)
+                   (if
+                     (core.string? x) x
+                     (core.nil? x) ""
+                     (core.pr-str x)))))))
 
     result))
 
