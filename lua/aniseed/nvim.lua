@@ -122,16 +122,37 @@ local function getenv(k)
 end
 
 local function new_win_accessor(winnr)
-  local function get(k)    return api.nvim_win_get_var(winnr, k) end
-  local function set(k, v) return api.nvim_win_set_var(winnr, k, v) end
-  local function del(k)    return api.nvim_win_del_var(winnr, k) end
+  local function get(k)
+    if winnr == nil and type(k) == 'number' then
+      return new_win_accessor(k)
+    end
+    return api.nvim_win_get_var(winnr or 0, k)
+  end
+  local function set(k, v) return api.nvim_win_set_var(winnr or 0, k, v) end
+  local function del(k)    return api.nvim_win_del_var(winnr or 0, k) end
   return make_meta_accessor(nil_wrap(get), set, del)
 end
 
+local function new_win_opt_accessor(winnr)
+  local function get(k)
+    if winnr == nil and type(k) == 'number' then
+      return new_win_opt_accessor(k)
+    end
+    return api.nvim_win_get_option(winnr or 0, k)
+  end
+  local function set(k, v) return api.nvim_win_set_option(winnr or 0, k, v) end
+  return make_meta_accessor(nil_wrap(get), set)
+end
+
 local function new_buf_accessor(bufnr)
-  local function get(k)    return api.nvim_buf_get_var(bufnr, k) end
-  local function set(k, v) return api.nvim_buf_set_var(bufnr, k, v) end
-  local function del(k)    return api.nvim_buf_del_var(bufnr, k) end
+  local function get(k)
+    if bufnr == nil and type(k) == 'number' then
+      return new_buf_accessor(k)
+    end
+    return api.nvim_buf_get_var(bufnr or 0, k)
+  end
+  local function set(k, v) return api.nvim_buf_set_var(bufnr or 0, k, v) end
+  local function del(k)    return api.nvim_buf_del_var(bufnr or 0, k) end
   return make_meta_accessor(nil_wrap(get), set, del)
 end
 
@@ -140,20 +161,17 @@ local function new_buf_opt_accessor(bufnr)
     if window_options[k] then
       return api.nvim_err_writeln(k.." is a window option, not a buffer option")
     end
-    return api.nvim_buf_get_option(bufnr, k)
+    if bufnr == nil and type(k) == 'number' then
+      return new_buf_opt_accessor(k)
+    end
+    return api.nvim_buf_get_option(bufnr or 0, k)
   end
   local function set(k, v)
     if window_options[k] then
       return api.nvim_err_writeln(k.." is a window option, not a buffer option")
     end
-    return api.nvim_buf_set_option(bufnr, k, v)
+    return api.nvim_buf_set_option(bufnr or 0, k, v)
   end
-  return make_meta_accessor(nil_wrap(get), set)
-end
-
-local function new_win_opt_accessor(winnr)
-  local function get(k)    return api.nvim_win_get_option(winnr, k) end
-  local function set(k, v) return api.nvim_win_set_option(winnr, k, v) end
   return make_meta_accessor(nil_wrap(get), set)
 end
 
@@ -168,30 +186,14 @@ return setmetatable({
   echo = nvim_echo;
   fn = rawget(vim, "fn") or fn;
   validate = validate;
-  g = make_meta_accessor(nil_wrap(api.nvim_get_var), api.nvim_set_var, api.nvim_del_var);
-  v = make_meta_accessor(nil_wrap(api.nvim_get_vvar), api.nvim_set_vvar);
-  o = make_meta_accessor(api.nvim_get_option, api.nvim_set_option);
+  g = rawget(vim, 'g') or make_meta_accessor(nil_wrap(api.nvim_get_var), api.nvim_set_var, api.nvim_del_var);
+  v = rawget(vim, 'v') or make_meta_accessor(nil_wrap(api.nvim_get_vvar), api.nvim_set_vvar);
+  o = rawget(vim, 'o') or make_meta_accessor(api.nvim_get_option, api.nvim_set_option);
+  w = new_win_accessor(nil);
+  b = new_buf_accessor(nil);
   env = rawget(vim, "env") or make_meta_accessor(getenv, fn.setenv);
-  w = extend(new_win_accessor(0), {
-    __call = function(_, winnr)
-      return new_win_accessor(winnr)
-    end
-  });
-  wo = rawget(vim, "wo") or extend(new_win_opt_accessor(0), {
-    __call = function(_, winnr)
-      return new_win_opt_accessor(winnr)
-    end
-  });
-  b = extend(new_buf_accessor(0), {
-    __call = function(_, bufnr)
-      return new_buf_accessor(bufnr)
-    end
-  });
-  bo = rawget(vim, "bo") or extend(new_buf_opt_accessor(0), {
-    __call = function(_, bufnr)
-      return new_buf_opt_accessor(bufnr)
-    end
-  });
+  wo = rawget(vim, "wo") or new_win_opt_accessor(nil);
+  bo = rawget(vim, "bo") or new_buf_opt_accessor(nil);
   buf = {
     line = api.nvim_get_current_line;
     nr = api.nvim_get_current_buf;

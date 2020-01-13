@@ -28,4 +28,4 @@ deps:
 	if [ ! -d "deps/Fennel" ]; then git clone https://github.com/bakpakin/Fennel.git deps/Fennel; fi
 	cd deps/Fennel && git fetch && git checkout 0.3.0
 	if [ ! -d "deps/nvim.lua" ]; then git clone https://github.com/norcalli/nvim.lua.git deps/nvim.lua; fi
-	cd deps/nvim.lua && git fetch && git checkout 2af9792aee503467855ebd92ccdd9b971236216f
+	cd deps/nvim.lua && git fetch && git checkout 5d57be0b6eea6c06977b1c5fe0752da909cf4154
