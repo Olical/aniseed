@@ -58,12 +58,17 @@ local function loadCode(code, environment, filename)
     end
 end
 
--- Create a new list
+-- Create a new list. Lists are a compile-time construct in Fennel; they are
+-- represented as tables with a special marker metatable. They only come from
+-- the parser, and they represent code which comes from reading a paren form;
+-- they are specifically not cons cells.
 local function list(...)
     return setmetatable({...}, LIST_MT)
 end
 
--- Create a new symbol
+-- Create a new symbol. Symbols are a compile-time construct in Fennel and are
+-- not exposed outside the compiler. Symbols have metadata describing what file,
+-- line, etc that they came from.
 local function sym(str, scope, meta)
     local s = {str, scope = scope}
     if meta then
@@ -74,7 +79,9 @@ local function sym(str, scope, meta)
     return setmetatable(s, SYMBOL_MT)
 end
 
--- Create a new sequence
+-- Create a new sequence. Sequences are tables that come from the parser when
+-- it encounters a form with square brackets. They are treated as regular tables
+-- except when certain macros need to look for binding forms, etc specifically.
 local function sequence(...)
    return setmetatable({...}, SEQUENCE_MT)
 end
@@ -376,7 +383,7 @@ local function parser(getbyte, filename)
                 if rawstr == 'true' then dispatch(true)
                 elseif rawstr == 'false' then dispatch(false)
                 elseif rawstr == '...' then dispatch(VARARG)
-                elseif rawstr:match('^:.+$') then -- keyword style strings
+                elseif rawstr:match('^:.+$') then -- colon style strings
                     dispatch(rawstr:sub(2))
                 elseif rawstr:match("^~") and rawstr ~= "~=" then
                     -- for backwards-compatibility, special-case allowance of ~=
@@ -428,10 +435,11 @@ local rootChunk
 local rootScope
 local rootOptions
 
--- Create a new Scope, optionally under a parent scope. Scopes are compile time constructs
--- that are responsible for keeping track of local variables, name mangling, and macros.
--- They are accessible to user code via the '*compiler' special form (may change). They
--- use metatables to implement nesting via inheritance.
+-- Create a new Scope, optionally under a parent scope. Scopes are compile time
+-- constructs that are responsible for keeping track of local variables, name
+-- mangling, and macros.  They are accessible to user code via the
+-- 'eval-compiler' special form (may change). They use metatables to implement
+-- nesting via metatables.
 local function makeScope(parent)
     return {
         unmanglings = setmetatable({}, {
@@ -561,6 +569,18 @@ local function globalUnmangling(identifier)
     end
 end
 
+-- If there's a provided list of allowed globals, don't let references thru that
+-- aren't on the list. This list is set at the compiler entry points of compile
+-- and compileStream.
+local allowedGlobals
+
+local function globalAllowed(name)
+    if not allowedGlobals then return true end
+    for _, g in ipairs(allowedGlobals) do
+        if g == name then return true end
+    end
+end
+
 -- Creates a symbol from a string by mangling it.
 -- ensures that the generated symbol is unique
 -- if the input string is unique in the scope.
@@ -649,18 +669,6 @@ local function declareLocal(symbol, meta, scope, ast)
     local mangling = localMangling(name, scope, ast)
     scope.symmeta[name] = meta
     return mangling
-end
-
--- If there's a provided list of allowed globals, don't let references
--- thru that aren't on the list. This list is set at the compiler
--- entry points of compile and compileStream.
-local allowedGlobals
-
-local function globalAllowed(name)
-    if not allowedGlobals then return true end
-    for _, g in ipairs(allowedGlobals) do
-        if g == name then return true end
-    end
 end
 
 -- Convert symbol to Lua code. Will only work for local symbols
@@ -1114,6 +1122,16 @@ local function destructure(to, from, ast, scope, parent, opts)
                 assertCompile(not (meta and not meta.var),
                     'expected local var', up1)
             end
+            if forceglobal then
+                assertCompile(not scope.unmanglings[raw],
+                              "global " .. raw .. " conflicts with local", ast)
+                scope.manglings[raw] = globalMangling(raw)
+                scope.unmanglings[globalMangling(raw)] = raw
+                if allowedGlobals then
+                    table.insert(allowedGlobals, raw)
+                end
+            end
+
             return symbolToExpression(symbol, scope)[1]
         end
     end
@@ -1234,6 +1252,15 @@ local function compileDo(ast, scope, parent, start)
     end
 end
 
+-- Raises compile error if unused locals are found and we're checking for them.
+local function checkUnused(scope, ast)
+    if not rootOptions.checkUnusedLocals then return end
+    for symName in pairs(scope.symmeta) do
+        assertCompile(scope.symmeta[symName].used or symName:find("^_"),
+                      ("unused local %s"):format(symName), ast)
+    end
+end
+
 -- Implements a do statement, starting at the 'start' element. By default, start is 2.
 local function doImpl(ast, scope, parent, opts, start, chunk, subScope)
     start = start or 2
@@ -1293,6 +1320,7 @@ local function doImpl(ast, scope, parent, opts, start, chunk, subScope)
     end
     emit(parent, chunk, ast)
     emit(parent, 'end', ast)
+    checkUnused(subScope, ast)
     return retexprs
 end
 
@@ -1388,6 +1416,7 @@ SPECIALS['fn'] = function(ast, scope, parent)
                                    fnName, table.concat(metaFields, ', ')))
     end
 
+    checkUnused(fScope, ast)
     return expr(fnName, 'sym')
 end
 docSpecial('fn', {'name?', 'args', 'docstring?', '...'},
@@ -1461,12 +1490,6 @@ docSpecial('.', {'tbl', 'key1', '...'},
 
 SPECIALS['global'] = function(ast, scope, parent)
     assertCompile(#ast == 3, "expected name and value", ast)
-    -- globals tracking doesn't currently work with multi-values/destructuring
-    if allowedGlobals and isSym(ast[2]) then
-        for _,global in ipairs(isList(ast[2]) and ast[2] or {ast[2]}) do
-            table.insert(allowedGlobals, deref(global))
-        end
-    end
     destructure(ast[2], ast[3], ast, scope, parent, {
         nomulti = true,
         forceglobal = true
@@ -1548,8 +1571,9 @@ SPECIALS['tset'] = function(ast, scope, parent)
                                table.concat(keys, ']['),
                                tostring(value)), ast)
 end
-docSpecial('tset', {'tbl', 'key1', 'val1', '...', 'keyN', 'valN'},
-           'Set the fields of a table to new values. Takes 1 or more key/value pairs.')
+docSpecial('tset', {'tbl', 'key1', '...', 'keyN', 'val'},
+           'Set the value of a table field. Can take additional keys to set'
+        .. 'nested values,\nbut all parents must contain an existing table.')
 
 -- The if special form behaves like the cond form in
 -- many languages
@@ -1635,6 +1659,9 @@ SPECIALS['if'] = function(ast, scope, parent, opts)
             if hasElse then
                 emit(lastBuffer, 'else', ast)
                 emit(lastBuffer, elseBranch.chunk, ast)
+            elseif(innerTarget) then
+                emit(lastBuffer, 'else', ast)
+                emit(lastBuffer, ("%s = nil"):format(innerTarget), ast)
             end
             emit(lastBuffer, 'end', ast)
         elseif not branches[i + 1].nested then
@@ -1688,9 +1715,11 @@ SPECIALS['each'] = function(ast, scope, parent)
             table.insert(bindVars, declareLocal(raw, {}, scope, ast))
         end
     end
-    emit(parent, ('for %s in %s do'):format(
-             table.concat(bindVars, ', '),
-             tostring(compile1(iter, scope, parent, {nval = 1})[1])), ast)
+    local vals, valNames = compile1(iter, scope, parent), {}
+    for _,v in ipairs(vals) do table.insert(valNames, tostring(v)) end
+
+    emit(parent, ('for %s in %s do'):format(table.concat(bindVars, ', '),
+                                            table.concat(valNames, ", ")), ast)
     local chunk = {}
     for raw, args in pairs(destructures) do
         destructure(args, raw, ast, scope, chunk,
@@ -1713,13 +1742,13 @@ SPECIALS['while'] = function(ast, scope, parent)
     local subChunk = {}
     if len1 ~= len2 then
         -- Compound condition
-        emit(parent, 'while true do', ast)
         -- Move new compilation to subchunk
         for i = len1 + 1, len2 do
             subChunk[#subChunk + 1] = parent[i]
             parent[i] = nil
         end
-        emit(parent, ('if %s then break end'):format(condition[1]), ast)
+        emit(parent, 'while true do', ast)
+        emit(subChunk, ('if not %s then break end'):format(condition[1]), ast)
     else
         -- Simple condition
         emit(parent, 'while ' .. tostring(condition) .. ' do', ast)
@@ -1901,7 +1930,7 @@ local function defineComparatorSpecial(name, realop, chainOp)
         end
         return out
     end
-    docSpecial(name, {name, 'a', 'b', '...'},
+    docSpecial(name, {'a', 'b', '...'},
                'Comparison operator; works the same as Lua but accepts more arguments.')
 end
 
@@ -2147,8 +2176,12 @@ local function traceback(msg, start)
     local level = start or 2 -- Can be used to skip some frames
     local lines = {}
     if msg then
-        local stripped = msg:gsub('^[^:]*:%d+:%s+', 'runtime error: ')
-        table.insert(lines, stripped)
+        if msg:find("^Compile error") then
+            table.insert(lines, msg)
+        else
+            local newmsg = msg:gsub('^[^:]*:%d+:%s+', 'runtime error: ')
+            table.insert(lines, newmsg)
+        end
     end
     table.insert(lines, 'stack traceback:')
     while true do
@@ -2237,7 +2270,7 @@ local function repl(options)
 
     opts.useMetadata = options.useMetadata ~= false
     opts.moduleName = options.moduleName
-    rootOptions = opts
+    local oldRootOptions = rootOptions
 
     local env = opts.env and wrapEnv(opts.env) or setmetatable({}, {
         __index = _ENV or _G
@@ -2324,21 +2357,40 @@ local function repl(options)
 
     local replCompleter = function(text)
         local matches = {}
-        local inputFragment = text:gsub("[%s)(]*(.+)", "%1")
+        local inputFragment = text:gsub(".*[%s)(]+", "")
 
-        -- adds any matching keys from the provided generator/iterator to matches
-        local function addMatchesFromGen(next, param, state)
-          for k in next, param, state do
-            if #matches >= 40 then break -- cap completions at 40 to avoid overwhelming
-            elseif inputFragment == k:sub(0, #inputFragment) then
-                table.insert(matches, k)
+        -- adds partial key matches in tbl to the match list
+        local function addPartials(input, tbl, prefix)
+            for k in pairs(tbl) do
+                if tbl == env or tbl == env.___replLocals___ then
+                    k = scope.unmanglings[k] or k
+                end
+                if #matches >= 40 then break -- cap completions at 40
+                elseif type(k) == 'string' and input == k:sub(0, #input) then
+                    table.insert(matches, prefix .. k)
+                end
             end
-          end
         end
-        addMatchesFromGen(pairs(env._ENV or env._G or {}))
-        addMatchesFromGen(pairs(env.___replLocals___ or {}))
-        addMatchesFromGen(pairs(SPECIALS or {}))
-        addMatchesFromGen(pairs(scope.specials or {}))
+        -- adds matches to the match list, descending into table fields
+        local function addMatches(input, tbl, prefix)
+            prefix = prefix and prefix .. "." or ""
+            if not string.find(input, "%.") then -- no (more) dots, so add matches
+                return addPartials(input, tbl, prefix)
+            end
+            -- check for table access field.child, and if field is a table, recur
+            local head, tail = string.match(input, "^([^.]+)%.(.*)")
+            local rawHead = tbl == env or tbl == env.___replLocals___
+                and scope.manglings[head] or head -- check mangling
+            if type(tbl[rawHead]) == "table" then
+                return addMatches(tail, tbl[rawHead], prefix .. head)
+            end
+        end
+
+        addMatches(inputFragment, scope.specials or {})
+        addMatches(inputFragment, SPECIALS or {})
+        addMatches(inputFragment, env.___replLocals___ or {})
+        addMatches(inputFragment, env)
+        addMatches(inputFragment, env._ENV or env._G or {})
         return matches
     end
     if opts.registerCompleter then opts.registerCompleter(replCompleter) end
@@ -2353,6 +2405,7 @@ local function repl(options)
             clearstream()
             reset()
         else
+            rootOptions = opts
             if not parseok then break end -- eof
             local compileOk, luaSource = pcall(compile, x, {
                 correlate = opts.correlate,
@@ -2385,6 +2438,7 @@ local function repl(options)
                     end
                 end
             end
+            rootOptions = oldRootOptions
         end
     end
 end
@@ -2392,7 +2446,7 @@ end
 local macroLoaded = {}
 
 local pathTable = {"./?.fnl", "./?/init.fnl"}
-local osPath = os.getenv("FENNEL_PATH")
+local osPath = os and os.getenv and os.getenv("FENNEL_PATH")
 if osPath then
     table.insert(pathTable, osPath)
 end
@@ -2418,7 +2472,7 @@ local module = {
     macroLoaded = macroLoaded,
     path = table.concat(pathTable, ";"),
     traceback = traceback,
-    version = "0.3.0",
+    version = "0.3.1",
 }
 
 local function searchModule(modulename, pathstring)
@@ -2599,6 +2653,9 @@ SPECIALS['include'] = function(ast, scope, parent, opts)
     rootScope.includes[mod] = ret
     return ret
 end
+docSpecial('include', {'module-name-literal'},
+           'Like require, but load the target module during compilation and embed it in the\n'
+        .. 'Lua output. The module must be a string literal and resolvable at compile time.')
 
 local function requireFallback(e)
     local code = ('require(%s)'):format(tostring(e))
@@ -2795,7 +2852,7 @@ that argument name begins with ?."
                   (do (assert (not (. pattern (+ k 2)))
                               "expected rest argument in final position")
                       (table.insert bindings (. pattern (+ k 1)))
-                      (table.insert bindings [`(select ,k ((or unpack table.unpack)
+                      (table.insert bindings [`(select ,k ((or _G.unpack table.unpack)
                                                            ,val))]))
                   (and (= :number (type k))
                        (= "&" (tostring (. pattern (- k 1)))))
