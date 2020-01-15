@@ -127,6 +127,13 @@ local function isSequence(x)
    return type(x) == 'table' and getmetatable(x) == SEQUENCE_MT and x
 end
 
+-- Returns a shallow copy of its table argument. Returns an empty table on nil.
+local function copy(from)
+   local to = {}
+   for k, v in pairs(from or {}) do to[k] = v end
+   return to
+end
+
 --
 -- Parser
 --
@@ -324,7 +331,8 @@ local function parser(getbyte, filename)
                     end
                     val = {}
                     for i = 1, #last, 2 do
-                        if tostring(last[i]) == ":" and isSym(last[i + 1]) then
+                        if(tostring(last[i]) == ":" and isSym(last[i + 1])
+                           and isSym(last[i])) then
                             last[i] = tostring(last[i + 1])
                         end
                         val[last[i]] = last[i + 1]
@@ -457,6 +465,9 @@ local function makeScope(parent)
         includes = setmetatable({}, {
             __index = parent and parent.includes
         }),
+        refedglobals = setmetatable({}, {
+            __index = parent and parent.refedglobals
+        }),
         autogensyms = {},
         parent = parent,
         vararg = parent and parent.vararg,
@@ -584,10 +595,7 @@ end
 -- Creates a symbol from a string by mangling it.
 -- ensures that the generated symbol is unique
 -- if the input string is unique in the scope.
-local function localMangling(str, scope, ast)
-    if scope.manglings[str] then
-        return scope.manglings[str]
-    end
+local function localMangling(str, scope, ast, tempManglings)
     local append = 0
     local mangling = str
     assertCompile(not isMultiSym(str), 'did not expect multi symbol ' .. str, ast)
@@ -601,14 +609,28 @@ local function localMangling(str, scope, ast)
         return ('_%02x'):format(c:byte())
     end)
 
+    -- Prevent name collisions with existing symbols
     local raw = mangling
     while scope.unmanglings[mangling] do
         mangling = raw .. append
         append = append + 1
     end
+
     scope.unmanglings[mangling] = str
-    scope.manglings[str] = mangling
+    local manglings = tempManglings or scope.manglings
+    manglings[str] = mangling
     return mangling
+end
+
+-- Calling this function will mean that further
+-- compilation in scope will use these new manglings
+-- instead of the current manglings.
+local function applyManglings(scope, newManglings, ast)
+    for raw, mangled in pairs(newManglings) do
+        assertCompile(not scope.refedglobals[mangled],
+        "use of global " .. raw .. " is aliased by a local", ast)
+        scope.manglings[raw] = mangled
+    end
 end
 
 -- Combine parts of a symbol
@@ -662,11 +684,11 @@ local function checkBindingValid(symbol, scope, ast)
 end
 
 -- Declare a local symbol
-local function declareLocal(symbol, meta, scope, ast)
+local function declareLocal(symbol, meta, scope, ast, tempManglings)
     checkBindingValid(symbol, scope, ast)
     local name = symbol[1]
     assertCompile(not isMultiSym(name), "did not expect mutltisym", ast)
-    local mangling = localMangling(name, scope, ast)
+    local mangling = localMangling(name, scope, ast, tempManglings)
     scope.symmeta[name] = meta
     return mangling
 end
@@ -693,6 +715,9 @@ local function symbolToExpression(symbol, scope, isReference)
     -- then we need to check for allowed globals
     assertCompile(not isReference or isLocal or globalAllowed(parts[1]),
                   'unknown global in strict mode: ' .. parts[1], symbol)
+    if not isLocal then
+        rootScope.refedglobals[parts[1]] = true
+    end
     return expr(combineParts(parts, scope), etype)
 end
 
@@ -945,6 +970,17 @@ end
 --   'tail' - boolean indicating tail position if set. If set, form will generate a return
 --   instruction.
 --   'nval' - The number of values to compile to if it is known to be a fixed value.
+
+-- In Lua, an expression can evaluate to 0 or more values via multiple
+-- returns. In many cases, Lua will drop extra values and convert a 0 value
+-- expression to nil. In other cases, Lua will use all of the values in an
+-- expression, such as in the last argument of a function call. Nval is an
+-- option passed to compile1 to say that the resulting expression should have
+-- at least n values. It lets us generate better code, because if we know we
+-- are only going to use 1 or 2 values from an expression, we can create 1 or 2
+-- locals to store intermediate results rather than turn the expression into a
+-- closure that is called immediately, which we have to do if we don't know.
+
 local function compile1(ast, scope, parent, opts)
     opts = opts or {}
     local exprs = {}
@@ -1104,13 +1140,15 @@ local function destructure(to, from, ast, scope, parent, opts)
     local forceset = opts.forceset
     local setter = declaration and "local %s = %s" or "%s = %s"
 
+    local newManglings = {}
+
     -- Get Lua source for symbol, and check for errors
     local function getname(symbol, up1)
         local raw = symbol[1]
         assertCompile(not (nomulti and isMultiSym(raw)),
             'did not expect multisym', up1)
         if declaration then
-            return declareLocal(symbol, {var = isvar}, scope, symbol)
+            return declareLocal(symbol, {var = isvar}, scope, symbol, newManglings)
         else
             local parts = isMultiSym(raw) or {raw}
             local meta = scope.symmeta[parts[1]]
@@ -1123,7 +1161,7 @@ local function destructure(to, from, ast, scope, parent, opts)
                     'expected local var', up1)
             end
             if forceglobal then
-                assertCompile(not scope.unmanglings[raw],
+                assertCompile(not scope.symmeta[scope.unmanglings[raw]],
                               "global " .. raw .. " conflicts with local", ast)
                 scope.manglings[raw] = globalMangling(raw)
                 scope.unmanglings[globalMangling(raw)] = raw
@@ -1216,7 +1254,9 @@ local function destructure(to, from, ast, scope, parent, opts)
         if top then return {returned = true} end
     end
 
-    return destructure1(to, nil, ast, true)
+    local ret = destructure1(to, nil, ast, true)
+    applyManglings(scope, newManglings, ast)
+    return ret
 end
 
 -- Unlike most expressions and specials, 'values' resolves with multiple
@@ -1659,7 +1699,8 @@ SPECIALS['if'] = function(ast, scope, parent, opts)
             if hasElse then
                 emit(lastBuffer, 'else', ast)
                 emit(lastBuffer, elseBranch.chunk, ast)
-            elseif(innerTarget) then
+            -- TODO: Consolidate use of condLine ~= "else" with hasElse
+            elseif(innerTarget and condLine ~= 'else') then
                 emit(lastBuffer, 'else', ast)
                 emit(lastBuffer, ("%s = nil"):format(innerTarget), ast)
             end
@@ -1704,11 +1745,12 @@ SPECIALS['each'] = function(ast, scope, parent)
     local iter = table.remove(binding, #binding) -- last item is iterator call
     local bindVars = {}
     local destructures = {}
+    local newManglings = {}
     for _, v in ipairs(binding) do
         assertCompile(isSym(v) or isTable(v),
                       'expected iterator symbol or table', ast)
         if(isSym(v)) then
-            table.insert(bindVars, declareLocal(v, {}, scope, ast))
+            table.insert(bindVars, declareLocal(v, {}, scope, ast, newManglings))
         else
             local raw = sym(gensym(scope))
             destructures[raw] = v
@@ -1725,6 +1767,7 @@ SPECIALS['each'] = function(ast, scope, parent)
         destructure(args, raw, ast, scope, chunk,
                     { declaration = true, nomulti = true })
     end
+    applyManglings(scope, newManglings, ast)
     compileDo(ast, scope, chunk, 3)
     emit(parent, chunk, ast)
     emit(parent, 'end', ast)
@@ -1980,26 +2023,26 @@ end
 
 local requireSpecial
 local function compile(ast, options)
-    options = options or {}
+    local opts = copy(options)
     local oldGlobals = allowedGlobals
     local oldChunk = rootChunk
     local oldScope = rootScope
     local oldOptions = rootOptions
-    allowedGlobals = options.allowedGlobals
-    if options.indent == nil then options.indent = '  ' end
+    allowedGlobals = opts.allowedGlobals
+    if opts.indent == nil then opts.indent = '  ' end
     local chunk = {}
-    local scope = options.scope or makeScope(GLOBAL_SCOPE)
+    local scope = opts.scope or makeScope(GLOBAL_SCOPE)
     rootChunk = chunk
     rootScope = scope
-    rootOptions = options
-    if options.requireAsInclude then scope.specials.require = requireSpecial end
+    rootOptions = opts
+    if opts.requireAsInclude then scope.specials.require = requireSpecial end
     local exprs = compile1(ast, scope, chunk, {tail = true})
     keepSideEffects(exprs, chunk, nil, ast)
     allowedGlobals = oldGlobals
     rootChunk = oldChunk
     rootScope = oldScope
     rootOptions = oldOptions
-    return flatten(chunk, options)
+    return flatten(chunk, opts)
 end
 
 -- map a function across all pairs in a table
@@ -2095,24 +2138,24 @@ end
 docSpecial('quote', {'x'}, 'Quasiquote the following form. Only works in macro/compiler scope.')
 
 local function compileStream(strm, options)
-    options = options or {}
+    local opts = copy(options)
     local oldGlobals = allowedGlobals
     local oldChunk = rootChunk
     local oldScope = rootScope
     local oldOptions = rootOptions
-    allowedGlobals = options.allowedGlobals
-    if options.indent == nil then options.indent = '  ' end
-    local scope = options.scope or makeScope(GLOBAL_SCOPE)
-    if options.requireAsInclude then scope.specials.require = requireSpecial end
+    allowedGlobals = opts.allowedGlobals
+    if opts.indent == nil then opts.indent = '  ' end
+    local scope = opts.scope or makeScope(GLOBAL_SCOPE)
+    if opts.requireAsInclude then scope.specials.require = requireSpecial end
     local vals = {}
-    for ok, val in parser(strm, options.filename) do
+    for ok, val in parser(strm, opts.filename) do
         if not ok then break end
         vals[#vals + 1] = val
     end
     local chunk = {}
     rootChunk = chunk
     rootScope = scope
-    rootOptions = options
+    rootOptions = opts
     for i = 1, #vals do
         local exprs = compile1(vals[i], scope, chunk, {
             tail = i == #vals,
@@ -2123,7 +2166,7 @@ local function compileStream(strm, options)
     rootChunk = oldChunk
     rootScope = oldScope
     rootOptions = oldOptions
-    return flatten(chunk, options)
+    return flatten(chunk, opts)
 end
 
 local function compileString(str, options)
@@ -2229,39 +2272,39 @@ local function currentGlobalNames(env)
 end
 
 local function eval(str, options, ...)
-    options = options or {}
+    local opts = copy(options)
     -- eval and dofile are considered "live" entry points, so we can assume
     -- that the globals available at compile time are a reasonable allowed list
     -- UNLESS there's a metatable on env, in which case we can't assume that
     -- pairs will return all the effective globals; for instance openresty
     -- sets up _G in such a way that all the globals are available thru
     -- the __index meta method, but as far as pairs is concerned it's empty.
-    if options.allowedGlobals == nil and not getmetatable(options.env) then
-        options.allowedGlobals = currentGlobalNames(options.env)
+    if opts.allowedGlobals == nil and not getmetatable(opts.env) then
+        opts.allowedGlobals = currentGlobalNames(opts.env)
     end
-    local env = options.env and wrapEnv(options.env)
-    local luaSource = compileString(str, options)
+    local env = opts.env and wrapEnv(opts.env)
+    local luaSource = compileString(str, opts)
     local loader = loadCode(luaSource, env,
-        options.filename and ('@' .. options.filename) or str)
+                            opts.filename and ('@' .. opts.filename) or str)
+    opts.filename = nil
     return loader(...)
 end
 
 local function dofileFennel(filename, options, ...)
-    options = options or {}
-    if options.allowedGlobals == nil then
-        options.allowedGlobals = currentGlobalNames(options.env)
+    local opts = copy(options)
+    if opts.allowedGlobals == nil then
+        opts.allowedGlobals = currentGlobalNames(opts.env)
     end
     local f = assert(io.open(filename, "rb"))
     local source = f:read("*all"):gsub("^#![^\n]*\n", "")
     f:close()
-    options.filename = options.filename or filename
-    return eval(source, options, ...)
+    opts.filename = opts.filename or filename
+    return eval(source, opts, ...)
 end
 
 -- Implements a configurable repl
 local function repl(options)
-
-    local opts = options or {}
+    local opts = copy(options)
     -- This would get set for us when calling eval, but we want to seed it
     -- with a value that is persistent so it doesn't get reset on each eval.
     if opts.allowedGlobals == nil then
@@ -2472,7 +2515,7 @@ local module = {
     macroLoaded = macroLoaded,
     path = table.concat(pathTable, ";"),
     traceback = traceback,
-    version = "0.3.1",
+    version = "0.3.2",
 }
 
 local function searchModule(modulename, pathstring)
@@ -2492,8 +2535,7 @@ module.makeSearcher = function(options)
       -- this will propagate options from the repl but not from eval, because
       -- eval unsets rootOptions after compiling but before running the actual
       -- calls to require.
-      local opts = {}
-      for k,v in pairs(rootOptions or {}) do opts[k] = v end
+      local opts = copy(rootOptions)
       for k,v in pairs(options or {}) do opts[k] = v end
       local filename = searchModule(modulename)
       if filename then
@@ -2602,10 +2644,7 @@ SPECIALS['include'] = function(ast, scope, parent, opts)
     local mod = loadCode(code)()
 
     -- Check cache
-    local includeExpr = scope.includes[mod]
-    if includeExpr then
-        return includeExpr
-    end
+    if scope.includes[mod] then return scope.includes[mod] end
 
     -- Find path to source
     local path = searchModule(mod)
@@ -2627,26 +2666,36 @@ SPECIALS['include'] = function(ast, scope, parent, opts)
     local s = f:read('*all')
     f:close()
 
-    -- splice in source and memoize it
-    -- so we can include it again without duplication
-    local target = gensym(scope)
-    local ret = expr(target, 'sym')
+    -- splice in source and memoize it in compiler AND package.preload
+    -- so we can include it again without duplication, even in runtime
+    local target = 'package.preload["' .. mod .. '"]'
+    local ret = expr('require("' .. mod .. '")', 'statement')
+
+    local subChunk, tempChunk = {}, {}
+    emit(tempChunk, subChunk, ast)
+    -- if lua, simply emit the setting of package.preload
+    if not isFennel then
+        emit(tempChunk, target .. ' = ' .. target .. ' or function()\n' .. s .. 'end', ast)
+    end
+    -- Splice tempChunk to begining of rootChunk
+    for i, v in ipairs(tempChunk) do
+        table.insert(rootChunk, i, v)
+    end
+
+    -- For fnl source, compile subChunk AFTER splicing into start of rootChunk.
     if isFennel then
-        local p = parser(stringStream(s), path)
-        local forms = list(sym('do'))
-        for _, val in p do table.insert(forms, val) end
+        local subopts = { nval = 1, target = target }
         local subscope = makeScope(rootScope.parent)
         if rootOptions.requireAsInclude then
             subscope.specials.require = requireSpecial
         end
-        local subopts = {
-            nval = 1,
-            target = target
-        }
-        emit(rootChunk, 'local ' .. target, ast)
-        compile1(forms, subscope, rootChunk, subopts)
-    else
-        emit(rootChunk, 'local ' .. target .. ' = (function() ' .. s .. ' end)()', ast)
+        local targetForm = list(sym('.'), sym('package.preload'), mod)
+        -- splice "or" statement in so it uses existing package.preload[modname]
+        -- if it's been set by something else, allowing for overrides
+        local forms = list(sym('or'), targetForm, list(sym('fn'), sequence()))
+        local p = parser(stringStream(s), path)
+        for _, val in p do table.insert(forms[3], val) end
+        compile1(forms, subscope, subChunk, subopts)
     end
 
     -- Put in cache and return
