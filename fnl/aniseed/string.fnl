@@ -32,4 +32,4 @@
 
     result))
 
-(expose)
+(module)
