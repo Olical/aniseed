@@ -6,7 +6,7 @@ compile:
 	rm -rf lua
 	for f in $(SRC_FILES); do \
 		mkdir -p lua/$$(dirname $$f); \
-		luajit deps/Fennel/fennel --compile fnl/$$f.fnl > lua/$$f.lua; \
+		luajit deps/Fennel/fennel --add-fennel-path macros/fnl/?.fnl --compile fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	cp deps/Fennel/fennel.lua lua/aniseed/fennel.lua
 	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
@@ -15,8 +15,10 @@ compile:
 test:
 	rm -rf test/lua
 	nvim -u NONE \
-		-c "let &runtimepath = &runtimepath . ',' . getcwd() . ',' . getcwd() . '/test'" \
-		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true}) " \
+		-c "let &runtimepath = &runtimepath . ',' . getcwd()" \
+		-c "let &runtimepath = &runtimepath . ',' . getcwd() . '/test'" \
+		-c "let &runtimepath = &runtimepath . ',' . getcwd() . '/macros'" \
+		-c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true})" \
 		-c "lua require('aniseed.test-suite').main()" \
 		test/fnl/foo.fnl; \
 		EXIT_CODE=$$?; \

@@ -1,6 +1,10 @@
+(require-macros :aniseed.module)
+
+(module aniseed.string)
+
 (local core (require :aniseed.core))
 
-(fn join [...]
+(defn join [...]
   "(join xs) (join sep xs)
   Joins all items of a table together with an optional separator.
   Separator defaults to an empty string.
@@ -28,5 +32,4 @@
 
     result))
 
-{:aniseed/module :aniseed.string
- :join join}
+(expose)
