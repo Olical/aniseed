@@ -4,4 +4,6 @@
     :runtimepath
     (.. (vim.api.nvim_get_option :runtimepath)
         "," cwd
+
+        ;; TODO Why won't this let me eval aniseed/string.fnl?
         "," cwd "/macros")))
