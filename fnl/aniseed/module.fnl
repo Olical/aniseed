@@ -1,3 +1,6 @@
+;; Macros for module definition.
+;; Can't be compiled to Lua directly.
+
 (local module-sym (gensym))
 
 (fn module [name]

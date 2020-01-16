@@ -54,5 +54,4 @@ do
   _0_0["join"] = v_23_0_
   join = v_23_0_
 end
-core.pr(join)
 return _0_0
