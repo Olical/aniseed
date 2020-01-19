@@ -21,10 +21,15 @@
 (fn defn [name ...]
   `(def ,name (fn ,name ,...)))
 
+(fn defonce [name value]
+  `(when (not (. ,module-sym ,(tostring name)))
+     (def ,name ,value)))
+
 (fn export []
   module-sym)
 
 {:module module
  :def def
  :defn defn
+ :defonce defonce
  :export export}
