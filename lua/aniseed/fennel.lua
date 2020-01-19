@@ -1548,9 +1548,8 @@ SPECIALS['tset'] = function(ast, scope, parent)
                                table.concat(keys, ']['),
                                tostring(value)), ast)
 end
-docSpecial('tset', {'tbl', 'key1', '...', 'keyN', 'val'},
-           'Set the value of a table field. Can take additional keys to set'
-        .. 'nested values,\nbut all parents must contain an existing table.')
+docSpecial('tset', {'tbl', 'key1', 'val1', '...', 'keyN', 'valN'},
+           'Set the fields of a table to new values. Takes 1 or more key/value pairs.')
 
 -- The if special form behaves like the cond form in
 -- many languages
@@ -1636,9 +1635,6 @@ SPECIALS['if'] = function(ast, scope, parent, opts)
             if hasElse then
                 emit(lastBuffer, 'else', ast)
                 emit(lastBuffer, elseBranch.chunk, ast)
-            elseif(innerTarget) then
-                emit(lastBuffer, 'else', ast)
-                emit(lastBuffer, ("%s = nil"):format(innerTarget), ast)
             end
             emit(lastBuffer, 'end', ast)
         elseif not branches[i + 1].nested then
@@ -1905,7 +1901,7 @@ local function defineComparatorSpecial(name, realop, chainOp)
         end
         return out
     end
-    docSpecial(name, {'a', 'b', '...'},
+    docSpecial(name, {name, 'a', 'b', '...'},
                'Comparison operator; works the same as Lua but accepts more arguments.')
 end
 
@@ -2241,7 +2237,7 @@ local function repl(options)
 
     opts.useMetadata = options.useMetadata ~= false
     opts.moduleName = options.moduleName
-    local oldRootOptions = rootOptions
+    rootOptions = opts
 
     local env = opts.env and wrapEnv(opts.env) or setmetatable({}, {
         __index = _ENV or _G
@@ -2328,40 +2324,21 @@ local function repl(options)
 
     local replCompleter = function(text)
         local matches = {}
-        local inputFragment = text:gsub(".*[%s)(]+", "")
+        local inputFragment = text:gsub("[%s)(]*(.+)", "%1")
 
-        -- adds partial key matches in tbl to the match list
-        local function addPartials(input, tbl, prefix)
-            for k in pairs(tbl) do
-                if tbl == env or tbl == env.___replLocals___ then
-                    k = scope.unmanglings[k] or k
-                end
-                if #matches >= 40 then break -- cap completions at 40
-                elseif type(k) == 'string' and input == k:sub(0, #input) then
-                    table.insert(matches, prefix .. k)
-                end
+        -- adds any matching keys from the provided generator/iterator to matches
+        local function addMatchesFromGen(next, param, state)
+          for k in next, param, state do
+            if #matches >= 40 then break -- cap completions at 40 to avoid overwhelming
+            elseif inputFragment == k:sub(0, #inputFragment) then
+                table.insert(matches, k)
             end
+          end
         end
-        -- adds matches to the match list, descending into table fields
-        local function addMatches(input, tbl, prefix)
-            prefix = prefix and prefix .. "." or ""
-            if not string.find(input, "%.") then -- no (more) dots, so add matches
-                return addPartials(input, tbl, prefix)
-            end
-            -- check for table access field.child, and if field is a table, recur
-            local head, tail = string.match(input, "^([^.]+)%.(.*)")
-            local rawHead = tbl == env or tbl == env.___replLocals___
-                and scope.manglings[head] or head -- check mangling
-            if type(tbl[rawHead]) == "table" then
-                return addMatches(tail, tbl[rawHead], prefix .. head)
-            end
-        end
-
-        addMatches(inputFragment, scope.specials or {})
-        addMatches(inputFragment, SPECIALS or {})
-        addMatches(inputFragment, env.___replLocals___ or {})
-        addMatches(inputFragment, env)
-        addMatches(inputFragment, env._ENV or env._G or {})
+        addMatchesFromGen(pairs(env._ENV or env._G or {}))
+        addMatchesFromGen(pairs(env.___replLocals___ or {}))
+        addMatchesFromGen(pairs(SPECIALS or {}))
+        addMatchesFromGen(pairs(scope.specials or {}))
         return matches
     end
     if opts.registerCompleter then opts.registerCompleter(replCompleter) end
@@ -2376,7 +2353,6 @@ local function repl(options)
             clearstream()
             reset()
         else
-            rootOptions = opts
             if not parseok then break end -- eof
             local compileOk, luaSource = pcall(compile, x, {
                 correlate = opts.correlate,
@@ -2409,7 +2385,6 @@ local function repl(options)
                     end
                 end
             end
-            rootOptions = oldRootOptions
         end
     end
 end
@@ -2417,7 +2392,7 @@ end
 local macroLoaded = {}
 
 local pathTable = {"./?.fnl", "./?/init.fnl"}
-local osPath = os and os.getenv and os.getenv("FENNEL_PATH")
+local osPath = os.getenv("FENNEL_PATH")
 if osPath then
     table.insert(pathTable, osPath)
 end
@@ -2443,7 +2418,7 @@ local module = {
     macroLoaded = macroLoaded,
     path = table.concat(pathTable, ";"),
     traceback = traceback,
-    version = "0.4.0-dev",
+    version = "0.3.0",
 }
 
 local function searchModule(modulename, pathstring)
@@ -2624,9 +2599,6 @@ SPECIALS['include'] = function(ast, scope, parent, opts)
     rootScope.includes[mod] = ret
     return ret
 end
-docSpecial('include', {'module-name-literal'},
-           'Like require, but load the target module during compilation and embed it in the\n'
-        .. 'Lua output. The module must be a string literal and resolvable at compile time.')
 
 local function requireFallback(e)
     local code = ('require(%s)'):format(tostring(e))
