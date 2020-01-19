@@ -3,14 +3,20 @@
 
 (local module-sym (gensym))
 
-(fn module [name]
-  `(local ,module-sym
-     (let [name# ,(tostring name)
-           loaded# (. package.loaded name#)]
-       (if (and (= :table (type loaded#))
-                (. loaded# :aniseed/module)) 
-         loaded#
-         {:aniseed/module name#}))))
+;; TODO Add local requires / imports from the args list.
+;; I think I need to register what it wants (by name) in the module map.
+;; That allows inspection of what's required to allow dynamic evaluation.
+;; Goal: Be able to evaluate each form in a file one at a time and have it work.
+;; This means module, then defs and have them all work.
+(fn module [name ...]
+  (let [args [...]]
+    `[(local ,module-sym
+        (let [name# ,(tostring name)
+              loaded# (. package.loaded name#)]
+          (if (and (= :table (type loaded#))
+                   (. loaded# :aniseed/module)) 
+            loaded#
+            {:aniseed/module name#})))]))
 
 (fn def [name value]
   `(local ,name

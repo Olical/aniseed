@@ -8,6 +8,7 @@ do
     _0_0 = {["aniseed/module"] = name_23_0_}
   end
 end
+do local _ = {nil} end
 local core = require("aniseed.core")
 local join = join
 do

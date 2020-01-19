@@ -1,6 +1,7 @@
 (require-macros :aniseed.module)
 
-(module aniseed.string)
+(module aniseed.string
+  (:require [aniseed.core :as core]))
 
 (local core (require :aniseed.core))
 
