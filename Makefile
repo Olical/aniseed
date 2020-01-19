@@ -8,9 +8,10 @@ compile:
 		mkdir -p lua/$$(dirname $$f); \
 		luajit deps/Fennel/fennel --add-fennel-path fnl/?.fnl --compile fnl/$$f.fnl > lua/$$f.lua; \
 	done
-	cp deps/Fennel/fennel.lua lua/aniseed/fennel.lua
-	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/view.lua
-	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/nvim.lua
+	mkdir -p lua/aniseed/deps
+	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
+	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/deps/view.lua
+	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
 
 test:
 	rm -rf test/lua
