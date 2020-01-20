@@ -8,6 +8,7 @@
   (require :aniseed.compile-test)
   (require :aniseed.fs-test)
   (require :aniseed.string-test)
+  (require :aniseed.macros-test)
 
   (let [results (test.run-all)]
     (if (test.ok? results)

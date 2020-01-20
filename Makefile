@@ -1,6 +1,6 @@
 .PHONY: compile test deps
 
-SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "module.fnl" -printf '%P\n'))
+SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.fnl" -printf '%P\n'))
 
 compile:
 	rm -rf lua

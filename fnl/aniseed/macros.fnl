@@ -1,4 +1,4 @@
-;; Macros for module definition.
+;; All of Aniseed's macros in one place.
 ;; Can't be compiled to Lua directly.
 
 (local module-sym (gensym))
@@ -27,8 +27,12 @@
 (fn defn [name ...]
   `(def ,name (fn ,name ,...)))
 
+(fn when-not [pred ...]
+  `(when (not ,pred)
+     ,...))
+
 (fn defonce [name value]
-  `(when (not (. ,module-sym ,(tostring name)))
+  `(when-not (. ,module-sym ,(tostring name))
      (def ,name ,value)))
 
 (fn export []
@@ -37,5 +41,6 @@
 {:module module
  :def def
  :defn defn
+ :when-not when-not
  :defonce defonce
  :export export}

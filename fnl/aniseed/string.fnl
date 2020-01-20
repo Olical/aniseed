@@ -1,4 +1,4 @@
-(require-macros :aniseed.module)
+(require-macros :aniseed.macros)
 
 (module aniseed.string
   (:require [aniseed.core :as core]))
