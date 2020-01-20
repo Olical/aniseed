@@ -10,10 +10,10 @@ do
 end
 do local _ = {nil} end
 local core = require("aniseed.core")
-local join = join
+local join = nil
 do
   local v_23_0_ = nil
-  local function join(...)
+  local function join0(...)
     local args = {...}
     local function _1_(...)
       if (2 == #args) then
@@ -51,7 +51,7 @@ do
     end
     return result
   end
-  v_23_0_ = join
+  v_23_0_ = join0
   _0_0["join"] = v_23_0_
   join = v_23_0_
 end

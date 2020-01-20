@@ -37,10 +37,10 @@ local function selection(type, ...)
     nu.normal("`[v`]y")
   end
   do
-    local selection = nvim.eval("@@")
+    local selection0 = nvim.eval("@@")
     nvim.o.selection = sel_backup
     nvim.ex.let("@@ = g:aniseed_reg_backup")
-    return selection
+    return selection0
   end
 end
 local function eval(code)

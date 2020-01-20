@@ -34,7 +34,7 @@ local function run(module_name)
       core.update(results, "tests", core.inc)
       do
         local prefix = ("[" .. module_name .. "/" .. label .. "]")
-        local fail = fail
+        local fail = nil
         local function _1_(desc, ...)
           test_failed = true
           local function _2_(...)
@@ -47,17 +47,17 @@ local function run(module_name)
           return print((str.join({prefix, " ", ...}) .. _2_(...)))
         end
         fail = _1_
-        local begin = begin
+        local begin = nil
         local function _2_()
           return core.update(results, "assertions", core.inc)
         end
         begin = _2_
-        local pass = pass
+        local pass = nil
         local function _3_()
           return core.update(results, "assertions-passed", core.inc)
         end
         pass = _3_
-        local t = t
+        local t = nil
         local function _4_(e, r, desc)
           begin()
           if (e == r) then
