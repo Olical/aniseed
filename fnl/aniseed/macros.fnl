@@ -3,20 +3,35 @@
 
 (local module-sym (gensym))
 
-;; TODO Add local requires / imports from the args list.
-;; I think I need to register what it wants (by name) in the module map.
-;; That allows inspection of what's required to allow dynamic evaluation.
-;; Goal: Be able to evaluate each form in a file one at a time and have it work.
-;; This means module, then defs and have them all work.
-(fn module [name ...]
-  (let [args [...]]
-    `[(local ,module-sym
-        (let [name# ,(tostring name)
-              loaded# (. package.loaded name#)]
-          (if (and (= :table (type loaded#))
-                   (. loaded# :aniseed/module)) 
-            loaded#
-            {:aniseed/module name#})))]))
+(fn module [name opts]
+  (let [res-sym (gensym)]
+    `(local ,module-sym
+       (let [name# ,(tostring name)
+             loaded# (. package.loaded name#)
+             ,res-sym (if (and (= :table (type loaded#))
+                               (. loaded# :aniseed/module)) 
+                        loaded#
+                        {})]
+
+         (tset ,res-sym :aniseed/module name#)
+         (tset ,res-sym :aniseed/requires {})
+         (tset ,res-sym :aniseed/includes {})
+
+         ,(when opts
+            (let [cmds []]
+              (each [kind bindings (pairs opts)]
+                (let [kind-str (tostring kind)]
+                  (when (or (= "require" kind-str)
+                            (= "include" kind-str))
+                    (each [alias module (pairs bindings)]
+                      (table.insert
+                        cmds
+                        `(tset (. ,res-sym ,(.. "aniseed/" kind-str "s"))
+                               ,(tostring alias)
+                               ,(tostring module)))))))
+              cmds))
+
+         ,res-sym))))
 
 (fn def [name value]
   `(local ,name
