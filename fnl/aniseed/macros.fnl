@@ -3,17 +3,17 @@
 
 (local module-sym (gensym))
 
-;; Capture and reinstate locals?
-
 (fn module [name opts]
   `[(local ,module-sym
       (let [name# ,(tostring name)
-            loaded# (. package.loaded name#)]
+            loaded# (. package.loaded name#)
+            result# (if (and (= :table (type loaded#))
+                             (. loaded# :aniseed/module))
+                      loaded#
+                      {:aniseed/module name#})
+            locals# (or (. result# :aniseed/locals) {})]
 
-        (if (and (= :table (type loaded#))
-                 (. loaded# :aniseed/module)) 
-          loaded#
-          {:aniseed/module name#})))
+        result#))
 
     ,(let [aliases []
            actions []
@@ -45,7 +45,19 @@
      (def ,name ,value)))
 
 (fn export []
-  module-sym)
+  `(do
+     (var locals# (or (. ,module-sym :aniseed/locals) {}))
+     (var done?# false)
+     (var n# 1)
+     (while (not done?#)
+       (let [(name# value#) (debug.getlocal 1 n#)]
+         (if name#
+           (do
+             (set n# (+ n# 1))
+             (tset locals# name# value#))
+           (set done?# true))))
+     (tset ,module-sym :aniseed/locals locals#)
+     ,module-sym))
 
 {:module module
  :def def

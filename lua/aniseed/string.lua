@@ -2,15 +2,20 @@ local _0_0 = nil
 do
   local name_23_0_ = "aniseed.string"
   local loaded_23_0_ = package.loaded[name_23_0_]
+  local result_23_0_ = nil
   if (("table" == type(loaded_23_0_)) and loaded_23_0_["aniseed/module"]) then
-    _0_0 = loaded_23_0_
+    result_23_0_ = loaded_23_0_
   else
-    _0_0 = {["aniseed/module"] = name_23_0_}
+    result_23_0_ = {["aniseed/module"] = name_23_0_}
   end
+  local locals_23_0_ = (result_23_0_["aniseed/locals"] or {})
+  _0_0 = result_23_0_
 end
 local _1_ = {require("aniseed.core")}
 local core = _1_[1]
 do local _ = {nil, nil} end
+local foo = "test"
+print(foo)
 local join = nil
 do
   local v_23_0_ = nil
@@ -56,4 +61,19 @@ do
   _0_0["join"] = v_23_0_
   join = v_23_0_
 end
-return _0_0
+do
+  local locals_23_0_ = (_0_0["aniseed/locals"] or {})
+  local done_3f_23_0_ = false
+  local n_23_0_ = 1
+  while not done_3f_23_0_ do
+    local name_23_0_, value_23_0_ = debug.getlocal(1, n_23_0_)
+    if name_23_0_ then
+      n_23_0_ = (n_23_0_ + 1)
+      locals_23_0_[name_23_0_] = value_23_0_
+    else
+      done_3f_23_0_ = true
+    end
+  end
+  _0_0["aniseed/locals"] = locals_23_0_
+  return _0_0
+end
