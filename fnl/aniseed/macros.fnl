@@ -6,14 +6,11 @@
 (fn module [name opts]
   `[(local ,module-sym
       (let [name# ,(tostring name)
-            loaded# (. package.loaded name#)
-            result# (if (and (= :table (type loaded#))
-                             (. loaded# :aniseed/module))
-                      loaded#
-                      {:aniseed/module name#})
-            locals# (or (. result# :aniseed/locals) {})]
-
-        result#))
+            loaded# (. package.loaded name#)]
+        (if (and (= :table (type loaded#))
+                 (. loaded# :aniseed/module))
+          loaded#
+          {:aniseed/module name#})))
 
     ,(let [aliases []
            actions []
