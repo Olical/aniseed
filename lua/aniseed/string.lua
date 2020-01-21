@@ -2,19 +2,15 @@ local _0_0 = nil
 do
   local name_23_0_ = "aniseed.string"
   local loaded_23_0_ = package.loaded[name_23_0_]
-  local _1_0 = nil
   if (("table" == type(loaded_23_0_)) and loaded_23_0_["aniseed/module"]) then
-    _1_0 = loaded_23_0_
+    _0_0 = loaded_23_0_
   else
-    _1_0 = {}
+    _0_0 = {["aniseed/module"] = name_23_0_}
   end
-  _1_0["aniseed/module"] = name_23_0_
-  _1_0["aniseed/requires"] = {}
-  _1_0["aniseed/requires"]["something"] = true
-  do local _ = {nil} end
-  _0_0 = _1_0
 end
-local core = require("aniseed.core")
+local _1_ = {require("aniseed.core")}
+local core = _1_[1]
+do local _ = {nil, nil} end
 local join = nil
 do
   local v_23_0_ = nil

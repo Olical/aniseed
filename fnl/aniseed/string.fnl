@@ -3,8 +3,6 @@
 (module aniseed.string
   {require {core aniseed.core}})
 
-(local core (require :aniseed.core))
-
 (defn join [...]
   "(join xs) (join sep xs)
   Joins all items of a table together with an optional separator.
