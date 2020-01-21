@@ -14,8 +14,12 @@
                         {})]
 
          (tset ,res-sym :aniseed/module name#)
-         (tset ,res-sym :aniseed/requires {})
-         (tset ,res-sym :aniseed/includes {})
+         (tset ,res-sym :aniseed/requires
+               (or (. ,res-sym :aniseed/requires)
+                   {}))
+         (tset ,res-sym :aniseed/includes
+               (or (. ,res-sym :aniseed/includes)
+                   {}))
 
          ,(when opts
             (let [cmds []]
