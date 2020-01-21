@@ -22,7 +22,13 @@
              (table.insert aliases alias)
              (table.insert actions `(,action ,(tostring module))))))
 
-       `(local ,aliases ,actions))])
+       `(local ,aliases ,actions))
+
+    ;; How I think locals will work:
+    ;; I should have access to package.loaded at runtime (so on interactive eval).
+    ;; This is the time where locals matter, so we can use the state the compiler can see to set values for the new eval.
+    ;; Might work!
+    ])
 
 (fn def [name value]
   `(local ,name
