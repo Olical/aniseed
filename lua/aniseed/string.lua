@@ -8,9 +8,9 @@ do
     _0_0 = {["aniseed/module"] = name_23_0_}
   end
 end
-local _1_ = {}
+local _1_ = {require("aniseed.core")}
+local core = _1_[1]
 do local _ = {nil, nil} end
-local core = require("aniseed.core")
 local join = nil
 do
   local v_23_0_ = nil
@@ -64,7 +64,9 @@ do
     local name_23_0_, value_23_0_ = debug.getlocal(1, n_23_0_)
     if name_23_0_ then
       n_23_0_ = (n_23_0_ + 1)
-      locals_23_0_[name_23_0_] = value_23_0_
+      if not string.find(name_23_0_, "^_%d") then
+        locals_23_0_[name_23_0_] = value_23_0_
+      end
     else
       done_3f_23_0_ = true
     end
