@@ -8,11 +8,9 @@ do
     _0_0 = {["aniseed/module"] = name_23_0_}
   end
 end
-local _1_ = {require("aniseed.core")}
-local core = _1_[1]
+local _1_ = {}
 do local _ = {nil, nil} end
-local foo = "test"
-print(foo)
+local core = require("aniseed.core")
 local join = nil
 do
   local v_23_0_ = nil

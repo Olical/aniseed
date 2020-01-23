@@ -4,31 +4,48 @@
 (local module-sym (gensym))
 
 (fn module [name opts]
-  `[(local ,module-sym
-      (let [name# ,(tostring name)
-            loaded# (. package.loaded name#)]
-        (if (and (= :table (type loaded#))
-                 (. loaded# :aniseed/module))
-          loaded#
-          {:aniseed/module name#})))
+  (if name
+    `[(local ,module-sym
+        (let [name# ,(tostring name)
+              loaded# (. package.loaded name#)]
+          (if (and (= :table (type loaded#))
+                   (. loaded# :aniseed/module))
+            loaded#
+            {:aniseed/module name#})))
 
-    ,(let [aliases []
-           actions []
-           loaded (. package.loaded (tostring name))]
+      ,(let [aliases []
+             vals []
+             locals (-?> package.loaded
+                         (. (tostring name))
+                         (. :aniseed/locals))]
 
-       (when opts
-         (each [action binds (pairs opts)]
-           (each [alias module (pairs binds)]
+         (when opts
+           (each [action binds (pairs opts)]
+             (each [alias module (pairs binds)]
+               (table.insert aliases alias)
+               (table.insert vals `(,action ,(tostring module))))))
+
+         ;; TODO This throws, can't bind _1_?
+         (when locals
+           (each [alias val (pairs locals)]
              (table.insert aliases alias)
-             (table.insert actions `(,action ,(tostring module))))))
+             (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias)))))
 
-       `(local ,aliases ,actions))
+         `(local ,aliases ,vals))]
 
-    ;; How I think locals will work:
-    ;; I should have access to package.loaded at runtime (so on interactive eval).
-    ;; This is the time where locals matter, so we can use the state the compiler can see to set values for the new eval.
-    ;; Might work!
-    ])
+    `(do
+       (var locals# (or (. ,module-sym :aniseed/locals) {}))
+       (var done?# false)
+       (var n# 1)
+       (while (not done?#)
+         (let [(name# value#) (debug.getlocal 1 n#)]
+           (if name#
+             (do
+               (set n# (+ n# 1))
+               (tset locals# name# value#))
+             (set done?# true))))
+       (tset ,module-sym :aniseed/locals locals#)
+       ,module-sym)))
 
 (fn def [name value]
   `(local ,name
@@ -47,24 +64,8 @@
   `(when-not (. ,module-sym ,(tostring name))
      (def ,name ,value)))
 
-(fn export []
-  `(do
-     (var locals# (or (. ,module-sym :aniseed/locals) {}))
-     (var done?# false)
-     (var n# 1)
-     (while (not done?#)
-       (let [(name# value#) (debug.getlocal 1 n#)]
-         (if name#
-           (do
-             (set n# (+ n# 1))
-             (tset locals# name# value#))
-           (set done?# true))))
-     (tset ,module-sym :aniseed/locals locals#)
-     ,module-sym))
-
 {:module module
  :def def
  :defn defn
  :when-not when-not
- :defonce defonce
- :export export}
+ :defonce defonce}

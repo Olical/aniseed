@@ -3,9 +3,6 @@
 (module aniseed.string
   {require {core aniseed.core}})
 
-(local foo "test")
-(print foo)
-
 (defn join [...]
   "(join xs) (join sep xs)
   Joins all items of a table together with an optional separator.
@@ -34,4 +31,4 @@
 
     result))
 
-(export)
+(module)
