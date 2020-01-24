@@ -14,9 +14,4 @@
     (defonce foo (inc))
     (t.= 1 calls)
     (defonce foo (inc))
-    (t.= 1 calls))
-
-  :when-not
-  (fn [t]
-    (t.= nil (when-not true :foo))
-    (t.= :foo (when-not false :foo)))}}
+    (t.= 1 calls))}}
