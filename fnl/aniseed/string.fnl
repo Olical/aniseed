@@ -30,5 +30,3 @@
                      (core.pr-str x)))))))
 
     result))
-
-(module)

@@ -1,76 +1,80 @@
 ;; All of Aniseed's macros in one place.
 ;; Can't be compiled to Lua directly.
 
-;; looks like it's to do with def
-;; maybe locals from the end of module too
-
 (local module-sym (gensym))
 
-(fn when-not [pred ...]
-  `(when (not ,pred)
-     ,...))
+(fn module [name new-local-fns]
+  `[(local ,module-sym
+      (let [name# ,(tostring name)
+            loaded# (. package.loaded name#)
+            module# (if (= :table (type loaded#)) loaded# {})]
+        (tset module# :aniseed/module name#)
+        (tset module# :aniseed/locals (or (. module# :aniseed/locals) {}))
+        (tset module# :aniseed/local-fns (or (. module# :aniseed/local-fns) {}))
+        (tset package.loaded name# module#)
+        module#))
 
-(fn module [name opts]
-  (if name
-    `[(local ,module-sym
-        (let [name# ,(tostring name)
-              loaded# (. package.loaded name#)]
-          (if (and (= :table (type loaded#))
-                   (. loaded# :aniseed/module))
-            loaded#
-            {:aniseed/module name#})))
+    ,(let [aliases []
+           vals []
+           locals (-?> package.loaded
+                       (. (tostring name))
+                       (. :aniseed/locals))
+           local-fns (or (-?> package.loaded
+                              (. (tostring name))
+                              (. :aniseed/local-fns))
+                         {})]
 
-      ,(let [aliases []
-             vals []
-             locals (-?> package.loaded
-                         (. (tostring name))
-                         (. :aniseed/locals))]
-
-         (when opts
-           (each [action binds (pairs opts)]
+       (when new-local-fns
+         (each [action binds (pairs new-local-fns)]
+           (let [action-str (tostring action)
+                 current (or (. local-fns action-str) {})]
+             (tset local-fns action-str current)
              (each [alias module (pairs binds)]
-               (table.insert aliases alias)
-               (table.insert vals `(,action ,(tostring module))))))
+               (tset current (tostring alias) (tostring module))))))
 
-         (when locals
-           (each [alias val (pairs locals)]
-             (table.insert aliases (sym alias))
-             (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias)))))
+       (each [action binds (pairs local-fns)]
+         (each [alias module (pairs binds)]
+           (table.insert aliases (sym alias))
+           (table.insert vals `(,(sym action) ,module))))
 
-         `(local ,aliases ,vals))]
+       (when locals
+         (each [alias val (pairs locals)]
+           (table.insert aliases (sym alias))
+           (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias)))))
 
-    `(do
-       (var locals# (or (. ,module-sym :aniseed/locals) {}))
-       (var done?# false)
-       (var n# 1)
+       `(local ,aliases
+          (do
+            (tset ,module-sym :aniseed/local-fns ,local-fns)
+            ,vals)))])
 
-       (while (not done?#)
-         (let [(name# value#) (debug.getlocal 1 n#)]
-           (if name#
-             (do
-               (set n# (+ n# 1))
-               (when-not (string.find name# "^_%d")
-                 (tset locals# name# value#)))
-             (set done?# true))))
-
-       (tset ,module-sym :aniseed/locals locals#)
-       ,module-sym)))
-
-(fn def [name value]
+(fn def- [name value]
   `(local ,name
      (let [v# ,value]
-       (tset ,module-sym ,(tostring name) v#)
+       (tset (. ,module-sym :aniseed/locals) ,(tostring name) v#)
        v#)))
+
+(fn def [name value]
+  `(def- ,name
+     (do
+       (let [v# ,value]
+         (tset ,module-sym ,(tostring name) v#)
+         v#))))
+
+(fn defn- [name ...]
+  `(def- ,name (fn ,name ,...)))
 
 (fn defn [name ...]
   `(def ,name (fn ,name ,...)))
 
+(fn defonce- [name value]
+  `(when (not (. ,module-sym ,(tostring name)))
+     (def- ,name ,value)))
+
 (fn defonce [name value]
-  `(when-not (. ,module-sym ,(tostring name))
+  `(when (not (. ,module-sym ,(tostring name)))
      (def ,name ,value)))
 
-{:when-not when-not
- :module module
- :def def
- :defn defn
- :defonce defonce}
+{:module module
+ :def- def- :def def
+ :defn- defn- :defn defn
+ :defonce- defonce- :defonce defonce}
