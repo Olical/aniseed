@@ -1,13 +1,17 @@
 ;; All of Aniseed's macros in one place.
 ;; Can't be compiled to Lua directly.
 
+;; Automatically loaded through require-macros for all Aniseed based evaluations.
+
 (local module-sym (gensym))
 
-(fn module [name new-local-fns]
+(fn module [name new-local-fns initial-mod]
   `[(local ,module-sym
       (let [name# ,(tostring name)
             loaded# (. package.loaded name#)
-            module# (if (= :table (type loaded#)) loaded# {})]
+            module# (if (= :table (type loaded#))
+                      loaded#
+                      ,(or initial-mod {}))]
         (tset module# :aniseed/module name#)
         (tset module# :aniseed/locals (or (. module# :aniseed/locals) {}))
         (tset module# :aniseed/local-fns (or (. module# :aniseed/local-fns) {}))
