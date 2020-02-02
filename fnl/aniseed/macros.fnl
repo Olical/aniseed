@@ -74,7 +74,13 @@
   `(when (not (. ,module-sym ,(tostring name)))
      (def ,name ,value)))
 
+(fn deftest [name ...]
+  `(let [tests# (or (. ,module-sym :aniseed/tests) {})]
+     (tset tests# ,(tostring name) (fn [,(sym :t)] ,...))
+     (tset ,module-sym :aniseed/tests tests#)))
+
 {:module module
  :def- def- :def def
  :defn- defn- :defn defn
- :defonce- defonce- :defonce defonce}
+ :defonce- defonce- :defonce defonce
+ :deftest deftest}
