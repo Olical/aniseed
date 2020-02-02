@@ -1,10 +1,13 @@
-(local core (require :aniseed.core))
-(local str (require :aniseed.string))
+(require-macros :aniseed.macros)
 
-(fn ok? [{: tests : tests-passed}]
+(module aniseed.test
+  {require {core aniseed.core
+            str aniseed.string}})
+
+(defn ok? [{: tests : tests-passed}]
   (= tests tests-passed))
 
-(fn display-results [results prefix]
+(defn display-results [results prefix]
   (let [{: tests
          : tests-passed
          : assertions
@@ -18,9 +21,9 @@
                assertions-passed "/" assertions " assertions passed")))
   results)
 
-(fn run [module-name]
-  (let [module (. package.loaded module-name)
-        tests (and (core.table? module) (. module :aniseed/tests))]
+(defn run [mod-name]
+  (let [mod (. package.loaded mod-name)
+        tests (and (core.table? mod) (. mod :aniseed/tests))]
     (when (core.table? tests)
       (let [results {:tests (length tests)
                      :tests-passed 0
@@ -29,7 +32,7 @@
         (each [label f (pairs tests)]
           (var test-failed false)
           (core.update results :tests core.inc)
-          (let [prefix (.. "[" module-name "/" label "]")
+          (let [prefix (.. "[" mod-name "/" label "]")
                 fail (fn [desc ...]
                        (set test-failed true)
                        (print (.. (str.join [prefix " " ...])
@@ -64,9 +67,9 @@
               (false err) (fail "Exception: " err)))
           (when (not test-failed)
             (core.update results :tests-passed core.inc)))
-        (display-results results (.. "[" module-name "]"))))))
+        (display-results results (.. "[" mod-name "]"))))))
 
-(fn run-all []
+(defn run-all []
   (-> (core.keys package.loaded)
       (->> (core.map run)
            (core.filter core.table?)
@@ -80,8 +83,3 @@
               :assertions 0
               :assertions-passed 0}))
       (display-results "[total]")))
-
-{:aniseed/module :aniseed.test
- :ok? ok?
- :run run
- :run-all run-all}

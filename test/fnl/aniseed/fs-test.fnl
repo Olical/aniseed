@@ -1,7 +1,7 @@
-(local fs (require :aniseed.fs))
+(require-macros :aniseed.macros)
 
-{:aniseed/module :aniseed.fs-test
- :aniseed/tests
- {:basename
-  (fn [t]
-    (t.= "foo" (fs.basename "foo/bar.fnl")))}}
+(module aniseed.fs-test
+  {require {fs aniseed.fs}})
+
+(deftest basename
+  (t.= "foo" (fs.basename "foo/bar.fnl")))

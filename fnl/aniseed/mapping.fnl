@@ -1,24 +1,27 @@
-(local core (require :aniseed.core))
-(local str (require :aniseed.string))
-(local nvim (require :aniseed.nvim))
-(local nu (require :aniseed.nvim.util))
-(local fennel (require :aniseed.fennel))
-(local test (require :aniseed.test))
+(require-macros :aniseed.macros)
 
-(fn handle-result [x]
-  (let [module (and (core.table? x) (. x :aniseed/module))]
-    (when module
-      (when (= nil (. package.loaded module))
-        (tset package.loaded module {}))
+(module aniseed.mapping
+  {require {core aniseed.core
+            str aniseed.string
+            nvim aniseed.nvim
+            nu aniseed.nvim.util
+            fennel aniseed.fennel
+            test aniseed.test}})
+
+(defn handle-result [x]
+  (let [mod (and (core.table? x) (. x :aniseed/module))]
+    (when mod
+      (when (= nil (. package.loaded mod))
+        (tset package.loaded mod {}))
 
       (each [k v (pairs x)]
-        (tset (. package.loaded module) k v))))
+        (tset (. package.loaded mod) k v))))
 
   (vim.schedule
     (fn []
       (core.pr x))))
 
-(fn selection [type ...]
+(defn selection [type ...]
   (let [sel-backup nvim.o.selection
         [visual?] [...]]
 
@@ -36,25 +39,25 @@
       (nvim.ex.let "@@ = g:aniseed_reg_backup")
       selection)))
 
-(fn eval [code]
+(defn eval [code]
   (handle-result (fennel.eval code)))
 
-(fn eval-selection [...]
+(defn eval-selection [...]
   (eval (selection ...)))
 
-(fn eval-range [first-line last-line]
+(defn eval-range [first-line last-line]
   (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
 
-(fn eval-file [path]
+(defn eval-file [path]
   (handle-result (fennel.dofile path)))
 
-(fn run-tests [name]
+(defn run-tests [name]
   (test.run name))
 
-(fn run-all-tests []
+(defn run-all-tests []
   (test.run-all))
 
-(fn init []
+(defn init []
   (nu.fn-bridge
     :AniseedSelection
     :aniseed.mapping :selection)
@@ -107,13 +110,3 @@
     ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>"
     {:noremap true
      :silent true}))
-
-{:aniseed/module :aniseed.mapping
- :eval eval
- :selection selection
- :eval-selection eval-selection
- :eval-range eval-range
- :eval-file eval-file
- :run-tests run-tests
- :run-all-tests run-all-tests
- :init init}

@@ -1,45 +1,48 @@
-(local view (require :aniseed.view))
+(require-macros :aniseed.macros)
 
-(fn first [xs]
+(module aniseed.core
+  {require {view aniseed.view}})
+
+(defn first [xs]
   (when xs
     (. xs 1)))
 
-(fn last [xs]
+(defn last [xs]
   (when xs
     (. xs (length xs))))
 
-(fn second [xs]
+(defn second [xs]
   (when xs
     (. xs 2)))
 
-(fn count [xs]
+(defn count [xs]
   (if xs
     (table.maxn xs)
     0))
 
-(fn string? [x]
+(defn string? [x]
   (= "string" (type x)))
 
-(fn nil? [x]
+(defn nil? [x]
   (= nil x))
 
-(fn table? [x]
+(defn table? [x]
   (= "table" (type x)))
 
-(fn inc [n]
+(defn inc [n]
   "Increment n by 1."
   (+ n 1))
 
-(fn dec [n]
+(defn dec [n]
   "Decrement n by 1."
   (- n 1))
 
-(fn update [tbl k f]
+(defn update [tbl k f]
   "Swap the value under key `k` in table `tbl` using function `f`."
   (tset tbl k (f (. tbl k)))
   tbl)
 
-(fn run! [f xs]
+(defn run! [f xs]
   "Execute the function (for side effects) for every xs."
   (when xs
     (let [nxs (count xs)]
@@ -47,7 +50,7 @@
         (for [i 1 nxs]
           (f (. xs i)))))))
 
-(fn filter [f xs]
+(defn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
     (run!
@@ -57,7 +60,7 @@
       xs)
     result))
 
-(fn map [f xs]
+(defn map [f xs]
   "Map xs to a new sequential table by calling (f x) on each item."
   (let [result []]
     (run!
@@ -71,25 +74,25 @@
       xs)
     result))
 
-(fn identity [x]
+(defn identity [x]
   "Returns what you pass it."
   x)
 
-(fn keys [t]
+(defn keys [t]
   "Get all keys of a table."
   (let [result []]
     (each [k _ (pairs t)]
       (table.insert result k))
     result))
 
-(fn vals [t]
+(defn vals [t]
   "Get all values of a table."
   (let [result []]
     (each [_ v (pairs t)]
       (table.insert result v))
     result))
 
-(fn reduce [f init xs]
+(defn reduce [f init xs]
   "Reduce xs into a result by passing each subsequent value into the fn with
   the previous value as the first arg. Starting with init."
   (var result init)
@@ -99,7 +102,7 @@
     xs)
   result)
 
-(fn some [f xs]
+(defn some [f xs]
   "Return the first truthy result from (f x) or nil."
   (var result nil)
   (var n 1)
@@ -110,7 +113,7 @@
       (set n (inc n))))
   result)
 
-(fn concat [...]
+(defn concat [...]
   "Concatinats the sequential table arguments together."
   (let [result []]
     (run! (fn [xs]
@@ -121,7 +124,7 @@
       [...])
     result))
 
-(fn slurp [path]
+(defn slurp [path]
   "Read the file into a string."
   (match (io.open path "r")
     (nil msg) (print (.. "Could not open file: " msg))
@@ -129,7 +132,7 @@
         (f:close)
         content)))
 
-(fn spit [path content]
+(defn spit [path content]
   "Spit the string into the file."
   (match (io.open path "w")
     (nil msg) (print (.. "Could not open file: " msg))
@@ -138,36 +141,11 @@
         (f:close)
         nil)))
 
-(fn pr-str [...]
+(defn pr-str [...]
   (.. (unpack
         (map (fn [x]
                (view x {:one-line true}))
              [...]))))
 
-(fn pr [...]
+(defn pr [...]
   (print (pr-str ...)))
-
-{:aniseed/module :aniseed.core
- :first first
- :last last
- :second second
- :count count
- :string? string?
- :nil? nil?
- :table? table?
- :inc inc
- :dec dec
- :update update
- :run! run!
- :filter filter
- :map map
- :identity identity
- :keys keys
- :vals vals
- :reduce reduce
- :some some
- :concat concat
- :slurp slurp
- :spit spit
- :pr-str pr-str
- :pr pr}

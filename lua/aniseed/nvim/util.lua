@@ -1,32 +1,78 @@
-local nvim = require("aniseed.nvim")
-local function normal(keys)
-  return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
+local _0_0 = nil
+do
+  local name_23_0_ = "aniseed.nvim.util"
+  local loaded_23_0_ = package.loaded[name_23_0_]
+  local module_23_0_ = nil
+  if ("table" == type(loaded_23_0_)) then
+    module_23_0_ = loaded_23_0_
+  else
+    module_23_0_ = {}
+  end
+  module_23_0_["aniseed/module"] = name_23_0_
+  module_23_0_["aniseed/locals"] = (module_23_0_["aniseed/locals"] or {})
+  module_23_0_["aniseed/local-fns"] = (module_23_0_["aniseed/local-fns"] or {})
+  package.loaded[name_23_0_] = module_23_0_
+  _0_0 = module_23_0_
 end
-local function fn_bridge(viml_name, module, lua_name, opts)
-  local _0_ = (opts or {})
-  local range = _0_["range"]
-  local _return = _0_["return"]
-  local function _1_()
-    if range then
-      return " range"
-    else
-      return ""
-    end
-  end
-  local function _2_()
-    if _return then
-      return "return"
-    else
-      return "call"
-    end
-  end
-  local function _3_()
-    if range then
-      return "\" . a:firstline . \", \" . a:lastline . \", "
-    else
-      return ""
-    end
-  end
-  return nvim.ex.function_((viml_name .. "(...)" .. _1_() .. "\n          " .. _2_() .. " luaeval(\"require('" .. module .. "')['" .. lua_name .. "'](" .. _3_() .. "unpack(_A))\", a:000)\n          endfunction"))
+local function _1_(...)
+  _0_0["aniseed/local-fns"] = {require = {nvim = "aniseed.nvim"}}
+  return {require("aniseed.nvim")}
 end
-return {["aniseed/module"] = "aniseed.nvim.util", ["fn-bridge"] = fn_bridge, normal = normal}
+local _2_ = _1_(...)
+local nvim = _2_[1]
+do local _ = {nil, nil} end
+local normal = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function normal0(keys)
+      return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
+    end
+    v_23_0_0 = normal0
+    _0_0["normal"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["normal"] = v_23_0_
+  normal = v_23_0_
+end
+local fn_bridge = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function fn_bridge0(viml_name, mod, lua_name, opts)
+      local _3_ = (opts or {})
+      local range = _3_["range"]
+      local _return = _3_["return"]
+      local function _4_()
+        if range then
+          return " range"
+        else
+          return ""
+        end
+      end
+      local function _5_()
+        if _return then
+          return "return"
+        else
+          return "call"
+        end
+      end
+      local function _6_()
+        if range then
+          return "\" . a:firstline . \", \" . a:lastline . \", "
+        else
+          return ""
+        end
+      end
+      return nvim.ex.function_((viml_name .. "(...)" .. _4_() .. "\n          " .. _5_() .. " luaeval(\"require('" .. mod .. "')['" .. lua_name .. "'](" .. _6_() .. "unpack(_A))\", a:000)\n          endfunction"))
+    end
+    v_23_0_0 = fn_bridge0
+    _0_0["fn-bridge"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["fn-bridge"] = v_23_0_
+  fn_bridge = v_23_0_
+end
+return nil

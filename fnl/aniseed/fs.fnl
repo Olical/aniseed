@@ -1,12 +1,11 @@
-(local core (require :aniseed.core))
-(local nvim (require :aniseed.nvim))
+(require-macros :aniseed.macros)
 
-(fn basename [path]
+(module aniseed.fs
+  {require {core aniseed.core
+            nvim aniseed.nvim}})
+
+(defn basename [path]
   (nvim.fn.fnamemodify path ":h"))
 
-(fn mkdirp [dir]
+(defn mkdirp [dir]
   (nvim.fn.mkdir dir "p"))
-
-{:aniseed/module :aniseed.fs
- :basename basename
- :mkdirp mkdirp}

@@ -1,9 +1,12 @@
-(local core (require :aniseed.core))
-(local fs (require :aniseed.fs))
-(local nvim (require :aniseed.nvim))
-(local fennel (require :aniseed.fennel))
+(require-macros :aniseed.macros)
 
-(fn str [content opts]
+(module aniseed.compile
+  {require {core aniseed.core
+            fs aniseed.fs
+            nvim aniseed.nvim
+            fennel aniseed.fennel}})
+
+(defn str [content opts]
   "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
   with some wrapping, returns an (ok? result) tuple."
   (xpcall
@@ -11,7 +14,7 @@
       (fennel.compileString content opts))
     fennel.traceback))
 
-(fn file [src dest opts]
+(defn file [src dest opts]
   "Compile the source file into the destination file if the source file was
   modified more recently. Will create any required ancestor directories for the
   destination file to exist."
@@ -24,7 +27,7 @@
                         (-> dest fs.basename fs.mkdirp)
                         (core.spit dest result))))))
 
-(fn glob [src-expr src-dir dest-dir opts]
+(defn glob [src-expr src-dir dest-dir opts]
   "Match all files against the src-expr under the src-dir then compile them
   into the dest-dir as Lua."
   (let [src-dir-len (core.inc (string.len src-dir))
@@ -37,8 +40,3 @@
               (.. dest-dir path)
               ".fnl$" ".lua")
             opts))))
-
-{:aniseed/module :aniseed.compile
- :glob glob
- :file file
- :str str}
