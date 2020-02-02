@@ -1,5 +1,3 @@
-(require-macros :aniseed.macros)
-
 (module aniseed.compile
   {require {core aniseed.core
             fs aniseed.fs
@@ -11,7 +9,9 @@
   with some wrapping, returns an (ok? result) tuple."
   (xpcall
     (fn []
-      (fennel.compileString content opts))
+      (fennel.compileString
+        (.. "(require-macros :aniseed.macros)\n" content)
+        opts))
     fennel.traceback))
 
 (defn file [src dest opts]

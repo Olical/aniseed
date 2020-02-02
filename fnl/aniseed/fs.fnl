@@ -1,5 +1,3 @@
-(require-macros :aniseed.macros)
-
 (module aniseed.fs
   {require {core aniseed.core
             nvim aniseed.nvim}})

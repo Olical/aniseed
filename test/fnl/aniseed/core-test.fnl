@@ -1,5 +1,3 @@
-(require-macros :aniseed.macros)
-
 (module aniseed.core-test
   {require {core aniseed.core}})
 

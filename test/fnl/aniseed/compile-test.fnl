@@ -1,5 +1,3 @@
-(require-macros :aniseed.macros)
-
 (module aniseed.compile-test
   {require {core aniseed.core
             compile aniseed.compile}})

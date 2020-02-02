@@ -1,5 +1,3 @@
-(require-macros :aniseed.macros)
-
 (module aniseed.fs-test
   {require {fs aniseed.fs}})
 

@@ -16,13 +16,13 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-  return {require("aniseed.fs"), require("aniseed.fennel"), require("aniseed.core"), require("aniseed.nvim")}
+  return {require("aniseed.nvim"), require("aniseed.fennel"), require("aniseed.core"), require("aniseed.fs")}
 end
 local _2_ = _1_(...)
-local fs = _2_[1]
+local nvim = _2_[1]
 local fennel = _2_[2]
 local core = _2_[3]
-local nvim = _2_[4]
+local fs = _2_[4]
 do local _ = {nil, nil} end
 local str = nil
 do
@@ -31,7 +31,7 @@ do
     local v_23_0_0 = nil
     local function str0(content, opts)
       local function _3_()
-        return fennel.compileString(content, opts)
+        return fennel.compileString(("(require-macros :aniseed.macros)\n" .. content), opts)
       end
       return xpcall(_3_, fennel.traceback)
     end
