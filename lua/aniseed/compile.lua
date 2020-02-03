@@ -16,22 +16,37 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-  return {require("aniseed.core"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
+  return {require("aniseed.nvim"), require("aniseed.core"), require("aniseed.fennel"), require("aniseed.fs")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
-local fennel = _2_[2]
-local fs = _2_[3]
-local nvim = _2_[4]
+local nvim = _2_[1]
+local core = _2_[2]
+local fennel = _2_[3]
+local fs = _2_[4]
 do local _ = ({nil, _0_0, nil})[2] end
+local macros_prefix = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function macros_prefix0(code)
+      return ("(require-macros :aniseed.macros)\n" .. code)
+    end
+    v_23_0_0 = macros_prefix0
+    _0_0["macros-prefix"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["macros-prefix"] = v_23_0_
+  macros_prefix = v_23_0_
+end
 local str = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function str0(content, opts)
+    local function str0(code, opts)
       local function _3_()
-        return fennel.compileString(("(require-macros :aniseed.macros)\n" .. content), opts)
+        return fennel.compileString(macros_prefix(code), opts)
       end
       return xpcall(_3_, fennel.traceback)
     end
@@ -49,9 +64,9 @@ do
     local v_23_0_0 = nil
     local function file0(src, dest, opts)
       if ((core["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
-        local content = core.slurp(src)
+        local code = core.slurp(src)
         do
-          local _3_0, _4_0 = str(content, {filename = src})
+          local _3_0, _4_0 = str(code, {filename = src})
           if ((_3_0 == false) and (nil ~= _4_0)) then
             local err = _4_0
             return nvim.err_writeln(err)

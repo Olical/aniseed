@@ -4,13 +4,17 @@
             nvim aniseed.nvim
             fennel aniseed.fennel}})
 
-(defn str [content opts]
+(defn macros-prefix [code]
+  (.. "(require-macros :aniseed.macros)\n" code))
+
+(defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
-  with some wrapping, returns an (ok? result) tuple."
+  with some wrapping, returns an (ok? result) tuple. Automatically requires the
+  Aniseed macros."
   (xpcall
     (fn []
       (fennel.compileString
-        (.. "(require-macros :aniseed.macros)\n" content)
+        (macros-prefix code)
         opts))
     fennel.traceback))
 
@@ -20,8 +24,8 @@
   destination file to exist."
   (when (or (and (core.table? opts) (. opts :force))
             (> (nvim.fn.getftime src) (nvim.fn.getftime dest)))
-    (let [content (core.slurp src)]
-      (match (str content {:filename src})
+    (let [code (core.slurp src)]
+      (match (str code {:filename src})
         (false err) (nvim.err_writeln err)
         (true result) (do
                         (-> dest fs.basename fs.mkdirp)

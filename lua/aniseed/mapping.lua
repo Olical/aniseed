@@ -15,23 +15,24 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
-  return {require("aniseed.nvim"), require("aniseed.fennel"), require("aniseed.test"), require("aniseed.string"), require("aniseed.core"), require("aniseed.nvim.util")}
+  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
+  return {require("aniseed.eval"), require("aniseed.fennel"), require("aniseed.string"), require("aniseed.core"), require("aniseed.test"), require("aniseed.nvim.util"), require("aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local nvim = _2_[1]
+local eval = _2_[1]
 local fennel = _2_[2]
-local test = _2_[3]
-local str = _2_[4]
-local core = _2_[5]
+local str = _2_[3]
+local core = _2_[4]
+local test = _2_[5]
 local nu = _2_[6]
+local nvim = _2_[7]
 do local _ = ({nil, _0_0, nil})[2] end
 local handle_result = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function handle_result0(x)
+    local function handle_result0(ok_3f, x)
       do
         local mod = (core["table?"](x) and x["aniseed/module"])
         if mod then
@@ -89,20 +90,20 @@ do
   _0_0["aniseed/locals"]["selection"] = v_23_0_
   selection = v_23_0_
 end
-local eval = nil
+local eval_str = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function eval0(code)
-      return handle_result(fennel.eval(code))
+    local function eval_str0(code, opts)
+      return handle_result(eval.str(code, opts))
     end
-    v_23_0_0 = eval0
-    _0_0["eval"] = v_23_0_0
+    v_23_0_0 = eval_str0
+    _0_0["eval-str"] = v_23_0_0
     v_23_0_ = v_23_0_0
   end
-  _0_0["aniseed/locals"]["eval"] = v_23_0_
-  eval = v_23_0_
+  _0_0["aniseed/locals"]["eval-str"] = v_23_0_
+  eval_str = v_23_0_
 end
 local eval_selection = nil
 do
@@ -110,7 +111,7 @@ do
   do
     local v_23_0_0 = nil
     local function eval_selection0(...)
-      return eval(selection(...))
+      return eval_str(selection(...))
     end
     v_23_0_0 = eval_selection0
     _0_0["eval-selection"] = v_23_0_0
@@ -125,7 +126,7 @@ do
   do
     local v_23_0_0 = nil
     local function eval_range0(first_line, last_line)
-      return eval(str.join("\n", nvim.fn.getline(first_line, last_line)))
+      return eval_str(str.join("\n", nvim.fn.getline(first_line, last_line)))
     end
     v_23_0_0 = eval_range0
     _0_0["eval-range"] = v_23_0_0
@@ -139,8 +140,8 @@ do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function eval_file0(path)
-      return handle_result(fennel.dofile(path))
+    local function eval_file0(filename)
+      return handle_result(eval.str(core.slurp(filename), {filename = filename}))
     end
     v_23_0_0 = eval_file0
     _0_0["eval-file"] = v_23_0_0
@@ -186,7 +187,7 @@ do
     local v_23_0_0 = nil
     local function init0()
       nu["fn-bridge"]("AniseedSelection", "aniseed.mapping", "selection")
-      nu["fn-bridge"]("AniseedEval", "aniseed.mapping", "eval")
+      nu["fn-bridge"]("AniseedEval", "aniseed.mapping", "eval-str")
       nu["fn-bridge"]("AniseedEvalFile", "aniseed.mapping", "eval-file")
       nu["fn-bridge"]("AniseedEvalRange", "aniseed.mapping", "eval-range", {range = true})
       nu["fn-bridge"]("AniseedEvalSelection", "aniseed.mapping", "eval-selection")

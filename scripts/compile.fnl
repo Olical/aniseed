@@ -18,6 +18,6 @@
 
 (let [filename (. arg 1)
       (_ok? result) (-> filename
-                     (read-file)
-                     (compile {:filename filename}))]
+                        (read-file)
+                        (compile {:filename filename}))]
   (print result))

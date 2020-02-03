@@ -4,9 +4,10 @@
             nvim aniseed.nvim
             nu aniseed.nvim.util
             fennel aniseed.fennel
+            eval aniseed.eval
             test aniseed.test}})
 
-(defn handle-result [x]
+(defn handle-result [ok? x]
   (let [mod (and (core.table? x) (. x :aniseed/module))]
     (when mod
       (when (= nil (. package.loaded mod))
@@ -37,17 +38,19 @@
       (nvim.ex.let "@@ = g:aniseed_reg_backup")
       selection)))
 
-(defn eval [code]
-  (handle-result (fennel.eval code)))
+(defn eval-str [code opts]
+  (handle-result (eval.str code opts)))
 
 (defn eval-selection [...]
-  (eval (selection ...)))
+  (eval-str (selection ...)))
 
 (defn eval-range [first-line last-line]
-  (eval (str.join "\n" (nvim.fn.getline first-line last-line))))
+  (eval-str (str.join "\n" (nvim.fn.getline first-line last-line))))
 
-(defn eval-file [path]
-  (handle-result (fennel.dofile path)))
+(defn eval-file [filename]
+  (-> (core.slurp filename)
+      (eval.str {:filename filename})
+      (handle-result)))
 
 (defn run-tests [name]
   (test.run name))
@@ -62,7 +65,7 @@
 
   (nu.fn-bridge
     :AniseedEval
-    :aniseed.mapping :eval)
+    :aniseed.mapping :eval-str)
 
   (nu.fn-bridge
     :AniseedEvalFile
