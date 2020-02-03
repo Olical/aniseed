@@ -1,1 +1,1 @@
-(require :aniseed.deps.nvim)
+(module aniseed.nvim {} (require :aniseed.deps.nvim))

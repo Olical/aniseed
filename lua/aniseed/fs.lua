@@ -21,7 +21,7 @@ end
 local _2_ = _1_(...)
 local nvim = _2_[1]
 local core = _2_[2]
-do local _ = {nil, nil} end
+do local _ = ({nil, _0_0, nil})[2] end
 local basename = nil
 do
   local v_23_0_ = nil

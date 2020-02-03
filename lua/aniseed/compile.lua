@@ -16,14 +16,14 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-  return {require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.core"), require("aniseed.nvim")}
+  return {require("aniseed.core"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local fennel = _2_[1]
-local fs = _2_[2]
-local core = _2_[3]
+local core = _2_[1]
+local fennel = _2_[2]
+local fs = _2_[3]
 local nvim = _2_[4]
-do local _ = {nil, nil} end
+do local _ = ({nil, _0_0, nil})[2] end
 local str = nil
 do
   local v_23_0_ = nil

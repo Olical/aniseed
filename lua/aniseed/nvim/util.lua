@@ -20,7 +20,7 @@ local function _1_(...)
 end
 local _2_ = _1_(...)
 local nvim = _2_[1]
-do local _ = {nil, nil} end
+do local _ = ({nil, _0_0, nil})[2] end
 local normal = nil
 do
   local v_23_0_ = nil
@@ -43,8 +43,8 @@ do
     local v_23_0_0 = nil
     local function fn_bridge0(viml_name, mod, lua_name, opts)
       local _3_ = (opts or {})
-      local _return = _3_["return"]
       local range = _3_["range"]
+      local _return = _3_["return"]
       local function _4_()
         if range then
           return " range"
