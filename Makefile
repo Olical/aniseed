@@ -14,7 +14,7 @@ compile:
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
 
 test:
-	scripts/test.sh
+	SUFFIX="test/fnl/foo.fnl" scripts/test.sh
 
 deps:
 	scripts/dep.sh bakpakin Fennel 0.3.2

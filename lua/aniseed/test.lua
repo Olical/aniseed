@@ -15,12 +15,13 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", str = "aniseed.string"}}
-  return {require("aniseed.string"), require("aniseed.core")}
+  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
+  return {require("aniseed.nvim"), require("aniseed.core"), require("aniseed.string")}
 end
 local _2_ = _1_(...)
-local str = _2_[1]
+local nvim = _2_[1]
 local core = _2_[2]
+local str = _2_[3]
 do local _ = ({nil, _0_0, nil})[2] end
 local ok_3f = nil
 do
@@ -29,8 +30,8 @@ do
     local v_23_0_0 = nil
     local function ok_3f0(_3_0)
       local _4_ = _3_0
-      local tests = _4_["tests"]
       local tests_passed = _4_["tests-passed"]
+      local tests = _4_["tests"]
       return (tests == tests_passed)
     end
     v_23_0_0 = ok_3f0
@@ -48,10 +49,10 @@ do
     local function display_results0(results, prefix)
       do
         local _3_ = results
-        local tests = _3_["tests"]
         local assertions = _3_["assertions"]
-        local tests_passed = _3_["tests-passed"]
         local assertions_passed = _3_["assertions-passed"]
+        local tests_passed = _3_["tests-passed"]
+        local tests = _3_["tests"]
         local function _4_()
           if ok_3f(results) then
             return "OK"
@@ -184,5 +185,32 @@ do
   end
   _0_0["aniseed/locals"]["run-all"] = v_23_0_
   run_all = v_23_0_
+end
+local suite = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function suite0()
+      nvim.ex.redir_("> test/results.txt")
+      local function _3_(path)
+        return require(string.gsub(string.match(path, "^test/fnl/(.-).fnl$"), "/", "."))
+      end
+      core["run!"](_3_, nvim.fn.globpath("test/fnl", "**/*-test.fnl", false, true))
+      do
+        local results = run_all()
+        if ok_3f(results) then
+          return nvim.ex.q()
+        else
+          return nvim.ex.cq()
+        end
+      end
+    end
+    v_23_0_0 = suite0
+    _0_0["suite"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["suite"] = v_23_0_
+  suite = v_23_0_
 end
 return nil

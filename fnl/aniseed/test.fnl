@@ -1,6 +1,7 @@
 (module aniseed.test
   {require {core aniseed.core
-            str aniseed.string}})
+            str aniseed.string
+            nvim aniseed.nvim}})
 
 (defn ok? [{: tests : tests-passed}]
   (= tests tests-passed))
@@ -81,3 +82,19 @@
               :assertions 0
               :assertions-passed 0}))
       (display-results "[total]")))
+
+(defn suite []
+  (nvim.ex.redir_ "> test/results.txt")
+
+  (->> (nvim.fn.globpath "test/fnl" "**/*-test.fnl" false true)
+       (core.run!
+         (fn [path]
+           (-> path
+               (string.match "^test/fnl/(.-).fnl$")
+               (string.gsub "/" ".")
+               (require)))))
+
+  (let [results (run-all)]
+    (if (ok? results)
+      (nvim.ex.q)
+      (nvim.ex.cq))))
