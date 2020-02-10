@@ -38,8 +38,19 @@
       (nvim.ex.let "@@ = g:aniseed_reg_backup")
       selection)))
 
+(def- buffer-header-length 20)
+(def- default-module-name "aniseed.user")
+(def- buffer-module-pattern "[(]%s*module%s*(.-)[%s){]")
+(defn- buffer-module-name []
+  (let [header (->> (nvim.buf_get_lines 0 0 buffer-header-length false)
+                    (str.join "\n"))]
+    (or (string.match header buffer-module-pattern)
+        default-module-name)))
+
 (defn eval-str [code opts]
-  (handle-result (eval.str code opts)))
+  (-> (.. "(module " (buffer-module-name) ")" code)
+      (eval.str opts)
+      (handle-result)))
 
 (defn eval-selection [...]
   (eval-str (selection ...)))

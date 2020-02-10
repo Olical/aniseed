@@ -16,14 +16,14 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {compile = "aniseed.compile", core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-  return {require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.compile"), require("aniseed.core"), require("aniseed.nvim")}
+  return {require("aniseed.core"), require("aniseed.compile"), require("aniseed.fennel"), require("aniseed.nvim"), require("aniseed.fs")}
 end
 local _2_ = _1_(...)
-local fennel = _2_[1]
-local fs = _2_[2]
-local compile = _2_[3]
-local core = _2_[4]
-local nvim = _2_[5]
+local core = _2_[1]
+local compile = _2_[2]
+local fennel = _2_[3]
+local nvim = _2_[4]
+local fs = _2_[5]
 do local _ = ({nil, _0_0, nil})[2] end
 local str = nil
 do
@@ -32,7 +32,7 @@ do
     local v_23_0_0 = nil
     local function str0(code, opts)
       local function _3_()
-        return fennel.eval(compile["macros-prefix"](("(module aniseed.core)" .. code)), opts)
+        return fennel.eval(compile["macros-prefix"](code), opts)
       end
       return xpcall(_3_, fennel.traceback)
     end

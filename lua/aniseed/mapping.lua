@@ -16,16 +16,16 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
-  return {require("aniseed.eval"), require("aniseed.fennel"), require("aniseed.string"), require("aniseed.core"), require("aniseed.test"), require("aniseed.nvim.util"), require("aniseed.nvim")}
+  return {require("aniseed.core"), require("aniseed.string"), require("aniseed.fennel"), require("aniseed.nvim"), require("aniseed.nvim.util"), require("aniseed.test"), require("aniseed.eval")}
 end
 local _2_ = _1_(...)
-local eval = _2_[1]
-local fennel = _2_[2]
-local str = _2_[3]
-local core = _2_[4]
-local test = _2_[5]
-local nu = _2_[6]
-local nvim = _2_[7]
+local core = _2_[1]
+local str = _2_[2]
+local fennel = _2_[3]
+local nvim = _2_[4]
+local nu = _2_[5]
+local test = _2_[6]
+local eval = _2_[7]
 do local _ = ({nil, _0_0, nil})[2] end
 local handle_result = nil
 do
@@ -90,13 +90,42 @@ do
   _0_0["aniseed/locals"]["selection"] = v_23_0_
   selection = v_23_0_
 end
+local buffer_header_length = nil
+do
+  local v_23_0_ = 20
+  _0_0["aniseed/locals"]["buffer-header-length"] = v_23_0_
+  buffer_header_length = v_23_0_
+end
+local default_module_name = nil
+do
+  local v_23_0_ = "aniseed.user"
+  _0_0["aniseed/locals"]["default-module-name"] = v_23_0_
+  default_module_name = v_23_0_
+end
+local buffer_module_pattern = nil
+do
+  local v_23_0_ = "[(]%s*module%s*(.-)[%s){]"
+  _0_0["aniseed/locals"]["buffer-module-pattern"] = v_23_0_
+  buffer_module_pattern = v_23_0_
+end
+local buffer_module_name = nil
+do
+  local v_23_0_ = nil
+  local function buffer_module_name0()
+    local header = str.join("\n", nvim.buf_get_lines(0, 0, buffer_header_length, false))
+    return (string.match(header, buffer_module_pattern) or default_module_name)
+  end
+  v_23_0_ = buffer_module_name0
+  _0_0["aniseed/locals"]["buffer-module-name"] = v_23_0_
+  buffer_module_name = v_23_0_
+end
 local eval_str = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
     local function eval_str0(code, opts)
-      return handle_result(eval.str(code, opts))
+      return handle_result(eval.str(("(module " .. buffer_module_name() .. ")" .. code), opts))
     end
     v_23_0_0 = eval_str0
     _0_0["eval-str"] = v_23_0_0

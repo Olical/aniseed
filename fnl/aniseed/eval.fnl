@@ -11,7 +11,7 @@
   equired."
   (xpcall
     (fn []
-      (-> (.. "(module aniseed.core)" code)
+      (-> code
           (compile.macros-prefix)
           (fennel.eval opts)))
     fennel.traceback))
