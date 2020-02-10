@@ -17,8 +17,5 @@ test:
 	scripts/test.sh
 
 deps:
-	mkdir -p deps
-	if [ ! -d "deps/Fennel" ]; then git clone https://github.com/bakpakin/Fennel.git deps/Fennel; fi
-	cd deps/Fennel && git fetch && git checkout 0.3.2
-	if [ ! -d "deps/nvim.lua" ]; then git clone https://github.com/norcalli/nvim.lua.git deps/nvim.lua; fi
-	cd deps/nvim.lua && git fetch && git checkout 5d57be0b6eea6c06977b1c5fe0752da909cf4154
+	scripts/dep.sh bakpakin Fennel 0.3.2
+	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
