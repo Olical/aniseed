@@ -9,8 +9,8 @@
 nvim -u NONE \
     $PREFIX \
     -c "let &runtimepath = &runtimepath . ',' . getcwd()" \
-    -c "let &runtimepath = &runtimepath . ',' . getcwd() . 'deps/aniseed'" \
     -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/test'" \
+    -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/deps/aniseed'" \
     -c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua', {force = true})" \
     -c "lua require('aniseed.test').suite()" \
     $SUFFIX
