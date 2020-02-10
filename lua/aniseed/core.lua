@@ -435,7 +435,7 @@ do
     local v_23_0_0 = nil
     local function pr_str0(...)
       local function _3_(x)
-        return view(x, {["one-line"] = true})
+        return view.serialise(x, {["one-line"] = true})
       end
       return unpack(map(_3_, {...}))
     end

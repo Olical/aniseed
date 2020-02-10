@@ -10,7 +10,7 @@ compile:
 	done
 	mkdir -p lua/aniseed/deps
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
-	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/deps/view.lua
+	cp deps/Fennel/fennelview.fnl.lua lua/aniseed/deps/fennelview.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
 
 test:

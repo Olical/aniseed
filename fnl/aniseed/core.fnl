@@ -142,7 +142,7 @@
 (defn pr-str [...]
   (.. (unpack
         (map (fn [x]
-               (view x {:one-line true}))
+               (view.serialise x {:one-line true}))
              [...]))))
 
 (defn pr [...]

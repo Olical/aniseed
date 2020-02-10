@@ -1,1 +1,4 @@
-(require :aniseed.deps.view)
+(module aniseed.view)
+
+(def serialise
+  (require :aniseed.deps.fennelview))
