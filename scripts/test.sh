@@ -17,4 +17,5 @@ nvim -u NONE \
 
 EXIT_CODE=$?
 cat test/results.txt
+echo
 exit $EXIT_CODE
