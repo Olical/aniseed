@@ -16,38 +16,40 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
-  return {require("aniseed.test"), require("aniseed.eval"), require("aniseed.string"), require("aniseed.nvim"), require("aniseed.nvim.util"), require("aniseed.fennel"), require("aniseed.core")}
+  return {require("aniseed.test"), require("aniseed.fennel"), require("aniseed.core"), require("aniseed.string"), require("aniseed.nvim"), require("aniseed.eval"), require("aniseed.nvim.util")}
 end
 local _2_ = _1_(...)
 local test = _2_[1]
-local eval = _2_[2]
-local str = _2_[3]
-local nvim = _2_[4]
-local nu = _2_[5]
-local fennel = _2_[6]
-local core = _2_[7]
+local fennel = _2_[2]
+local core = _2_[3]
+local str = _2_[4]
+local nvim = _2_[5]
+local eval = _2_[6]
+local nu = _2_[7]
 do local _ = ({nil, _0_0, nil})[2] end
 local handle_result = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function handle_result0(ok_3f, x)
-      do
-        local mod = (core["table?"](x) and x["aniseed/module"])
+    local function handle_result0(ok_3f, result)
+      if not ok_3f then
+        return nvim.err_writeln(result)
+      else
+        local mod = (core["table?"](result) and result["aniseed/module"])
         if mod then
           if (nil == package.loaded[mod]) then
             package.loaded[mod] = {}
           end
-          for k, v in pairs(x) do
+          for k, v in pairs(result) do
             package.loaded[mod][k] = v
           end
         end
+        local function _4_()
+          return core.pr(result)
+        end
+        return vim.schedule(_4_)
       end
-      local function _3_()
-        return core.pr(x)
-      end
-      return vim.schedule(_3_)
     end
     v_23_0_0 = handle_result0
     _0_0["handle-result"] = v_23_0_0

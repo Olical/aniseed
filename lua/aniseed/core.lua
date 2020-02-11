@@ -434,10 +434,16 @@ do
   do
     local v_23_0_0 = nil
     local function pr_str0(...)
+      local s = nil
       local function _3_(x)
         return view.serialise(x, {["one-line"] = true})
       end
-      return unpack(map(_3_, {...}))
+      s = unpack(map(_3_, {...}))
+      if (not s or ("" == s)) then
+        return "nil"
+      else
+        return s
+      end
     end
     v_23_0_0 = pr_str0
     _0_0["pr-str"] = v_23_0_0

@@ -15,16 +15,17 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {}
-  return {}
+  _0_0["aniseed/local-fns"] = {require = {view = "aniseed.deps.fennelview"}}
+  return {require("aniseed.deps.fennelview")}
 end
 local _2_ = _1_(...)
+local view = _2_[1]
 do local _ = ({nil, _0_0, nil})[2] end
 local serialise = nil
 do
   local v_23_0_ = nil
   do
-    local v_23_0_0 = require("aniseed.deps.fennelview")
+    local v_23_0_0 = view
     _0_0["serialise"] = v_23_0_0
     v_23_0_ = v_23_0_0
   end

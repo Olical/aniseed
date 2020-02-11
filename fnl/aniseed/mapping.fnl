@@ -7,18 +7,21 @@
             eval aniseed.eval
             test aniseed.test}})
 
-(defn handle-result [ok? x]
-  (let [mod (and (core.table? x) (. x :aniseed/module))]
-    (when mod
-      (when (= nil (. package.loaded mod))
-        (tset package.loaded mod {}))
+(defn handle-result [ok? result]
+  (if (not ok?)
+    (nvim.err_writeln result)
 
-      (each [k v (pairs x)]
-        (tset (. package.loaded mod) k v))))
+    (let [mod (and (core.table? result) (. result :aniseed/module))]
+      (when mod
+        (when (= nil (. package.loaded mod))
+          (tset package.loaded mod {}))
 
-  (vim.schedule
-    (fn []
-      (core.pr x))))
+        (each [k v (pairs result)]
+          (tset (. package.loaded mod) k v)))
+
+      (vim.schedule
+        (fn []
+          (core.pr result))))))
 
 (defn selection [type ...]
   (let [sel-backup nvim.o.selection

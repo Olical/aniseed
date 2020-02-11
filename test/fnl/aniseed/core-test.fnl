@@ -39,7 +39,8 @@
   (t.= -6 (core.dec -5)))
 
 (deftest pr-str
-  (t.pr= "[1 2 3]" (core.pr-str [1 2 3])))
+  (t.pr= "[1 2 3]" (core.pr-str [1 2 3]))
+  (t.pr= "nil" (core.pr-str nil)))
 
 (deftest map
   (t.pr= [2 3 4] (core.map core.inc [1 2 3])))

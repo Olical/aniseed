@@ -1,4 +1,4 @@
-(module aniseed.view)
+(module aniseed.view
+  {require {view aniseed.deps.fennelview}})
 
-(def serialise
-  (require :aniseed.deps.fennelview))
+(def serialise view)
