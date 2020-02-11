@@ -16,12 +16,12 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
-  return {require("aniseed.nvim"), require("aniseed.core"), require("aniseed.string")}
+  return {require("aniseed.string"), require("aniseed.core"), require("aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local nvim = _2_[1]
+local str = _2_[1]
 local core = _2_[2]
-local str = _2_[3]
+local nvim = _2_[3]
 do local _ = ({nil, _0_0, nil})[2] end
 local ok_3f = nil
 do
@@ -49,9 +49,9 @@ do
     local function display_results0(results, prefix)
       do
         local _3_ = results
-        local assertions = _3_["assertions"]
         local assertions_passed = _3_["assertions-passed"]
         local tests_passed = _3_["tests-passed"]
+        local assertions = _3_["assertions"]
         local tests = _3_["tests"]
         local function _4_()
           if ok_3f(results) then

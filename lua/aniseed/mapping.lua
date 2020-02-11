@@ -16,16 +16,16 @@ do
 end
 local function _1_(...)
   _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
-  return {require("aniseed.eval"), require("aniseed.test"), require("aniseed.core"), require("aniseed.fennel"), require("aniseed.nvim"), require("aniseed.nvim.util"), require("aniseed.string")}
+  return {require("aniseed.test"), require("aniseed.eval"), require("aniseed.string"), require("aniseed.nvim"), require("aniseed.nvim.util"), require("aniseed.fennel"), require("aniseed.core")}
 end
 local _2_ = _1_(...)
-local eval = _2_[1]
-local test = _2_[2]
-local core = _2_[3]
-local fennel = _2_[4]
-local nvim = _2_[5]
-local nu = _2_[6]
-local str = _2_[7]
+local test = _2_[1]
+local eval = _2_[2]
+local str = _2_[3]
+local nvim = _2_[4]
+local nu = _2_[5]
+local fennel = _2_[6]
+local core = _2_[7]
 do local _ = ({nil, _0_0, nil})[2] end
 local handle_result = nil
 do
@@ -209,12 +209,12 @@ do
   _0_0["aniseed/locals"]["run-all-tests"] = v_23_0_
   run_all_tests = v_23_0_
 end
-local init = nil
+local init_commands = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
-    local function init0()
+    local function init_commands0()
       nu["fn-bridge"]("AniseedSelection", "aniseed.mapping", "selection")
       nu["fn-bridge"]("AniseedEval", "aniseed.mapping", "eval-str")
       nu["fn-bridge"]("AniseedEvalFile", "aniseed.mapping", "eval-file")
@@ -227,9 +227,49 @@ do
       nvim.ex.command_("-range", "AniseedEvalRange", "<line1>,<line2>call AniseedEvalRange()")
       nvim.ex.command_("-nargs=1", "AniseedRunTests", "call AniseedRunTests(<q-args>)")
       nvim.ex.command_("-nargs=0", "AniseedRunAllTests", "call AniseedRunAllTests()")
-      nvim.set_keymap("n", "<Plug>(AniseedEval)", ":set opfunc=AniseedEvalSelection<cr>g@", {noremap = true, silent = true})
-      nvim.set_keymap("n", "<Plug>(AniseedEvalCurrentFile)", ":call AniseedEvalFile(expand('%'))<cr>", {noremap = true, silent = true})
-      return nvim.set_keymap("v", "<Plug>(AniseedEvalSelection)", ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>", {noremap = true, silent = true})
+      nvim.set_keymap("n", nu.plug("AniseedEval"), ":set opfunc=AniseedEvalSelection<cr>g@", {noremap = true, silent = true})
+      nvim.set_keymap("n", nu.plug("AniseedEvalCurrentFile"), ":call AniseedEvalFile(expand('%'))<cr>", {noremap = true, silent = true})
+      return nvim.set_keymap("v", nu.plug("AniseedEvalSelection"), ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>", {noremap = true, silent = true})
+    end
+    v_23_0_0 = init_commands0
+    _0_0["init-commands"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["init-commands"] = v_23_0_
+  init_commands = v_23_0_
+end
+local init_mappings = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function init_mappings0()
+      nvim.ex.augroup("aniseed")
+      nvim.ex.autocmd_()
+      nu["ft-map"]("fennel", "n", "E", nu.plug("AniseedEval"))
+      nu["ft-map"]("fennel", "n", "ee", (nu.plug("AniseedEval") .. "af"))
+      nu["ft-map"]("fennel", "n", "er", (nu.plug("AniseedEval") .. "aF"))
+      nu["ft-map"]("fennel", "n", "ef", nu.plug("AniseedEvalCurrentFile"))
+      nu["ft-map"]("fennel", "v", "ee", nu.plug("AniseedEvalSelection"))
+      nu["ft-map"]("fennel", "n", "eb", ":%AniseedEvalRange<cr>")
+      nu["ft-map"]("fennel", "n", "t", ":AniseedRunAllTests<cr>")
+      return nvim.ex.augroup("END")
+    end
+    v_23_0_0 = init_mappings0
+    _0_0["init-mappings"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["init-mappings"] = v_23_0_
+  init_mappings = v_23_0_
+end
+local init = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function init0()
+      init_commands()
+      return init_mappings()
     end
     v_23_0_0 = init0
     _0_0["init"] = v_23_0_0
