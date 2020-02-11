@@ -69,7 +69,7 @@
 (defn run-all-tests []
   (test.run-all))
 
-(defn init []
+(defn init-commands []
   (nu.fn-bridge
     :AniseedSelection
     :aniseed.mapping :selection)
@@ -106,19 +106,35 @@
   (nvim.ex.command_ :-nargs=0 :AniseedRunAllTests "call AniseedRunAllTests()")
 
   (nvim.set_keymap
-    :n "<Plug>(AniseedEval)"
+    :n (nu.plug :AniseedEval)
     ":set opfunc=AniseedEvalSelection<cr>g@"
     {:noremap true
      :silent true})
 
   (nvim.set_keymap
-    :n "<Plug>(AniseedEvalCurrentFile)"
+    :n (nu.plug :AniseedEvalCurrentFile)
     ":call AniseedEvalFile(expand('%'))<cr>"
     {:noremap true
      :silent true})
 
   (nvim.set_keymap
-    :v "<Plug>(AniseedEvalSelection)"
+    :v (nu.plug :AniseedEvalSelection)
     ":<c-u>call AniseedEvalSelection(visualmode(), v:true)<cr>"
     {:noremap true
      :silent true}))
+
+(defn init-mappings []
+  (nvim.ex.augroup :aniseed)
+  (nvim.ex.autocmd_)
+  (nu.ft-map :fennel :n :E (nu.plug :AniseedEval))
+  (nu.ft-map :fennel :n :ee (.. (nu.plug :AniseedEval) :af))
+  (nu.ft-map :fennel :n :er (.. (nu.plug :AniseedEval) :aF))
+  (nu.ft-map :fennel :n :ef (nu.plug :AniseedEvalCurrentFile))
+  (nu.ft-map :fennel :v :ee (nu.plug :AniseedEvalSelection))
+  (nu.ft-map :fennel :n :eb ":%AniseedEvalRange<cr>")
+  (nu.ft-map :fennel :n :t ":AniseedRunAllTests<cr>")
+  (nvim.ex.augroup :END))
+
+(defn init []
+  (init-commands)
+  (init-mappings))
