@@ -1,5 +1,4 @@
-*.fnl linguist-language=Lisp
 lua/* linguist-generated
 lua/aniseed/deps/fennel.lua linguist-vendored
-lua/aniseed/deps/view.lua linguist-vendored
+lua/aniseed/deps/fennelview.lua linguist-vendored
 lua/aniseed/deps/nvim.lua linguist-vendored
