@@ -1,5 +1,67 @@
 = Aniseed
 
+Easily write configuration or plugins for https://neovim.io/[Neovim] in https://fennel-lang.org/[Fennel], a Lisp that compiles to Lua.
+
+This is aimed at people who want to extend Neovim interactively with a Lisp as you would Emacs without requiring any extra processes or remote plugins. Code is evaluated as you edit like in a Clojure with https://github.com/Olical/conjure[Conjure].
+
+It provides the tools you need to compile, run, inspect and develop programs with Fennel. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file!
+
+[source,clojure]
+----
+(module my-module
+  {require {core aniseed.core
+            nvim aniseed.nvim}})
+
+(def- some-private-value 2)
+
+(defn- some-private-fn [x]
+  (* x some-private-value))
+
+(defn a-public-fn [x]
+  (-> x
+      (some-private-fn)
+      (core.inc)))
+
+(comment
+  (a-public-fn 10) ;; => 21
+  (some-private-fn 10) ;; => 20
+  (set nvim.g.hello "world!"))
+----
+
+Aniseed allows you to evaluate any form in this source code to build up your module dynamically with a constant REPL based flow. Once the buffer, file or forms have been evaluated you can even call the function from Lua and Vim Script.
+
+[source,viml]
+----
+lua print(require("my-module")["a-public-fn"](10))
+" Prints: 21
+
+echo g:hello
+" Prints: world!
+----
+
+== Installation
+
+Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
+
+[source,viml]
+----
+Plug 'Olical/aniseed', { 'tag': 'v3.0.0' }
+
+" For Fennel code highlighting (based on Clojure).
+Plug 'bakpakin/fennel.vim'
+
+" Used by the evaluation mappings.
+Plug 'guns/vim-sexp'
+
+" Highly recommended if you're going to use vim-sexp.
+Plug 'tpope/vim-sexp-mappings-for-regular-people'
+
+" Set up the Aniseed commands and mappings.
+lua require("aniseed.mapping").init()
+----
+
+The reliance on `vim-sexp` will be replaced by integration with https://github.com/Olical/conjure[Conjure] once I've finished rewriting it with Aniseed. Conjure, with the help of Aniseed, will become a generic suite for working with Lisps in Neovim.
+
 == Unlicenced
 
 The following files are excluded from my license and ownership:
