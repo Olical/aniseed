@@ -2,9 +2,9 @@
 
 Easily write configuration or plugins for https://neovim.io/[Neovim] in https://fennel-lang.org/[Fennel], a Lisp that compiles to Lua.
 
-This is aimed at people who want to extend Neovim interactively with a Lisp as you would Emacs without requiring any extra processes or remote plugins. Code is evaluated as you edit like in a Clojure with https://github.com/Olical/conjure[Conjure].
+This is aimed at people who want to extend Neovim interactively with a Lisp as you would Emacs without requiring any extra processes or RPC based remote plugin. Code is evaluated interactively as you work, it feels a lot like editing Clojure with https://github.com/Olical/conjure[Conjure].
 
-It provides the tools you need to compile, run, inspect and develop programs with Fennel. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file!
+It provides the tools you need to AOT compile, run and test (CI ready testing library) with Fennel within Neovim's process. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file!
 
 [source,clojure]
 ----
@@ -39,6 +39,8 @@ echo g:hello
 " Prints: world!
 ----
 
+https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] is an example of what you can do with Aniseed, it allows you to write machine or directory specific configuration in Fennel. It's useful in it's own right but also a good reference for how to write a plugin.
+
 == Installation
 
 Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
@@ -61,6 +63,33 @@ lua require("aniseed.mapping").init()
 ----
 
 The reliance on `vim-sexp` will be replaced by integration with https://github.com/Olical/conjure[Conjure] once I've finished rewriting it with Aniseed. Conjure, with the help of Aniseed, will become a generic suite for working with Lisps in Neovim.
+
+== Writing your dotfiles in Fennel
+
+My Neovim https://github.com/Olical/dotfiles[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim` after Aniseed has been loaded.
+
+[source,viml]
+----
+lua require('aniseed.dotfiles')
+----
+
+Now try adding some Fennel such as the example below to `~/.config/nvim/fnl/dotfiles/init.fnl`. The next time you open Neovim you'll see `"Hello!"` printed as a message!
+
+[source,clojure]
+----
+(module dotfiles.init
+  {require {core aniseed.core}})
+
+(core.pr "Hello!")
+----
+
+This will place the AOT compiled Lua (it's only recompiled if you change the Fennel source) in `~/.config/nvim/lua`, you'll want to add that to your `.gitignore` if your dotfiles are in git as they should be.
+
+That's all there is to it! You can continue to add more files (modules) under `fnl/dotfiles` and require them using the `module` macro syntax.
+
+== Compiling a plugin ahead of time
+== Using Aniseed at runtime in a plugin
+== Standard library
 
 == Unlicenced
 
