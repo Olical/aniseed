@@ -85,14 +85,14 @@ Feel free to have a peek in `fnl/aniseed/mapping.fnl` to see which commands are 
 
 == Use case 1: Writing your dotfiles in Fennel
 
-My Neovim https://github.com/Olical/dotfiles/tree/master/neovim/.config/nvim[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim` after Aniseed has been loaded.
+My Neovim https://github.com/Olical/dotfiles/tree/master/neovim/.config/nvim[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim`.
 
 [source,viml]
 ----
 lua require('aniseed.dotfiles')
 ----
 
-Now try adding some Fennel such as the example below to `~/.config/nvim/fnl/dotfiles/init.fnl`. The next time you open Neovim you'll see `"Hello!"` printed as a message!
+Now try adding some Fennel such as the example below to `~/.config/nvim/fnl/dotfiles/init.fnl`. The next time you open Neovim you'll see `"Hello!"`.
 
 [source,clojure]
 ----
@@ -135,7 +135,12 @@ Now let's add a small program to `fnl/my-plugin/init.fnl`.
 (print "Hello, World!")
 ----
 
-We can compile the plugin using `deps/aniseed/scripts/compile.sh` which will write into the `lua` directory, you should commit that output so that users of your plugin don't have to know it was ever written in Fennel in the first place.
+We can compile the plugin using another helper which will write into the `lua` directory, you should commit that output so that users of your plugin don't have to know it was ever written in Fennel in the first place.
+
+[source,bash]
+----
+deps/aniseed/scripts/compile.sh
+----
 
 Users can call into your plugin however and whenever they choose or you can add some sort of startup hook into `plugin/my-plugin.vim`.
 
@@ -148,7 +153,7 @@ lua require('my-plugin.init')
 
 == Using Aniseed at runtime in a plugin
 
-I've only shown how to use Aniseed at compile time, there's one extra step involved when you want to use Aniseed in the runtime of your plugin. You can use `deps/aniseed/scripts/embed.sh` to copy Aniseed's Lua into your Lua directory under a directory prefix.
+I've only shown how to use Aniseed at compile time, there's one extra step involved when you want to use Aniseed in the runtime of your plugin. You can use `deps/aniseed/scripts/embed.sh` to copy Aniseed's Lua into your Lua directory under a unique prefix.
 
 The code will be modified to add a prefix that keeps this version of Aniseed local to your plugin. This technique allows multiple plugins to carry their own copies of Aniseed with them without any conflicts or inconsistencies.
 
@@ -197,7 +202,7 @@ And here's some more useful modules you'll probably want to check out.
 
 == Testing
 
-Aniseed tests itself with it's own test suite, so you can see an example inside this very repository. We start by creating a module within our project such as `fnl/foo/math.fnl`.
+Aniseed tests itself with it's own testing tools, so you can see an example inside this very repository. We start by creating a module within our project such as `fnl/foo/math.fnl`.
 
 [source,clojure]
 ----
