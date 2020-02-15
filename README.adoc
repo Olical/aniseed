@@ -155,26 +155,64 @@ We can then refer to our Aniseed copy from `my-plugin.init`.
 (core.pr {:msg "Hello, World!"})
 ----
 
-== An example Makefile
+== Testing
+
+Aniseed tests itself with it's own test suite, so you can see an example inside this very repository. We start by creating a module within our project such as `fnl/foo/math.fnl`.
+
+[source,clojure]
+----
+(module foo.math)
+
+(defn add [a b]
+  (+ a b))
+----
+
+We can then create our test module in `test/fnl/foo/math-test.fnl`.
+
+[source,clojure]
+----
+(module foo.math-test
+  {require {math foo.math}})
+
+;; The `t` assertion table is included automatically via the deftest macro.
+(deftest add
+  (t.= 10 (math.add 6 4) "it adds things together"))
+----
+
+All of the tests can then be executed using the helper script which will startup Neovim, execute the tests, capture the results and finally display them in stdout. It exits with an appropriate status code for use with CI systems (you'll need to ensure `nvim` is available inside your CI somehow).
+
+[source,bash]
+----
+# You'll want to .gitginore /test/lua/ and /test/results.txt.
+# Provide a SUFFIX or PREFIX env var to prepend or append code to the nvim command.
+deps/aniseed/scripts/test.sh
+----
+
+The `t` assertion table that's defined for you contains a few assertion functions that'll hopefully come in useful.
+
+ * `(t.= expected result [description])` - check for an expected result.
+ * `(t.pr= expected result [descrpition])` - the same but both values will be serialised to a string before comparison, this allows you to compare deeply nested tables.
+ * `(t.ok? result [description])` - check for some truthy value.
+
+== Full Makefile example
 
 [source,make]
 ----
-.PHONY: deps compile
+.PHONY: deps compile test
 
 deps:
 	scripts/dep.sh Olical aniseed vX.Y.Z # insert latest version
 
 compile:
-	# Prevents hanging Lua files from when you delete Fennel files.
-	# This is entirely optional.
+	# Optionally prevents hanging Lua files from when you delete Fennel files.
 	rm -rf lua
 	deps/aniseed/scripts/compile.sh
 	deps/aniseed/scripts/embed.sh aniseed my-plugin
+
+test:
+	# This example ensures our tests run with a Fennel buffer open.
+	SUFFIX="foo.fnl" deps/aniseed/scripts/test.sh
 ----
-
-== Testing
-
-TODO
 
 == Unlicenced
 
