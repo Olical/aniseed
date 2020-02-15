@@ -92,8 +92,48 @@ This will write the compiled Lua into `~/.config/nvim/lua`, it's only recompiled
 You can continue to add more files (modules) under `fnl/dotfiles` and require them using the `module` macro syntax. Feel free to get creative with it!
 
 == Compiling a plugin ahead of time
+
+https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] and the experimental https://github.com/Olical/conjure-sourcery[conjure-sourcery] should be good examples of Fennel based plugins (I hope so, I wrote them), here's how to start a new one.
+
+We'll start by fetching the `dep.sh` helper script which we'll use to clone and update Aniseed when required. It can be used for repos other than Aniseed but I won't be showing that here.
+
+[source,bash]
+----
+mkdir -p scripts
+curl https://raw.githubusercontent.com/Olical/aniseed/master/scripts/dep.sh -o scripts/dep.sh
+chmod +x scripts/dep.sh
+----
+
+Now let's clone Aniseed into `deps/aniseed`, be sure to `.gitignore` the `deps` directory. I keep my `dep.sh` calls in my `Makefile` so I can run `make deps` to synchronise anything that's required.
+
+[source,bash]
+----
+scripts/dep.sh Olical aniseed v3.0.0
+----
+
+Now let's add a tiny program to `fnl/my-plugin/init.fnl`.
+
+[source,clojure]
+----
+(module my-plugin.init)
+
+(print "Hello, World!")
+----
+
+We can compile the plugin using `deps/aniseed/scripts/compile.sh` which will write into the `lua` directory, you can commit that output so that users of your plugin don't have to know it was ever written in Fennel in the first place.
+
+Users can call into your plugin however they choose or you can add some sort of startup hook into `plugin/my-plugin.vim` (I'm deeply sorry that a little Vim Script is involved).
+
+[source,viml]
+----
+lua require("my-plugin.init")
+
+" Prints: Hello, World!
+----
+
 == Using Aniseed at runtime in a plugin
 == Standard library
+== Testing
 
 == Unlicenced
 
