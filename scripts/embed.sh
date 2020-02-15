@@ -9,6 +9,6 @@
 # Args: Dependency name, your project module prefix.
 # Usage: deps/aniseed/scripts/embed.sh aniseed conjure
 
-mkdir -p "lua/$2/$1"
-cp -r "deps/$1/lua/$1/*" "lua/$2/$1"
+mkdir -p "lua/$2"
+cp -ru "deps/$1/lua/$1" "lua/$2/$1"
 find "lua/$2/$1" -type f -name "*.lua" -exec sed -i "s/\"$1\./\"$2.aniseed./g" {} \;
