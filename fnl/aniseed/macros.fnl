@@ -5,6 +5,17 @@
 
 (local module-sym (gensym))
 
+(fn sorted-each [f x]
+  (let [acc []]
+    (each [k v (pairs x)]
+      (table.insert acc [k v]))
+    (table.sort
+      acc
+      (fn [a b]
+        (< (. a 1) (. b 1))))
+    (each [_ [k v] (ipairs acc)]
+      (f k v))))
+
 (fn module [name new-local-fns initial-mod]
   `(-> [(local ,module-sym
           (let [name# ,(tostring name)
@@ -38,15 +49,21 @@
                  (each [alias module (pairs binds)]
                    (tset current (tostring alias) (tostring module))))))
 
-           (each [action binds (pairs local-fns)]
-             (each [alias module (pairs binds)]
-               (table.insert aliases (sym alias))
-               (table.insert vals `(,(sym action) ,module))))
+           (sorted-each
+             (fn [action binds]
+               (sorted-each
+                 (fn [alias module]
+                   (table.insert aliases (sym alias))
+                   (table.insert vals `(,(sym action) ,module)))
+                 binds))
+             local-fns)
 
            (when locals
-             (each [alias val (pairs locals)]
-               (table.insert aliases (sym alias))
-               (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias)))))
+             (sorted-each
+               (fn [alias val]
+                 (table.insert aliases (sym alias))
+                 (table.insert vals `(-> ,module-sym (. :aniseed/locals) (. ,alias))))
+               locals))
 
            `(local ,aliases
               (do
