@@ -71,6 +71,20 @@ lua require('aniseed.mapping').init()
 
 The reliance on `vim-sexp` will be replaced by integration with https://github.com/Olical/conjure[Conjure] once I've finished rewriting it with Aniseed. Conjure, with the help of Aniseed, will become a generic suite for working with Lisps in Neovim.
 
+== Mappings
+
+If you've required `aniseed.mapping` and executed `init()` you'll be able to use the following mappings inside Fennel buffers to run various chunks of code.
+
+ * `<localleader>E[motion]` - eval the given motion of Fennel code.
+ * `<localleader>ee` - eval the current form under the cursor.
+ * `<localleader>er` - eval the outermost form under the cursor.
+ * `<localleader>ef` - eval the file from disk.
+ * `<localleader>ee` (visual) - eval the visually selected code.
+ * `<localleader>eb` - eval the current buffer.
+ * `<localleader>t` - eval all loaded tests.
+
+Feel free to have a peek in `fnl/aniseed/mapping.fnl` to see which commands are exposed, you'll be able to write your own custom mappings on top of those easily enough.
+
 == Use case 1: Writing your dotfiles in Fennel
 
 My Neovim https://github.com/Olical/dotfiles/tree/master/neovim/.config/nvim[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim` after Aniseed has been loaded.
@@ -194,7 +208,7 @@ The `t` assertion table that's defined for you contains a few assertion function
  * `(t.pr= expected result [descrpition])` - the same but both values will be serialised to a string before comparison, this allows you to compare deeply nested tables.
  * `(t.ok? result [description])` - check for some truthy value.
 
-== Full Makefile example
+== Makefile example
 
 [source,make]
 ----
