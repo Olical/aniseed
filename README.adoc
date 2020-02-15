@@ -6,8 +6,6 @@ This is aimed at people who want to extend Neovim interactively with a Lisp as y
 
 It provides the tools you need to compile, run and test (even in CI!) Fennel within your editor. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file!
 
-TODO stdlib docs
-
 [source,clojure]
 ----
 (module my-module
@@ -168,6 +166,34 @@ We can then refer to our Aniseed copy from `my-plugin.init`.
 
 (core.pr {:msg "Hello, World!"})
 ----
+
+== Standard library
+
+Aniseed provides a fair few functions that it uses internally but are designed for use by plugin authors. The best way to discover these is to delve into `fnl/aniseed` and have a look through the source, anything that isn't self explanatory has a documentation string attached to it.
+
+[source,clojure]
+----
+(module foo
+  {require {core aniseed.core
+            str aniseed.string}})
+
+(defn- add [a b]
+  (+ a b))
+
+(->> [1 2 3]
+     (core.map core.inc)
+     (core.reduce add 0))
+;; => 9
+
+(str.join ", " [1 2 3])
+;; => "1, 2, 3"
+----
+
+And here's some more useful modules you'll probably want to check out.
+
+ * `aniseed.nvim` is actually https://github.com/norcalli/nvim.lua[nvim.lua], an extremely helpful library for controlling Neovim.
+ * `aniseed.eval` allows you to run more Fennel code through Aniseed.
+ * `aniseed.compile` lets you compile strings and files of Fennel into Lua.
 
 == Testing
 
