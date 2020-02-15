@@ -165,9 +165,11 @@ deps:
 	scripts/dep.sh Olical aniseed vX.Y.Z # insert latest version
 
 compile:
+	# Prevents hanging Lua files from when you delete Fennel files.
+	# This is entirely optional.
 	rm -rf lua
 	deps/aniseed/scripts/compile.sh
-	deps/aniseed/scripts/embed.sh aniseed nvim-local-fennel
+	deps/aniseed/scripts/embed.sh aniseed my-plugin
 ----
 
 == Testing
