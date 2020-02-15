@@ -79,8 +79,8 @@ If you've required `aniseed.mapping` and executed `init()` you'll be able to use
  * `<localleader>ee` - eval the current form under the cursor.
  * `<localleader>er` - eval the outermost form under the cursor.
  * `<localleader>ef` - eval the file from disk.
- * `<localleader>ee` (visual) - eval the visually selected code.
  * `<localleader>eb` - eval the current buffer.
+ * `<localleader>ee` (visual) - eval the visually selected code.
  * `<localleader>t` - eval all loaded tests.
 
 Feel free to have a peek in `fnl/aniseed/mapping.fnl` to see which commands are exposed, you'll be able to write your own custom mappings on top of those easily enough.
