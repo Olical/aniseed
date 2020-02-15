@@ -2,9 +2,11 @@
 
 Easily write configuration or plugins for https://neovim.io/[Neovim] in https://fennel-lang.org/[Fennel], a Lisp that compiles to Lua.
 
-This is aimed at people who want to extend Neovim interactively with a Lisp as you would in some _other_ text editor. Code is evaluated interactively as you work, it feels a lot like editing Clojure with https://github.com/Olical/conjure[Conjure].
+This is aimed at people who want to extend Neovim interactively with a Lisp as you would in some _other_ text editor. Code is evaluated interactively as you work, it feels a lot like editing https://clojure.org/[Clojure] with https://github.com/Olical/conjure[Conjure].
 
 It provides the tools you need to compile, run and test (even in CI!) Fennel within your editor. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file!
+
+TODO stdlib docs
 
 [source,clojure]
 ----
@@ -51,9 +53,10 @@ Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-p
 
 [source,viml]
 ----
+" Depend on the latest version via tag.
 Plug 'Olical/aniseed', { 'tag': 'v3.0.0' }
 
-" For Fennel code highlighting (based on Clojure).
+" For Fennel highlighting (based on Clojure).
 Plug 'bakpakin/fennel.vim'
 
 " Used by the evaluation mappings.
@@ -63,12 +66,12 @@ Plug 'guns/vim-sexp'
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
 
 " Set up the Aniseed commands and mappings.
-lua require("aniseed.mapping").init()
+lua require('aniseed.mapping').init()
 ----
 
 The reliance on `vim-sexp` will be replaced by integration with https://github.com/Olical/conjure[Conjure] once I've finished rewriting it with Aniseed. Conjure, with the help of Aniseed, will become a generic suite for working with Lisps in Neovim.
 
-== Writing your dotfiles in Fennel
+== Use case 1: Writing your dotfiles in Fennel
 
 My Neovim https://github.com/Olical/dotfiles/tree/master/neovim/.config/nvim[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim` after Aniseed has been loaded.
 
@@ -89,13 +92,13 @@ Now try adding some Fennel such as the example below to `~/.config/nvim/fnl/dotf
 
 This will write the compiled Lua into `~/.config/nvim/lua`, it's only recompiled if the Fennel changes. You'll want to add the `lua` directory to your `.gitignore` if your dotfiles are in git.
 
-You can continue to add more files (modules) under `fnl/dotfiles` and require them using the `module` macro syntax. Feel free to get creative with it!
+You can continue to add more files under `fnl/dotfiles` and require them using the `module` macro syntax.
 
-== Compiling a plugin ahead of time
+== Use case 2: Compiling a plugin ahead of time
 
-https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] and the experimental https://github.com/Olical/conjure-sourcery[conjure-sourcery] should be good examples of Fennel based plugins (I hope so, I wrote them), here's how to start a new one.
+https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] and the experimental https://github.com/Olical/conjure-sourcery[conjure-sourcery] should be good examples of Fennel based plugins (I hope so, I wrote them), here's how to create something new.
 
-We'll start by fetching the `dep.sh` helper script which we'll use to clone and update Aniseed when required. It can be used for repos other than Aniseed but I won't be showing that here.
+We'll start by fetching the `dep.sh` helper script which we'll use to clone and update Aniseed. It can be used for repos other than Aniseed, feel free to reuse it.
 
 [source,bash]
 ----
@@ -108,10 +111,10 @@ Now let's clone Aniseed into `deps/aniseed`, be sure to `.gitignore` the `deps` 
 
 [source,bash]
 ----
-scripts/dep.sh Olical aniseed v3.0.0
+scripts/dep.sh Olical aniseed vX.Y.Z # insert latest version
 ----
 
-Now let's add a tiny program to `fnl/my-plugin/init.fnl`.
+Now let's add a small program to `fnl/my-plugin/init.fnl`.
 
 [source,clojure]
 ----
@@ -120,20 +123,56 @@ Now let's add a tiny program to `fnl/my-plugin/init.fnl`.
 (print "Hello, World!")
 ----
 
-We can compile the plugin using `deps/aniseed/scripts/compile.sh` which will write into the `lua` directory, you can commit that output so that users of your plugin don't have to know it was ever written in Fennel in the first place.
+We can compile the plugin using `deps/aniseed/scripts/compile.sh` which will write into the `lua` directory, you should commit that output so that users of your plugin don't have to know it was ever written in Fennel in the first place.
 
-Users can call into your plugin however they choose or you can add some sort of startup hook into `plugin/my-plugin.vim` (I'm deeply sorry that a little Vim Script is involved).
+Users can call into your plugin however and whenever they choose or you can add some sort of startup hook into `plugin/my-plugin.vim`.
 
 [source,viml]
 ----
-lua require("my-plugin.init")
+lua require('my-plugin.init')
 
 " Prints: Hello, World!
 ----
 
 == Using Aniseed at runtime in a plugin
-== Standard library
+
+I've only shown how to use Aniseed at compile time, there's one extra step involved when you want to use Aniseed in the runtime of your plugin. You can use `deps/aniseed/scripts/embed.sh` to copy Aniseed's Lua into your Lua directory under a directory prefix.
+
+The code will be modified to add a prefix that keeps this version of Aniseed local to your plugin. This technique allows multiple plugins to carry their own copies of Aniseed with them without any conflicts or inconsistencies.
+
+[source,bash]
+----
+deps/aniseed/scripts/embed.sh aniseed my-plugin
+----
+
+We can then refer to our Aniseed copy from `my-plugin.init`.
+
+[source,clojure]
+----
+(module my-plugin.init
+  {require {core my-plugin.aniseed.core}})
+
+(core.pr {:msg "Hello, World!"})
+----
+
+== An example Makefile
+
+[source,make]
+----
+.PHONY: deps compile
+
+deps:
+	scripts/dep.sh Olical aniseed vX.Y.Z # insert latest version
+
+compile:
+	rm -rf lua
+	deps/aniseed/scripts/compile.sh
+	deps/aniseed/scripts/embed.sh aniseed nvim-local-fennel
+----
+
 == Testing
+
+TODO
 
 == Unlicenced
 
