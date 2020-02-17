@@ -26,6 +26,9 @@ It provides the tools you need to compile, run and test (even in CI!) Fennel wit
       (some-private-fn)
       (core.inc)))
 
+;; Prevent this value being overwritten on each eval.
+(defonce- some-stateful-thing (some-dep.start-server!))
+
 (comment
   (a-public-fn 10) ;; => 21
   (some-private-fn 10) ;; => 20
@@ -82,6 +85,82 @@ If you've required `aniseed.mapping` and executed `init()` you'll be able to use
  * `<localleader>t` - eval all loaded tests.
 
 Feel free to have a peek in `fnl/aniseed/mapping.fnl` to see which commands are exposed, you'll be able to write your own custom mappings on top of those easily enough.
+
+== Module macros
+
+Lua and Fennel require you to use `(local ...)` and `(fn ...)` as well as a table as the last value in your file to define modules. This leads to inconsistent syntax and having to jump up and down in the buffer to keep your module's table in sync with what you want to expose and what it should be called.
+
+This unstructured approach also makes it really hard (maybe impossible?) to have an interactive REPL driven work flow. We want to be able to say in a structured way "here's what my module is called, here's what it requires and here's what it defines".
+
+Aniseed makes the following macros available to you which will allow you to write modules in a structured way using the evaluation mappings described previously. Let's get the most interesting and complex one out of the way first, the rest are just different ways of defining things.
+
+=== `(module NAME [REQUIRES] [BASE])`
+
+Define a module under the name given by the first argument, this should be the first form in your file. The name should match the path as you would in Clojure namespaces.
+
+So `fnl/my-plugin/features/backflip.fnl` would start with `(module my-plugin.features.backflip)`. By using the dot syntax we get to build paths that work on any OS, even if their path separator is different.
+
+The requires are a table where the key is the function you want executed (`require` or `include`) and the values are tables of aliases and module names. Let's take our previous module example and require a utility module into it under an alias of `util`.
+
+[source,clojure]
+----
+(module my-plugin.features.backflip
+  {require {util my-plugin.util}})
+
+(util.do-thing)
+----
+
+____
+You're not limited to just `require` or `include`, any function name will do. If you write a special `require` called `require-py` that compiles Python to Lua and loads it, you can use that too!
+____
+
+The final argument can be used in rare scenarios where you want to build your module upon another Lua module which may not be related to Aniseed or Fennel in any way. Let's say you want to take a Lua library, wrap it with an Aniseed module and add some function to it.
+
+[source,clojure]
+----
+(module my-plugin.math {} (include :some-awesome-lua-math-lib))
+
+(defn inc [x]
+  (+ x 1))
+----
+
+Now we have a module that inherits from a Lua module but extends it with an extra function. You probably won't need this, but it's handy when you do! Aniseed actually uses it internally to wrap the `nvim.lua` library.
+
+=== The `(def...)` family
+
+The `def...` macros help you define values or functions private to your module or exposed to the world. Every `def` macro can be suffixed with a hyphen to keep it private, like `(def- ten 10)`.
+
+ * `(def NAME VALUE)` - just like `local` or `var` but Aniseed is now aware of the value and will allow you to refer to it in subsequent evaluations of forms within that module.
+ * `(defonce NAME VALUE)` - the same as `def` but will only define once. Subsequent evaluations of this form will do nothing. This is great for keeping process IDs from background jobs between evaluations.
+ * `(defn NAME ARGS ...)` - translates to `(def NAME (fn ARGS ...))`, so it's just like the regular `(fn ...)` form really.
+
+== Standard library
+
+Aniseed provides a fair few functions that it uses internally but are designed for use by plugin authors. The best way to discover these is to delve into `fnl/aniseed` and have a look through the source, anything that isn't self explanatory has a documentation string attached to it.
+
+[source,clojure]
+----
+(module foo
+  {require {core aniseed.core
+            str aniseed.string}})
+
+(defn- add [a b]
+  (+ a b))
+
+(->> [1 2 3]
+     (core.map core.inc)
+     (core.reduce add 0))
+;; => 9
+
+(str.join ", " [1 2 3])
+;; => "1, 2, 3"
+----
+
+And here's some more useful modules you'll probably want to check out.
+
+ * `aniseed.nvim` is actually https://github.com/norcalli/nvim.lua[nvim.lua], an extremely helpful library for controlling Neovim.
+ * `aniseed.eval` allows you to run more Fennel code through Aniseed.
+ * `aniseed.compile` lets you compile strings and files of Fennel into Lua.
 
 == Use case 1: Writing your dotfiles in Fennel
 
@@ -151,7 +230,7 @@ lua require('my-plugin.init')
 " Prints: Hello, World!
 ----
 
-== Using Aniseed at runtime in a plugin
+=== Using Aniseed at runtime in a plugin
 
 I've only shown how to use Aniseed at compile time, there's one extra step involved when you want to use Aniseed in the runtime of your plugin. You can use `deps/aniseed/scripts/embed.sh` to copy Aniseed's Lua into your Lua directory under a unique prefix.
 
@@ -171,34 +250,6 @@ We can then refer to our Aniseed copy from `my-plugin.init`.
 
 (core.pr {:msg "Hello, World!"})
 ----
-
-== Standard library
-
-Aniseed provides a fair few functions that it uses internally but are designed for use by plugin authors. The best way to discover these is to delve into `fnl/aniseed` and have a look through the source, anything that isn't self explanatory has a documentation string attached to it.
-
-[source,clojure]
-----
-(module foo
-  {require {core aniseed.core
-            str aniseed.string}})
-
-(defn- add [a b]
-  (+ a b))
-
-(->> [1 2 3]
-     (core.map core.inc)
-     (core.reduce add 0))
-;; => 9
-
-(str.join ", " [1 2 3])
-;; => "1, 2, 3"
-----
-
-And here's some more useful modules you'll probably want to check out.
-
- * `aniseed.nvim` is actually https://github.com/norcalli/nvim.lua[nvim.lua], an extremely helpful library for controlling Neovim.
- * `aniseed.eval` allows you to run more Fennel code through Aniseed.
- * `aniseed.compile` lets you compile strings and files of Fennel into Lua.
 
 == Testing
 
