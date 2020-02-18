@@ -65,16 +65,13 @@ Plug 'guns/vim-sexp'
 
 " Highly recommended if you're going to use vim-sexp.
 Plug 'tpope/vim-sexp-mappings-for-regular-people'
-
-" Set up the Aniseed commands and mappings.
-lua require('aniseed.mapping').init()
 ----
 
 The reliance on `vim-sexp` will be replaced by integration with https://github.com/Olical/conjure[Conjure] once I've finished rewriting it with Aniseed. Conjure, with the help of Aniseed, will become a generic suite for working with Lisps in Neovim.
 
 == Mappings
 
-If you've required `aniseed.mapping` and executed `init()` you'll be able to use the following mappings inside Fennel buffers to run various chunks of code.
+You can use the following mappings inside Fennel buffers to run various chunks of code thanks to the `aniseed.mapping` module which is initialised for you on startup.
 
  * `<localleader>E[motion]` - eval the given motion of Fennel code.
  * `<localleader>ee` - eval the current form under the cursor.
