@@ -2,6 +2,8 @@
 
 Easily write configuration or plugins for https://neovim.io/[Neovim] in https://fennel-lang.org/[Fennel], a Lisp that compiles to Lua.
 
+https://asciinema.org/a/qmjKuGEsxkDxUhOlfNKLenesJ[image:https://asciinema.org/a/qmjKuGEsxkDxUhOlfNKLenesJ.svg[asciicast]]
+
 This is aimed at people who want to extend Neovim interactively with a Lisp as you would in some _other_ text editor. Code is evaluated as you work, it feels a lot like editing https://clojure.org/[Clojure] with https://github.com/Olical/conjure[Conjure].
 
 It provides the tools you need to compile, run and test (even in CI!) Fennel within your editor. It includes a set of macros to make defining and depending on modules far more like Clojure than Lua. No more remembering to put values in a table at the bottom of the file.
