@@ -92,15 +92,17 @@
 
 (fn defonce- [name value]
   `(def- ,name
-     (if ,name
-       ,name
-       ,value)))
+     (let [current# (. (. ,module-sym :aniseed/locals) ,(tostring name))]
+       (if current#
+         current#
+         ,value))))
 
 (fn defonce [name value]
   `(def ,name
-     (if ,name
-       ,name
-       ,value)))
+     (let [current# (. ,module-sym ,(tostring name))]
+       (if current#
+         current#
+         ,value))))
 
 (fn deftest [name ...]
   `(let [tests# (or (. ,module-sym :aniseed/tests) {})]
