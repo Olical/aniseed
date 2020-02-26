@@ -29,7 +29,7 @@ do
     local function join0(...)
       local args = {...}
       local function _3_(...)
-        if (2 == #args) then
+        if (2 == core.count(args)) then
           return args
         else
           return {"", core.first(args)}
@@ -70,5 +70,25 @@ do
   end
   _0_0["aniseed/locals"]["join"] = v_23_0_
   join = v_23_0_
+end
+local split = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function split0(s, pat)
+      local acc = {}
+      local function _3_(part)
+        return table.insert(acc, part)
+      end
+      string.gsub(s, pat, _3_)
+      return acc
+    end
+    v_23_0_0 = split0
+    _0_0["split"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["split"] = v_23_0_
+  split = v_23_0_
 end
 return nil

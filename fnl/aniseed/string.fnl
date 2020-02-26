@@ -7,7 +7,7 @@
   Separator defaults to an empty string.
   Values that aren't a string or nil will go through aniseed.core.pr-str."
   (let [args [...]
-        [sep xs] (if (= 2 (length args))
+        [sep xs] (if (= 2 (core.count args))
                    args
                    ["" (core.first args)])
         count (core.count xs)]
@@ -28,3 +28,14 @@
                      (core.pr-str x)))))))
 
     result))
+
+(defn split [s pat]
+  "Split the given string into a sequential table using the pattern. Unlike
+  other splits, the pattern should match what you want in each item, it's not a
+  pattern for what to split on. So to split on commas you would use '[^,]+'"
+  (let [acc []]
+    (string.gsub
+      s pat
+      (fn [part]
+        (table.insert acc part)))
+    acc))
