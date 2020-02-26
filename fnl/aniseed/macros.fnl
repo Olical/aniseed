@@ -91,12 +91,16 @@
   `(def ,name (fn ,name ,...)))
 
 (fn defonce- [name value]
-  `(when (not (. ,module-sym ,(tostring name)))
-     (def- ,name ,value)))
+  `(def- ,name
+     (if ,name
+       ,name
+       ,value)))
 
 (fn defonce [name value]
-  `(when (not (. ,module-sym ,(tostring name)))
-     (def ,name ,value)))
+  `(def ,name
+     (if ,name
+       ,name
+       ,value)))
 
 (fn deftest [name ...]
   `(let [tests# (or (. ,module-sym :aniseed/tests) {})]
