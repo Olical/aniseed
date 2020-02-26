@@ -4,8 +4,15 @@
             nvim aniseed.nvim
             fennel aniseed.fennel}})
 
+(let [fnl-suffixes (-> package.path
+                       (string.gsub "%.lua;" ".fnl;")
+                       (string.gsub "%.lua$" ".fnl"))]
+  (set fennel.path
+       (.. (string.gsub fnl-suffixes "/lua/" "/fnl/") ";" fnl-suffixes)))
+
 (defn macros-prefix [code]
-  (.. "(require-macros :aniseed.macros)\n" code))
+  (let [macros-module :aniseed.macros]
+    (.. "(require-macros \"" macros-module "\")\n" code)))
 
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
