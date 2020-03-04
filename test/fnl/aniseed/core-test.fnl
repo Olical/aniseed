@@ -67,4 +67,6 @@
   (t.= 0 (core.count nil) "no arg")
   (t.= 3 (core.count [1 nil 3]) "nil gap")
   (t.= 4 (core.count [nil nil nil :a]) "mostly nils")
+  (t.= 3 (core.count "foo") "strings")
+  (t.= 0 (core.count "") "empty strings")
   (t.= 0 (core.count {:a 1 :b 2}) "associative doesn't work"))

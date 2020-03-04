@@ -13,11 +13,6 @@
   (when xs
     (. xs 2)))
 
-(defn count [xs]
-  (if xs
-    (table.maxn xs)
-    0))
-
 (defn string? [x]
   (= "string" (type x)))
 
@@ -26,6 +21,12 @@
 
 (defn table? [x]
   (= "table" (type x)))
+
+(defn count [xs]
+  (if
+    (table? xs) (table.maxn xs)
+    (not xs) 0
+    (length xs)))
 
 (defn inc [n]
   "Increment n by 1."

@@ -72,25 +72,6 @@ do
   _0_0["aniseed/locals"]["second"] = v_23_0_
   second = v_23_0_
 end
-local count = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function count0(xs)
-      if xs then
-        return table.maxn(xs)
-      else
-        return 0
-      end
-    end
-    v_23_0_0 = count0
-    _0_0["count"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["count"] = v_23_0_
-  count = v_23_0_
-end
 local string_3f = nil
 do
   local v_23_0_ = nil
@@ -135,6 +116,27 @@ do
   end
   _0_0["aniseed/locals"]["table?"] = v_23_0_
   table_3f = v_23_0_
+end
+local count = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function count0(xs)
+      if table_3f(xs) then
+        return table.maxn(xs)
+      elseif not xs then
+        return 0
+      else
+        return #xs
+      end
+    end
+    v_23_0_0 = count0
+    _0_0["count"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["count"] = v_23_0_
+  count = v_23_0_
 end
 local inc = nil
 do
