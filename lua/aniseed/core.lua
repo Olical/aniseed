@@ -438,7 +438,7 @@ do
       local function _3_(x)
         return view.serialise(x, {["one-line"] = true})
       end
-      s = unpack(map(_3_, {...}))
+      s = table.concat(map(_3_, {...}), " ")
       if (not s or ("" == s)) then
         return "nil"
       else

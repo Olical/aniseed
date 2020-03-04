@@ -40,6 +40,7 @@
 
 (deftest pr-str
   (t.pr= "[1 2 3]" (core.pr-str [1 2 3]))
+  (t.pr= "1 2 3" (core.pr-str 1 2 3))
   (t.pr= "nil" (core.pr-str nil)))
 
 (deftest map

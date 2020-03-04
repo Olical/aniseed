@@ -140,10 +140,11 @@
         nil)))
 
 (defn pr-str [...]
-  (let [s (.. (unpack
-                (map (fn [x]
-                       (view.serialise x {:one-line true}))
-                     [...])))]
+  (let [s (table.concat
+            (map (fn [x]
+                   (view.serialise x {:one-line true}))
+                 [...])
+            " ")]
     (if (or (not s) (= "" s))
       "nil"
       s)))
