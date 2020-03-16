@@ -73,7 +73,17 @@ The reliance on `vim-sexp` will be replaced by integration with https://github.c
 
 == Mappings
 
-You can use the following mappings inside Fennel buffers to run various chunks of code thanks to the `aniseed.mapping` module which is initialised for you on startup.
+You can use the following mappings inside Fennel buffers to run various chunks of code with the `aniseed.mapping` module.
+
+[source,viml]
+----
+" Initialise all commands and mappings in one go.
+lua require('aniseed.mapping').init()
+
+" Or initialise the parts you want so you can customise things.
+lua require('aniseed.mapping')['init-commands']()
+lua require('aniseed.mapping')['init-mappings']()
+----
 
  * `<localleader>E[motion]` - eval the given motion of Fennel code.
  * `<localleader>ee` - eval the current form under the cursor.
