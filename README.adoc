@@ -75,6 +75,16 @@ The reliance on `vim-sexp` will be replaced by integration with https://github.c
 
 You can use the following mappings inside Fennel buffers to run various chunks of code with the `aniseed.mapping` module.
 
+ * `<localleader>E[motion]` - eval the given motion of Fennel code.
+ * `<localleader>ee` - eval the current form under the cursor.
+ * `<localleader>er` - eval the outermost form under the cursor.
+ * `<localleader>ef` - eval the file from disk.
+ * `<localleader>eb` - eval the current buffer.
+ * `<localleader>ee` (visual) - eval the visually selected code.
+ * `<localleader>t` - run all loaded tests.
+
+You'll need to require `aniseed.mapping` and execute the `init` function after Aniseed is loaded by your plugin manager to set everything up.
+
 [source,viml]
 ----
 " Initialise all commands and mappings in one go.
@@ -84,14 +94,6 @@ lua require('aniseed.mapping').init()
 lua require('aniseed.mapping')['init-commands']()
 lua require('aniseed.mapping')['init-mappings']()
 ----
-
- * `<localleader>E[motion]` - eval the given motion of Fennel code.
- * `<localleader>ee` - eval the current form under the cursor.
- * `<localleader>er` - eval the outermost form under the cursor.
- * `<localleader>ef` - eval the file from disk.
- * `<localleader>eb` - eval the current buffer.
- * `<localleader>ee` (visual) - eval the visually selected code.
- * `<localleader>t` - run all loaded tests.
 
 Feel free to have a peek in `fnl/aniseed/mapping.fnl` to see which commands are exposed, you'll be able to write your own custom mappings on top of those easily enough.
 
