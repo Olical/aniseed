@@ -57,7 +57,7 @@ Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-p
 [source,viml]
 ----
 " Depend on the latest version via tag.
-Plug 'Olical/aniseed', { 'tag': 'v3.0.0' }
+Plug 'Olical/aniseed', { 'tag': 'v3.1.0' }
 
 " For Fennel highlighting (based on Clojure).
 Plug 'bakpakin/fennel.vim'
