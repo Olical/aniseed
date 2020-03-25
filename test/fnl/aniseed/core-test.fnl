@@ -54,6 +54,22 @@
   (t.= :hello (core.identity :hello) "returns what you give it")
   (t.= nil (core.identity) "no arg returns nil"))
 
+(deftest keys
+  (t.pr= [] (core.keys nil) "nil is empty")
+  (t.pr= [] (core.keys {}) "empty is empty")
+  (t.pr= [:a :b] (core.keys {:a 1 :b 2}) "simple use"))
+
+(deftest vals
+  (t.pr= [] (core.vals nil) "nil is empty")
+  (t.pr= [] (core.vals {}) "empty is empty")
+  (t.pr= [1 2] (core.vals {:a 1 :b 2}) "simple use"))
+
+(deftest kv-pairs
+  (t.pr= [] (core.kv-pairs nil) "nil is empty")
+  (t.pr= [] (core.kv-pairs {}) "empty is empty")
+  (t.pr= [[:a 1] [:b 2]] (core.kv-pairs {:a 1 :b 2}) "simple table")
+  (t.pr= [[1 :a] [2 :b]] (core.kv-pairs [:a :b]) "sequential works but is weird"))
+
 (deftest concat
   (let [orig [1 2 3]]
     (t.pr= [1 2 3 4 5 6] (core.concat orig [4 5 6]) "table has been concatenated")

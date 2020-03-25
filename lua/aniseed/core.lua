@@ -279,8 +279,10 @@ do
     local v_23_0_0 = nil
     local function keys0(t)
       local result = {}
-      for k, _ in pairs(t) do
-        table.insert(result, k)
+      if t then
+        for k, _ in pairs(t) do
+          table.insert(result, k)
+        end
       end
       return result
     end
@@ -298,8 +300,10 @@ do
     local v_23_0_0 = nil
     local function vals0(t)
       local result = {}
-      for _, v in pairs(t) do
-        table.insert(result, v)
+      if t then
+        for _, v in pairs(t) do
+          table.insert(result, v)
+        end
       end
       return result
     end
@@ -309,6 +313,27 @@ do
   end
   _0_0["aniseed/locals"]["vals"] = v_23_0_
   vals = v_23_0_
+end
+local kv_pairs = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function kv_pairs0(t)
+      local result = {}
+      if t then
+        for k, v in pairs(t) do
+          table.insert(result, {k, v})
+        end
+      end
+      return result
+    end
+    v_23_0_0 = kv_pairs0
+    _0_0["kv-pairs"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["kv-pairs"] = v_23_0_
+  kv_pairs = v_23_0_
 end
 local reduce = nil
 do

@@ -80,15 +80,25 @@
 (defn keys [t]
   "Get all keys of a table."
   (let [result []]
-    (each [k _ (pairs t)]
-      (table.insert result k))
+    (when t
+      (each [k _ (pairs t)]
+        (table.insert result k)))
     result))
 
 (defn vals [t]
   "Get all values of a table."
   (let [result []]
-    (each [_ v (pairs t)]
-      (table.insert result v))
+    (when t
+      (each [_ v (pairs t)]
+        (table.insert result v)))
+    result))
+
+(defn kv-pairs [t]
+  "Get all keys and values of a table zipped up in pairs."
+  (let [result []]
+    (when t
+      (each [k v (pairs t)]
+        (table.insert result [k v])))
     result))
 
 (defn reduce [f init xs]
