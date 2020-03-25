@@ -173,6 +173,16 @@
     {}
     [...]))
 
+(defn select-keys [t ks]
+  (if (and t ks)
+    (reduce
+      (fn [acc k]
+        (when k
+          (tset acc k (. t k)))
+        acc)
+      {}
+      ks)
+    {}))
+
 ;; TODO with-out-str
-;; TODO select-keys
 ;; TODO get + get-in + set + set-in

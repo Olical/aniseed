@@ -92,3 +92,11 @@
   (t.pr= {} (core.merge) "always start with an empty table")
   (t.pr= {:a 1} (core.merge nil {:a 1}) "into nil")
   (t.pr= {:a 1 :c 3} (core.merge {:a 1} nil {:c 3}) "nil in the middle"))
+
+(deftest select-keys
+  (t.pr= {} (core.select-keys nil [:a :b]) "no table")
+  (t.pr= {} (core.select-keys {} [:a :b]) "empty table")
+  (t.pr= {} (core.select-keys {:a 1 :b 2} nil) "no keys")
+  (t.pr= {} (core.select-keys nil nil) "nothing")
+  (t.pr= {:a 1 :c 3} (core.select-keys {:a 1 :b 2 :c 3} [:a :c])
+         "simple table and keys"))

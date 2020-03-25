@@ -517,4 +517,29 @@ do
   _0_0["aniseed/locals"]["merge"] = v_23_0_
   merge = v_23_0_
 end
+local select_keys = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function select_keys0(t, ks)
+      if (t and ks) then
+        local function _3_(acc, k)
+          if k then
+            acc[k] = t[k]
+          end
+          return acc
+        end
+        return reduce(_3_, {}, ks)
+      else
+        return {}
+      end
+    end
+    v_23_0_0 = select_keys0
+    _0_0["select-keys"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["select-keys"] = v_23_0_
+  select_keys = v_23_0_
+end
 return nil
