@@ -152,3 +152,17 @@
 
 (defn pr [...]
   (print (pr-str ...)))
+
+(defn merge [...]
+  (reduce
+    (fn [acc m]
+      (when m
+        (each [k v (pairs m)]
+          (tset acc k v)))
+      acc)
+    {}
+    [...]))
+
+;; TODO with-out-str
+;; TODO select-keys
+;; TODO get + get-in + set + set-in

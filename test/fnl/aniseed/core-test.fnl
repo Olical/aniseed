@@ -55,10 +55,10 @@
   (t.= nil (core.identity) "no arg returns nil"))
 
 (deftest concat
-  (local orig [1 2 3])
-  (t.pr= [1 2 3 4 5 6] (core.concat orig [4 5 6]) "table has been concatenated")
-  (t.pr= [4 5 6 1 2 3] (core.concat [4 5 6] orig) "order is important")
-  (t.pr= [1 2 3] orig "original hasn't been modified"))
+  (let [orig [1 2 3]]
+    (t.pr= [1 2 3 4 5 6] (core.concat orig [4 5 6]) "table has been concatenated")
+    (t.pr= [4 5 6 1 2 3] (core.concat [4 5 6] orig) "order is important")
+    (t.pr= [1 2 3] orig "original hasn't been modified")))
 
 (deftest count
   (t.= 3 (core.count [1 2 3]) "three values")
@@ -70,3 +70,9 @@
   (t.= 3 (core.count "foo") "strings")
   (t.= 0 (core.count "") "empty strings")
   (t.= 0 (core.count {:a 1 :b 2}) "associative doesn't work"))
+
+(deftest merge
+  (t.pr= {:a 1 :b 2} (core.merge {} {:a 1} {:b 2}) "simple maps")
+  (t.pr= {} (core.merge) "always start with an empty table")
+  (t.pr= {:a 1} (core.merge nil {:a 1}) "into nil")
+  (t.pr= {:a 1 :c 3} (core.merge {:a 1} nil {:c 3}) "nil in the middle"))

@@ -469,4 +469,27 @@ do
   _0_0["aniseed/locals"]["pr"] = v_23_0_
   pr = v_23_0_
 end
+local merge = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function merge0(...)
+      local function _3_(acc, m)
+        if m then
+          for k, v in pairs(m) do
+            acc[k] = v
+          end
+        end
+        return acc
+      end
+      return reduce(_3_, {}, {...})
+    end
+    v_23_0_0 = merge0
+    _0_0["merge"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["merge"] = v_23_0_
+  merge = v_23_0_
+end
 return nil
