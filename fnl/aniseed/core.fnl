@@ -36,6 +36,30 @@
   "Decrement n by 1."
   (- n 1))
 
+(defn keys [t]
+  "Get all keys of a table."
+  (let [result []]
+    (when t
+      (each [k _ (pairs t)]
+        (table.insert result k)))
+    result))
+
+(defn vals [t]
+  "Get all values of a table."
+  (let [result []]
+    (when t
+      (each [_ v (pairs t)]
+        (table.insert result v)))
+    result))
+
+(defn kv-pairs [t]
+  "Get all keys and values of a table zipped up in pairs."
+  (let [result []]
+    (when t
+      (each [k v (pairs t)]
+        (table.insert result [k v])))
+    result))
+
 (defn update [tbl k f]
   "Swap the value under key `k` in table `tbl` using function `f`."
   (tset tbl k (f (. tbl k)))
@@ -73,33 +97,13 @@
       xs)
     result))
 
+(defn map-indexed [f xs]
+  "Map xs to a new sequential table by calling (f [k v]) on each item. "
+  (map f (kv-pairs xs)))
+
 (defn identity [x]
   "Returns what you pass it."
   x)
-
-(defn keys [t]
-  "Get all keys of a table."
-  (let [result []]
-    (when t
-      (each [k _ (pairs t)]
-        (table.insert result k)))
-    result))
-
-(defn vals [t]
-  "Get all values of a table."
-  (let [result []]
-    (when t
-      (each [_ v (pairs t)]
-        (table.insert result v)))
-    result))
-
-(defn kv-pairs [t]
-  "Get all keys and values of a table zipped up in pairs."
-  (let [result []]
-    (when t
-      (each [k v (pairs t)]
-        (table.insert result [k v])))
-    result))
 
 (defn reduce [f init xs]
   "Reduce xs into a result by passing each subsequent value into the fn with
@@ -133,10 +137,23 @@
       [...])
     result))
 
+(defn println [...]
+  (let [msg (->> [...]
+                 (map-indexed
+                   (fn [[i s]]
+                     (if (= 1 i)
+                       s
+                       (.. " " s))))
+                 (reduce
+                   (fn [acc s]
+                     (.. acc s))
+                   ""))]
+    (print msg)))
+
 (defn slurp [path]
   "Read the file into a string."
   (match (io.open path "r")
-    (nil msg) (print (.. "Could not open file: " msg))
+    (nil msg) (println (.. "Could not open file: " msg))
     f (let [content (f:read "*all")]
         (f:close)
         content)))
@@ -144,7 +161,7 @@
 (defn spit [path content]
   "Spit the string into the file."
   (match (io.open path "w")
-    (nil msg) (print (.. "Could not open file: " msg))
+    (nil msg) (println (.. "Could not open file: " msg))
     f (do
         (f:write content)
         (f:close)
@@ -161,7 +178,7 @@
       s)))
 
 (defn pr [...]
-  (print (pr-str ...)))
+  (println (pr-str ...)))
 
 (defn merge [...]
   (reduce

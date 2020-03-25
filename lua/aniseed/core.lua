@@ -168,6 +168,69 @@ do
   _0_0["aniseed/locals"]["dec"] = v_23_0_
   dec = v_23_0_
 end
+local keys = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function keys0(t)
+      local result = {}
+      if t then
+        for k, _ in pairs(t) do
+          table.insert(result, k)
+        end
+      end
+      return result
+    end
+    v_23_0_0 = keys0
+    _0_0["keys"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["keys"] = v_23_0_
+  keys = v_23_0_
+end
+local vals = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function vals0(t)
+      local result = {}
+      if t then
+        for _, v in pairs(t) do
+          table.insert(result, v)
+        end
+      end
+      return result
+    end
+    v_23_0_0 = vals0
+    _0_0["vals"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["vals"] = v_23_0_
+  vals = v_23_0_
+end
+local kv_pairs = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function kv_pairs0(t)
+      local result = {}
+      if t then
+        for k, v in pairs(t) do
+          table.insert(result, {k, v})
+        end
+      end
+      return result
+    end
+    v_23_0_0 = kv_pairs0
+    _0_0["kv-pairs"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["kv-pairs"] = v_23_0_
+  kv_pairs = v_23_0_
+end
 local update = nil
 do
   local v_23_0_ = nil
@@ -257,6 +320,21 @@ do
   _0_0["aniseed/locals"]["map"] = v_23_0_
   map = v_23_0_
 end
+local map_indexed = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function map_indexed0(f, xs)
+      return map(f, kv_pairs(xs))
+    end
+    v_23_0_0 = map_indexed0
+    _0_0["map-indexed"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["map-indexed"] = v_23_0_
+  map_indexed = v_23_0_
+end
 local identity = nil
 do
   local v_23_0_ = nil
@@ -271,69 +349,6 @@ do
   end
   _0_0["aniseed/locals"]["identity"] = v_23_0_
   identity = v_23_0_
-end
-local keys = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function keys0(t)
-      local result = {}
-      if t then
-        for k, _ in pairs(t) do
-          table.insert(result, k)
-        end
-      end
-      return result
-    end
-    v_23_0_0 = keys0
-    _0_0["keys"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["keys"] = v_23_0_
-  keys = v_23_0_
-end
-local vals = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function vals0(t)
-      local result = {}
-      if t then
-        for _, v in pairs(t) do
-          table.insert(result, v)
-        end
-      end
-      return result
-    end
-    v_23_0_0 = vals0
-    _0_0["vals"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["vals"] = v_23_0_
-  vals = v_23_0_
-end
-local kv_pairs = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function kv_pairs0(t)
-      local result = {}
-      if t then
-        for k, v in pairs(t) do
-          table.insert(result, {k, v})
-        end
-      end
-      return result
-    end
-    v_23_0_0 = kv_pairs0
-    _0_0["kv-pairs"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["kv-pairs"] = v_23_0_
-  kv_pairs = v_23_0_
 end
 local reduce = nil
 do
@@ -403,6 +418,36 @@ do
   _0_0["aniseed/locals"]["concat"] = v_23_0_
   concat = v_23_0_
 end
+local println = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function println0(...)
+      local msg = nil
+      local function _3_(acc, s)
+        return (acc .. s)
+      end
+      local function _4_(_5_0)
+        local _6_ = _5_0
+        local i = _6_[1]
+        local s = _6_[2]
+        if (1 == i) then
+          return s
+        else
+          return (" " .. s)
+        end
+      end
+      msg = reduce(_3_, "", map_indexed(_4_, {...}))
+      return print(msg)
+    end
+    v_23_0_0 = println0
+    _0_0["println"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["println"] = v_23_0_
+  println = v_23_0_
+end
 local slurp = nil
 do
   local v_23_0_ = nil
@@ -412,7 +457,7 @@ do
       local _3_0, _4_0 = io.open(path, "r")
       if ((_3_0 == nil) and (nil ~= _4_0)) then
         local msg = _4_0
-        return print(("Could not open file: " .. msg))
+        return println(("Could not open file: " .. msg))
       elseif (nil ~= _3_0) then
         local f = _3_0
         do
@@ -438,7 +483,7 @@ do
       local _3_0, _4_0 = io.open(path, "w")
       if ((_3_0 == nil) and (nil ~= _4_0)) then
         local msg = _4_0
-        return print(("Could not open file: " .. msg))
+        return println(("Could not open file: " .. msg))
       elseif (nil ~= _3_0) then
         local f = _3_0
         do
@@ -485,7 +530,7 @@ do
   do
     local v_23_0_0 = nil
     local function pr0(...)
-      return print(pr_str(...))
+      return println(pr_str(...))
     end
     v_23_0_0 = pr0
     _0_0["pr"] = v_23_0_0

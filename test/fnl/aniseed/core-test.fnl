@@ -38,22 +38,6 @@
   (t.= 1 (core.dec 2))
   (t.= -6 (core.dec -5)))
 
-(deftest pr-str
-  (t.pr= "[1 2 3]" (core.pr-str [1 2 3]))
-  (t.pr= "1 2 3" (core.pr-str 1 2 3))
-  (t.pr= "nil" (core.pr-str nil)))
-
-(deftest map
-  (t.pr= [2 3 4] (core.map core.inc [1 2 3])))
-
-(deftest filter
-  (t.pr= [2 4 6] (core.filter #(= 0 (% $1 2)) [1 2 3 4 5 6]))
-  (t.pr= [] (core.filter #(= 0 (% $1 2)) nil)))
-
-(deftest identity
-  (t.= :hello (core.identity :hello) "returns what you give it")
-  (t.= nil (core.identity) "no arg returns nil"))
-
 (deftest keys
   (t.pr= [] (core.keys nil) "nil is empty")
   (t.pr= [] (core.keys {}) "empty is empty")
@@ -69,6 +53,30 @@
   (t.pr= [] (core.kv-pairs {}) "empty is empty")
   (t.pr= [[:a 1] [:b 2]] (core.kv-pairs {:a 1 :b 2}) "simple table")
   (t.pr= [[1 :a] [2 :b]] (core.kv-pairs [:a :b]) "sequential works but is weird"))
+
+(deftest pr-str
+  (t.pr= "[1 2 3]" (core.pr-str [1 2 3]))
+  (t.pr= "1 2 3" (core.pr-str 1 2 3))
+  (t.pr= "nil" (core.pr-str nil)))
+
+(deftest map
+  (t.pr= [2 3 4] (core.map core.inc [1 2 3])))
+
+(deftest map-indexed
+  (t.pr= [[2 :a] [3 :b]]
+         (core.map-indexed
+           (fn [[k v]]
+             [(core.inc k) v])
+           [:a :b])
+         "incrementing the index"))
+
+(deftest filter
+  (t.pr= [2 4 6] (core.filter #(= 0 (% $1 2)) [1 2 3 4 5 6]))
+  (t.pr= [] (core.filter #(= 0 (% $1 2)) nil)))
+
+(deftest identity
+  (t.= :hello (core.identity :hello) "returns what you give it")
+  (t.= nil (core.identity) "no arg returns nil"))
 
 (deftest concat
   (let [orig [1 2 3]]

@@ -12,12 +12,13 @@
          : assertions
          : assertions-passed}
         results]
-    (print (.. prefix " "
-               (if (ok? results)
-                 "OK"
-                 "FAILED")
-               " " tests-passed "/" tests " tests and "
-               assertions-passed "/" assertions " assertions passed")))
+    (core.println
+      (.. prefix " "
+          (if (ok? results)
+            "OK"
+            "FAILED")
+          " " tests-passed "/" tests " tests and "
+          assertions-passed "/" assertions " assertions passed")))
   results)
 
 (defn run [mod-name]
