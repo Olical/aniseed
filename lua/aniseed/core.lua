@@ -418,13 +418,46 @@ do
   _0_0["aniseed/locals"]["concat"] = v_23_0_
   concat = v_23_0_
 end
+local _2aprinter_2a = nil
+do
+  local v_23_0_ = print
+  _0_0["aniseed/locals"]["*printer*"] = v_23_0_
+  _2aprinter_2a = v_23_0_
+end
+local with_out_str = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function with_out_str0(f)
+      local acc = ""
+      local function _3_(_241)
+        acc = (acc .. _241 .. "\n")
+        return nil
+      end
+      _2aprinter_2a = _3_
+      do
+        local ok_3f, result = pcall(f)
+        _2aprinter_2a = print
+        if not ok_3f then
+          error(result)
+        end
+      end
+      return acc
+    end
+    v_23_0_0 = with_out_str0
+    _0_0["with-out-str"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["with-out-str"] = v_23_0_
+  with_out_str = v_23_0_
+end
 local println = nil
 do
   local v_23_0_ = nil
   do
     local v_23_0_0 = nil
     local function println0(...)
-      local msg = nil
       local function _3_(acc, s)
         return (acc .. s)
       end
@@ -438,8 +471,7 @@ do
           return (" " .. s)
         end
       end
-      msg = reduce(_3_, "", map_indexed(_4_, {...}))
-      return print(msg)
+      return _2aprinter_2a(reduce(_3_, "", map_indexed(_4_, {...})))
     end
     v_23_0_0 = println0
     _0_0["println"] = v_23_0_0

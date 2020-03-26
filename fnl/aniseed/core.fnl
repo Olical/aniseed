@@ -137,18 +137,29 @@
       [...])
     result))
 
+(def- *printer* print)
+
+(defn with-out-str [f]
+  (var acc "")
+  (set *printer* #(set acc (.. acc $1 "\n")))
+  (let [(ok? result) (pcall f)]
+    (set *printer* print)
+    (when (not ok?)
+      (error result)))
+  acc)
+
 (defn println [...]
-  (let [msg (->> [...]
-                 (map-indexed
-                   (fn [[i s]]
-                     (if (= 1 i)
-                       s
-                       (.. " " s))))
-                 (reduce
-                   (fn [acc s]
-                     (.. acc s))
-                   ""))]
-    (print msg)))
+  (->> [...]
+       (map-indexed
+         (fn [[i s]]
+           (if (= 1 i)
+             s
+             (.. " " s))))
+       (reduce
+         (fn [acc s]
+           (.. acc s))
+         "")
+       (*printer*)))
 
 (defn slurp [path]
   "Read the file into a string."
@@ -201,5 +212,4 @@
       ks)
     {}))
 
-;; TODO with-out-str
 ;; TODO get + get-in + set + set-in

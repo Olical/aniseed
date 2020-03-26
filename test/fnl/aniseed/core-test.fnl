@@ -84,6 +84,22 @@
     (t.pr= [4 5 6 1 2 3] (core.concat [4 5 6] orig) "order is important")
     (t.pr= [1 2 3] orig "original hasn't been modified")))
 
+(deftest with-out-str
+  (t.= "" (core.with-out-str (fn [] (+ 1 1))) "nothing")
+  (t.pr= (values false "oh no")
+         (pcall
+           core.with-out-str
+           (fn []
+             (core.println "foo")
+             (error "oh no")))
+         "error bubbles out but still resets *printer*")
+  (t.= "foo\nbar\n"
+       (core.with-out-str
+         (fn []
+           (core.println "foo")
+           (core.println "bar")))
+       "two lines"))
+
 (deftest count
   (t.= 3 (core.count [1 2 3]) "three values")
   (t.= 0 (core.count []) "empty")
