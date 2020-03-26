@@ -619,4 +619,50 @@ do
   _0_0["aniseed/locals"]["select-keys"] = v_23_0_
   select_keys = v_23_0_
 end
+local get = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function get0(t, k, d)
+      local res = ((t and t[k]) or nil)
+      if nil_3f(res) then
+        return d
+      else
+        return res
+      end
+    end
+    v_23_0_0 = get0
+    _0_0["get"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["get"] = v_23_0_
+  get = v_23_0_
+end
+local get_in = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function get_in0(t, ks, d)
+      local res = nil
+      local function _3_(acc, k)
+        if table_3f(acc) then
+          return get(acc, k)
+        end
+      end
+      res = reduce(_3_, t, ks)
+      if nil_3f(res) then
+        return d
+      else
+        return res
+      end
+    end
+    v_23_0_0 = get_in0
+    _0_0["get-in"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["get-in"] = v_23_0_
+  get_in = v_23_0_
+end
 return nil

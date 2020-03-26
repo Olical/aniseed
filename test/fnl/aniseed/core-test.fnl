@@ -124,3 +124,20 @@
   (t.pr= {} (core.select-keys nil nil) "nothing")
   (t.pr= {:a 1 :c 3} (core.select-keys {:a 1 :b 2 :c 3} [:a :c])
          "simple table and keys"))
+
+(deftest get
+  (t.= nil (core.get nil :a) "from nothing is nothing")
+  (t.= nil (core.get {:a 1} nil) "nothing from something is nothing")
+  (t.= 10 (core.get nil nil 10) "just a default returns a default")
+  (t.= nil (core.get {:a 1} :b) "a missing key is nothing")
+  (t.= 2 (core.get {:a 1} :b 2) "defaults replace missing")
+  (t.= 1 (core.get {:a 1} :a) "results match")
+  (t.= 1 (core.get {:a 1} :a 2) "results match (even with default)")
+  (t.= :b (core.get [:a :b] 2) "sequential tables work too"))
+
+(deftest get-in
+  (t.= nil (core.get-in nil [:a]) "something from nil is nil")
+  (t.pr= {:a 1} (core.get-in {:a 1} [])
+         "empty path is idempotent")
+  (t.= 10 (core.get-in {:a {:b 10 :c 20}} [:a :b]) "two levels")
+  (t.= 5 (core.get-in {:a {:b 10 :c 20}} [:a :d] 5) "default"))

@@ -212,4 +212,20 @@
       ks)
     {}))
 
+(defn get [t k d]
+  (let [res (or (and t (. t k)) nil)]
+    (if (nil? res)
+      d
+      res)))
+
+(defn get-in [t ks d]
+  (let [res (reduce
+              (fn [acc k]
+                (when (table? acc)
+                  (get acc k)))
+              t ks)]
+    (if (nil? res)
+      d
+      res)))
+
 ;; TODO get + get-in + set + set-in
