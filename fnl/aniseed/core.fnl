@@ -1,18 +1,6 @@
 (module aniseed.core
   {require {view aniseed.view}})
 
-(defn first [xs]
-  (when xs
-    (. xs 1)))
-
-(defn last [xs]
-  (when xs
-    (. xs (length xs))))
-
-(defn second [xs]
-  (when xs
-    (. xs 2)))
-
 (defn string? [x]
   (= "string" (type x)))
 
@@ -27,6 +15,18 @@
     (table? xs) (table.maxn xs)
     (not xs) 0
     (length xs)))
+
+(defn first [xs]
+  (when xs
+    (. xs 1)))
+
+(defn second [xs]
+  (when xs
+    (. xs 2)))
+
+(defn last [xs]
+  (when xs
+    (. xs (count xs))))
 
 (defn inc [n]
   "Increment n by 1."
@@ -119,12 +119,20 @@
   "Return the first truthy result from (f x) or nil."
   (var result nil)
   (var n 1)
-  (while (and (not result) (<= n (length xs)))
+  (while (and (not result) (<= n (count xs)))
     (let [candidate (f (. xs n))]
       (when candidate
         (set result candidate))
       (set n (inc n))))
   result)
+
+(defn butlast [xs]
+  (let [total (count xs)]
+    (->> (kv-pairs xs)
+         (filter
+           (fn [[n v]]
+             (< n total)))
+         (map second))))
 
 (defn concat [...]
   "Concatinats the sequential table arguments together."
@@ -228,4 +236,24 @@
       d
       res)))
 
-;; TODO get + get-in + set + set-in
+(defn assoc [t k v]
+  (let [t (or t {})]
+    (when (not (nil? k))
+      (tset t k v))
+    t))
+
+(defn assoc-in [t ks v]
+  (let [path (butlast ks)
+        final (last ks)
+        t (or t {})]
+    (assoc (reduce
+             (fn [acc k]
+               (let [step (get acc k)]
+                 (if (nil? step)
+                   (get (assoc acc k {}) k)
+                   step)))
+             t
+             path)
+           final
+           v)
+    t))

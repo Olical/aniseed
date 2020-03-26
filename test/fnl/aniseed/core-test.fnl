@@ -9,6 +9,12 @@
   (t.= 3 (core.last [1 2 3]) "3 is last")
   (t.= nil (core.last nil) "last of nil is nil"))
 
+(deftest butlast
+  (t.pr= [] (core.butlast nil) "nothing is empty")
+  (t.pr= [] (core.butlast []) "empty is empty")
+  (t.pr= [] (core.butlast [1]) "one item is empty")
+  (t.pr= [1 2] (core.butlast [1 2 3]) "more than one works"))
+
 (deftest second
   (t.= nil (core.second []) "nil when empty")
   (t.= nil (core.second nil) "nil when nil")
@@ -141,3 +147,26 @@
          "empty path is idempotent")
   (t.= 10 (core.get-in {:a {:b 10 :c 20}} [:a :b]) "two levels")
   (t.= 5 (core.get-in {:a {:b 10 :c 20}} [:a :d] 5) "default"))
+
+(deftest assoc
+  (t.pr= {} (core.assoc nil nil nil) "3x nil is an empty map")
+  (t.pr= {} (core.assoc nil :a nil) "setting to nil is noop")
+  (t.pr= {} (core.assoc nil nil :a) "nil key is noop")
+  (t.pr= {:a 1} (core.assoc nil :a 1) "from nothing to one key")
+  (t.pr= [:a] (core.assoc nil 1 :a) "sequential")
+  (t.pr= {:a 1 :b 2} (core.assoc {:a 1} :b 2) "adding to existing"))
+
+(deftest assoc-in
+  (t.pr= {} (core.assoc-in nil nil nil) "empty as possible")
+  (t.pr= {} (core.assoc-in nil [] nil) "empty path, nothing else")
+  (t.pr= {} (core.assoc-in nil [] 2) "empty path and a value")
+  (t.pr= {:a 1} (core.assoc-in {:a 1} [] 2)
+         "empty path, base table and a value")
+  (t.pr= {:a 1 :b 2} (core.assoc-in {:a 1} [:b] 2)
+         "simple one path segment")
+  (t.pr= {:a 1 :b {:c 2}} (core.assoc-in {:a 1} [:b :c] 2)
+         "two levels from base")
+  (t.pr= {:b {:c 2}} (core.assoc-in nil [:b :c] 2)
+         "two levels from nothing")
+  (t.pr= {:a {:b [:c]}} (core.assoc-in nil [:a :b 1] :c)
+         "mixing associative and sequential"))

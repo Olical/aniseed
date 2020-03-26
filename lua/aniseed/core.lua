@@ -21,57 +21,6 @@ end
 local _2_ = _1_(...)
 local view = _2_[1]
 do local _ = ({nil, _0_0, nil})[2] end
-local first = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function first0(xs)
-      if xs then
-        return xs[1]
-      end
-    end
-    v_23_0_0 = first0
-    _0_0["first"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["first"] = v_23_0_
-  first = v_23_0_
-end
-local last = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function last0(xs)
-      if xs then
-        return xs[#xs]
-      end
-    end
-    v_23_0_0 = last0
-    _0_0["last"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["last"] = v_23_0_
-  last = v_23_0_
-end
-local second = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function second0(xs)
-      if xs then
-        return xs[2]
-      end
-    end
-    v_23_0_0 = second0
-    _0_0["second"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["second"] = v_23_0_
-  second = v_23_0_
-end
 local string_3f = nil
 do
   local v_23_0_ = nil
@@ -137,6 +86,57 @@ do
   end
   _0_0["aniseed/locals"]["count"] = v_23_0_
   count = v_23_0_
+end
+local first = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function first0(xs)
+      if xs then
+        return xs[1]
+      end
+    end
+    v_23_0_0 = first0
+    _0_0["first"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["first"] = v_23_0_
+  first = v_23_0_
+end
+local second = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function second0(xs)
+      if xs then
+        return xs[2]
+      end
+    end
+    v_23_0_0 = second0
+    _0_0["second"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["second"] = v_23_0_
+  second = v_23_0_
+end
+local last = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function last0(xs)
+      if xs then
+        return xs[count(xs)]
+      end
+    end
+    v_23_0_0 = last0
+    _0_0["last"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["last"] = v_23_0_
+  last = v_23_0_
 end
 local inc = nil
 do
@@ -379,7 +379,7 @@ do
     local function some0(f, xs)
       local result = nil
       local n = 1
-      while (not result and (n <= #xs)) do
+      while (not result and (n <= count(xs))) do
         local candidate = f(xs[n])
         if candidate then
           result = candidate
@@ -394,6 +394,28 @@ do
   end
   _0_0["aniseed/locals"]["some"] = v_23_0_
   some = v_23_0_
+end
+local butlast = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function butlast0(xs)
+      local total = count(xs)
+      local function _3_(_4_0)
+        local _5_ = _4_0
+        local n = _5_[1]
+        local v = _5_[2]
+        return (n < total)
+      end
+      return map(second, filter(_3_, kv_pairs(xs)))
+    end
+    v_23_0_0 = butlast0
+    _0_0["butlast"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["butlast"] = v_23_0_
+  butlast = v_23_0_
 end
 local concat = nil
 do
@@ -664,5 +686,51 @@ do
   end
   _0_0["aniseed/locals"]["get-in"] = v_23_0_
   get_in = v_23_0_
+end
+local assoc = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function assoc0(t, k, v)
+      local t0 = (t or {})
+      if not nil_3f(k) then
+        t0[k] = v
+      end
+      return t0
+    end
+    v_23_0_0 = assoc0
+    _0_0["assoc"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["assoc"] = v_23_0_
+  assoc = v_23_0_
+end
+local assoc_in = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function assoc_in0(t, ks, v)
+      local path = butlast(ks)
+      local final = last(ks)
+      local t0 = (t or {})
+      local function _3_(acc, k)
+        local step = get(acc, k)
+        if nil_3f(step) then
+          return get(assoc(acc, k, {}), k)
+        else
+          return step
+        end
+      end
+      assoc(reduce(_3_, t0, path), final, v)
+      return t0
+    end
+    v_23_0_0 = assoc_in0
+    _0_0["assoc-in"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["assoc-in"] = v_23_0_
+  assoc_in = v_23_0_
 end
 return nil
