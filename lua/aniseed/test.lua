@@ -50,9 +50,9 @@ do
       do
         local _3_ = results
         local assertions_passed = _3_["assertions-passed"]
-        local tests = _3_["tests"]
         local assertions = _3_["assertions"]
         local tests_passed = _3_["tests-passed"]
+        local tests = _3_["tests"]
         local function _4_()
           if ok_3f(results) then
             return "OK"
@@ -96,7 +96,7 @@ do
                   return ""
                 end
               end
-              return print((str.join({prefix, " ", ...}) .. _4_(...)))
+              return a.println((str.join({prefix, " ", ...}) .. _4_(...)))
             end
             fail = _3_
             local begin = nil

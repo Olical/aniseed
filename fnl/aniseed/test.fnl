@@ -35,10 +35,10 @@
           (let [prefix (.. "[" mod-name "/" label "]")
                 fail (fn [desc ...]
                        (set test-failed true)
-                       (print (.. (str.join [prefix " " ...])
-                                  (if desc
-                                    (.. " (" desc ")")
-                                    ""))))
+                       (a.println (.. (str.join [prefix " " ...])
+                                      (if desc
+                                        (.. " (" desc ")")
+                                        ""))))
                 begin (fn []
                         (a.update results :assertions a.inc))
                 pass (fn []
