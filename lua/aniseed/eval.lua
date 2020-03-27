@@ -15,15 +15,14 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {compile = "aniseed.compile", core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-  return {require("aniseed.compile"), require("aniseed.core"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
+  _0_0["aniseed/local-fns"] = {require = {compile = "aniseed.compile", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
+  return {require("aniseed.compile"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
 end
 local _2_ = _1_(...)
 local compile = _2_[1]
-local core = _2_[2]
-local fennel = _2_[3]
-local fs = _2_[4]
-local nvim = _2_[5]
+local fennel = _2_[2]
+local fs = _2_[3]
+local nvim = _2_[4]
 do local _ = ({nil, _0_0, nil})[2] end
 local str = nil
 do

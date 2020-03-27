@@ -1,5 +1,5 @@
 (module aniseed.test
-  {require {core aniseed.core
+  {require {a aniseed.core
             str aniseed.string
             nvim aniseed.nvim}})
 
@@ -12,7 +12,7 @@
          : assertions
          : assertions-passed}
         results]
-    (core.println
+    (a.println
       (.. prefix " "
           (if (ok? results)
             "OK"
@@ -23,15 +23,15 @@
 
 (defn run [mod-name]
   (let [mod (. package.loaded mod-name)
-        tests (and (core.table? mod) (. mod :aniseed/tests))]
-    (when (core.table? tests)
+        tests (and (a.table? mod) (. mod :aniseed/tests))]
+    (when (a.table? tests)
       (let [results {:tests (length tests)
                      :tests-passed 0
                      :assertions 0
                      :assertions-passed 0}]
         (each [label f (pairs tests)]
           (var test-failed false)
-          (core.update results :tests core.inc)
+          (a.update results :tests a.inc)
           (let [prefix (.. "[" mod-name "/" label "]")
                 fail (fn [desc ...]
                        (set test-failed true)
@@ -40,19 +40,19 @@
                                     (.. " (" desc ")")
                                     ""))))
                 begin (fn []
-                        (core.update results :assertions core.inc))
+                        (a.update results :assertions a.inc))
                 pass (fn []
-                       (core.update results :assertions-passed core.inc)) 
+                       (a.update results :assertions-passed a.inc)) 
 
                 t {:= (fn [e r desc]
                         (begin)
                         (if (= e r)
                           (pass)
-                          (fail desc "Expected '" (core.pr-str e) "' but received '" (core.pr-str r) "'")))
+                          (fail desc "Expected '" (a.pr-str e) "' but received '" (a.pr-str r) "'")))
                    :pr= (fn [e r desc]
                           (begin)
-                          (let [se (core.pr-str e)
-                                sr (core.pr-str r)]
+                          (let [se (a.pr-str e)
+                                sr (a.pr-str r)]
                             (if (= se sr)
                               (pass)
                               (fail desc "Expected (with pr) '" se "' but received '" sr "'"))))
@@ -60,20 +60,20 @@
                           (begin)
                           (if r
                             (pass)
-                            (fail desc "Expected truthy result but received '" (core.pr-str r) "'")))}]
+                            (fail desc "Expected truthy result but received '" (a.pr-str r) "'")))}]
             (match (pcall
                      (fn []
                        (f t)))
               (false err) (fail "Exception: " err)))
           (when (not test-failed)
-            (core.update results :tests-passed core.inc)))
+            (a.update results :tests-passed a.inc)))
         (display-results results (.. "[" mod-name "]"))))))
 
 (defn run-all []
-  (-> (core.keys package.loaded)
-      (->> (core.map run)
-           (core.filter core.table?)
-           (core.reduce
+  (-> (a.keys package.loaded)
+      (->> (a.map run)
+           (a.filter a.table?)
+           (a.reduce
              (fn [totals results]
                (each [k v (pairs results)]
                  (tset totals k (+ v (. totals k))))
@@ -88,7 +88,7 @@
   (nvim.ex.redir_ "> test/results.txt")
 
   (->> (nvim.fn.globpath "test/fnl" "**/*-test.fnl" false true)
-       (core.run!
+       (a.run!
          (fn [path]
            (-> path
                (string.match "^test/fnl/(.-).fnl$")

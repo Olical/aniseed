@@ -1,5 +1,5 @@
 (module aniseed.mapping
-  {require {core aniseed.core
+  {require {a aniseed.core
             str aniseed.string
             nvim aniseed.nvim
             nu aniseed.nvim.util
@@ -11,7 +11,7 @@
   (if (not ok?)
     (nvim.err_writeln result)
 
-    (let [mod (and (core.table? result) (. result :aniseed/module))]
+    (let [mod (and (a.table? result) (. result :aniseed/module))]
       (when mod
         (when (= nil (. package.loaded mod))
           (tset package.loaded mod {}))
@@ -21,7 +21,7 @@
 
       (vim.schedule
         (fn []
-          (core.pr result))))))
+          (a.pr result))))))
 
 (defn selection [type ...]
   (let [sel-backup nvim.o.selection
@@ -62,7 +62,7 @@
   (eval-str (str.join "\n" (nvim.fn.getline first-line last-line))))
 
 (defn eval-file [filename]
-  (-> (core.slurp filename)
+  (-> (a.slurp filename)
       (eval.str {:filename filename})
       (handle-result)))
 

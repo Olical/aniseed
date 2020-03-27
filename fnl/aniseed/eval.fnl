@@ -1,6 +1,5 @@
 (module aniseed.eval
-  {require {core aniseed.core
-            fs aniseed.fs
+  {require {fs aniseed.fs
             nvim aniseed.nvim
             fennel aniseed.fennel
             compile aniseed.compile}})

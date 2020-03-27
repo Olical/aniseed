@@ -15,11 +15,11 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
+  _0_0["aniseed/local-fns"] = {require = {a = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
   return {require("aniseed.core"), require("aniseed.nvim"), require("aniseed.string")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
+local a = _2_[1]
 local nvim = _2_[2]
 local str = _2_[3]
 do local _ = ({nil, _0_0, nil})[2] end
@@ -30,8 +30,8 @@ do
     local v_23_0_0 = nil
     local function ok_3f0(_3_0)
       local _4_ = _3_0
-      local tests = _4_["tests"]
       local tests_passed = _4_["tests-passed"]
+      local tests = _4_["tests"]
       return (tests == tests_passed)
     end
     v_23_0_0 = ok_3f0
@@ -49,10 +49,10 @@ do
     local function display_results0(results, prefix)
       do
         local _3_ = results
+        local assertions_passed = _3_["assertions-passed"]
         local tests = _3_["tests"]
         local assertions = _3_["assertions"]
         local tests_passed = _3_["tests-passed"]
-        local assertions_passed = _3_["assertions-passed"]
         local function _4_()
           if ok_3f(results) then
             return "OK"
@@ -60,7 +60,7 @@ do
             return "FAILED"
           end
         end
-        core.println((prefix .. " " .. _4_() .. " " .. tests_passed .. "/" .. tests .. " tests and " .. assertions_passed .. "/" .. assertions .. " assertions passed"))
+        a.println((prefix .. " " .. _4_() .. " " .. tests_passed .. "/" .. tests .. " tests and " .. assertions_passed .. "/" .. assertions .. " assertions passed"))
       end
       return results
     end
@@ -78,12 +78,12 @@ do
     local v_23_0_0 = nil
     local function run0(mod_name)
       local mod = package.loaded[mod_name]
-      local tests = (core["table?"](mod) and mod["aniseed/tests"])
-      if core["table?"](tests) then
+      local tests = (a["table?"](mod) and mod["aniseed/tests"])
+      if a["table?"](tests) then
         local results = {["assertions-passed"] = 0, ["tests-passed"] = 0, assertions = 0, tests = #tests}
         for label, f in pairs(tests) do
           local test_failed = false
-          core.update(results, "tests", core.inc)
+          a.update(results, "tests", a.inc)
           do
             local prefix = ("[" .. mod_name .. "/" .. label .. "]")
             local fail = nil
@@ -101,12 +101,12 @@ do
             fail = _3_
             local begin = nil
             local function _4_()
-              return core.update(results, "assertions", core.inc)
+              return a.update(results, "assertions", a.inc)
             end
             begin = _4_
             local pass = nil
             local function _5_()
-              return core.update(results, "assertions-passed", core.inc)
+              return a.update(results, "assertions-passed", a.inc)
             end
             pass = _5_
             local t = nil
@@ -115,7 +115,7 @@ do
               if (e == r) then
                 return pass()
               else
-                return fail(desc, "Expected '", core["pr-str"](e), "' but received '", core["pr-str"](r), "'")
+                return fail(desc, "Expected '", a["pr-str"](e), "' but received '", a["pr-str"](r), "'")
               end
             end
             local function _7_(r, desc)
@@ -123,14 +123,14 @@ do
               if r then
                 return pass()
               else
-                return fail(desc, "Expected truthy result but received '", core["pr-str"](r), "'")
+                return fail(desc, "Expected truthy result but received '", a["pr-str"](r), "'")
               end
             end
             local function _8_(e, r, desc)
               begin()
               do
-                local se = core["pr-str"](e)
-                local sr = core["pr-str"](r)
+                local se = a["pr-str"](e)
+                local sr = a["pr-str"](r)
                 if (se == sr) then
                   return pass()
                 else
@@ -152,7 +152,7 @@ do
             end
           end
           if not test_failed then
-            core.update(results, "tests-passed", core.inc)
+            a.update(results, "tests-passed", a.inc)
           end
         end
         return display_results(results, ("[" .. mod_name .. "]"))
@@ -177,7 +177,7 @@ do
         end
         return totals
       end
-      return display_results(core.reduce(_3_, {["assertions-passed"] = 0, ["tests-passed"] = 0, assertions = 0, tests = 0}, core.filter(core["table?"], core.map(run, core.keys(package.loaded)))), "[total]")
+      return display_results(a.reduce(_3_, {["assertions-passed"] = 0, ["tests-passed"] = 0, assertions = 0, tests = 0}, a.filter(a["table?"], a.map(run, a.keys(package.loaded)))), "[total]")
     end
     v_23_0_0 = run_all0
     _0_0["run-all"] = v_23_0_0
@@ -196,7 +196,7 @@ do
       local function _3_(path)
         return require(string.gsub(string.match(path, "^test/fnl/(.-).fnl$"), "/", "."))
       end
-      core["run!"](_3_, nvim.fn.globpath("test/fnl", "**/*-test.fnl", false, true))
+      a["run!"](_3_, nvim.fn.globpath("test/fnl", "**/*-test.fnl", false, true))
       do
         local results = run_all()
         if ok_3f(results) then

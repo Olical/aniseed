@@ -12,7 +12,7 @@ It provides the tools you need to compile, run and test (even in CI!) Fennel wit
 ----
 (module my-module
   {;; Require other modules with aliases.
-   require {core aniseed.core
+   require {a aniseed.core
             nvim aniseed.nvim}
 
    ;; Inline modules at compile time.
@@ -26,7 +26,7 @@ It provides the tools you need to compile, run and test (even in CI!) Fennel wit
 (defn a-public-fn [x]
   (-> x
       (some-private-fn)
-      (core.inc)))
+      (a.inc)))
 
 ;; Prevent this value being overwritten on each eval.
 (defonce- some-stateful-thing (some-dep.start-server!))
@@ -153,15 +153,15 @@ Aniseed provides a fair few functions that it uses internally but are designed f
 [source,clojure]
 ----
 (module foo
-  {require {core aniseed.core
+  {require {a aniseed.core
             str aniseed.string}})
 
 (defn- add [a b]
   (+ a b))
 
 (->> [1 2 3]
-     (core.map core.inc)
-     (core.reduce add 0))
+     (a.map a.inc)
+     (a.reduce add 0))
 ;; => 9
 
 (str.join ", " [1 2 3])
@@ -188,9 +188,9 @@ Now try adding some Fennel, such as the example below, to `~/.config/nvim/fnl/do
 [source,clojure]
 ----
 (module dotfiles.init
-  {require {core aniseed.core}})
+  {require {a aniseed.core}})
 
-(core.pr "Hello!")
+(a.pr "Hello!")
 ----
 
 This will write the compiled Lua into `~/.config/nvim/lua`, it's only recompiled if the Fennel changes. You'll want to add the `lua` directory to your `.gitignore` if your dotfiles are in git.
@@ -258,9 +258,9 @@ We can then refer to our Aniseed copy from `my-plugin.init`.
 [source,clojure]
 ----
 (module my-plugin.init
-  {require {core my-plugin.aniseed.core}})
+  {require {a my-plugin.aniseed.core}})
 
-(core.pr {:msg "Hello, World!"})
+(a.pr {:msg "Hello, World!"})
 ----
 
 == Testing

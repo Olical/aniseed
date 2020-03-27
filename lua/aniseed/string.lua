@@ -15,11 +15,11 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core"}}
+  _0_0["aniseed/local-fns"] = {require = {a = "aniseed.core"}}
   return {require("aniseed.core")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
+local a = _2_[1]
 do local _ = ({nil, _0_0, nil})[2] end
 local join = nil
 do
@@ -29,16 +29,16 @@ do
     local function join0(...)
       local args = {...}
       local function _3_(...)
-        if (2 == core.count(args)) then
+        if (2 == a.count(args)) then
           return args
         else
-          return {"", core.first(args)}
+          return {"", a.first(args)}
         end
       end
       local _4_ = _3_(...)
       local sep = _4_[1]
       local xs = _4_[2]
-      local count = core.count(xs)
+      local count = a.count(xs)
       local result = ""
       if (count > 0) then
         for i = 1, count do
@@ -51,12 +51,12 @@ do
             end
           end
           local function _6_(...)
-            if core["string?"](x) then
+            if a["string?"](x) then
               return x
-            elseif core["nil?"](x) then
+            elseif a["nil?"](x) then
               return ""
             else
-              return core["pr-str"](x)
+              return a["pr-str"](x)
             end
           end
           result = (result .. _5_(...) .. _6_(...))

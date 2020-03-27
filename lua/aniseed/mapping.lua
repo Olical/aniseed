@@ -15,11 +15,11 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
+  _0_0["aniseed/local-fns"] = {require = {a = "aniseed.core", eval = "aniseed.eval", fennel = "aniseed.fennel", nu = "aniseed.nvim.util", nvim = "aniseed.nvim", str = "aniseed.string", test = "aniseed.test"}}
   return {require("aniseed.core"), require("aniseed.eval"), require("aniseed.fennel"), require("aniseed.nvim.util"), require("aniseed.nvim"), require("aniseed.string"), require("aniseed.test")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
+local a = _2_[1]
 local eval = _2_[2]
 local fennel = _2_[3]
 local nu = _2_[4]
@@ -36,7 +36,7 @@ do
       if not ok_3f then
         return nvim.err_writeln(result)
       else
-        local mod = (core["table?"](result) and result["aniseed/module"])
+        local mod = (a["table?"](result) and result["aniseed/module"])
         if mod then
           if (nil == package.loaded[mod]) then
             package.loaded[mod] = {}
@@ -46,7 +46,7 @@ do
           end
         end
         local function _4_()
-          return core.pr(result)
+          return a.pr(result)
         end
         return vim.schedule(_4_)
       end
@@ -172,7 +172,7 @@ do
   do
     local v_23_0_0 = nil
     local function eval_file0(filename)
-      return handle_result(eval.str(core.slurp(filename), {filename = filename}))
+      return handle_result(eval.str(a.slurp(filename), {filename = filename}))
     end
     v_23_0_0 = eval_file0
     _0_0["eval-file"] = v_23_0_0

@@ -15,11 +15,11 @@ do
   _0_0 = module_23_0_
 end
 local function _1_(...)
-  _0_0["aniseed/local-fns"] = {require = {core = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
+  _0_0["aniseed/local-fns"] = {require = {a = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
   return {require("aniseed.core"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
 end
 local _2_ = _1_(...)
-local core = _2_[1]
+local a = _2_[1]
 local fennel = _2_[2]
 local fs = _2_[3]
 local nvim = _2_[4]
@@ -70,8 +70,8 @@ do
   do
     local v_23_0_0 = nil
     local function file0(src, dest, opts)
-      if ((core["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
-        local code = core.slurp(src)
+      if ((a["table?"](opts) and opts.force) or (nvim.fn.getftime(src) > nvim.fn.getftime(dest))) then
+        local code = a.slurp(src)
         do
           local _4_0, _5_0 = str(code, {filename = src})
           if ((_4_0 == false) and (nil ~= _5_0)) then
@@ -81,7 +81,7 @@ do
             local result = _5_0
             do
               fs.mkdirp(fs.basename(dest))
-              return core.spit(dest, result)
+              return a.spit(dest, result)
             end
           end
         end
@@ -100,12 +100,12 @@ do
   do
     local v_23_0_0 = nil
     local function glob0(src_expr, src_dir, dest_dir, opts)
-      local src_dir_len = core.inc(string.len(src_dir))
+      local src_dir_len = a.inc(string.len(src_dir))
       local src_paths = nil
       local function _4_(path)
         return string.sub(path, src_dir_len)
       end
-      src_paths = core.map(_4_, nvim.fn.globpath(src_dir, src_expr, true, true))
+      src_paths = a.map(_4_, nvim.fn.globpath(src_dir, src_expr, true, true))
       for _, path in ipairs(src_paths) do
         file((src_dir .. path), string.gsub((dest_dir .. path), ".fnl$", ".lua"), opts)
       end

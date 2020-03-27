@@ -1,16 +1,16 @@
 (module aniseed.string
-  {require {core aniseed.core}})
+  {require {a aniseed.core}})
 
 (defn join [...]
   "(join xs) (join sep xs)
   Joins all items of a table together with an optional separator.
   Separator defaults to an empty string.
-  Values that aren't a string or nil will go through aniseed.core.pr-str."
+  Values that aren't a string or nil will go through aniseed.a.pr-str."
   (let [args [...]
-        [sep xs] (if (= 2 (core.count args))
+        [sep xs] (if (= 2 (a.count args))
                    args
-                   ["" (core.first args)])
-        count (core.count xs)]
+                   ["" (a.first args)])
+        count (a.count xs)]
 
     (var result "")
 
@@ -23,9 +23,9 @@
                      ""
                      sep)
                    (if
-                     (core.string? x) x
-                     (core.nil? x) ""
-                     (core.pr-str x)))))))
+                     (a.string? x) x
+                     (a.nil? x) ""
+                     (a.pr-str x)))))))
 
     result))
 
