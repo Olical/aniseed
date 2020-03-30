@@ -156,8 +156,23 @@
       (error result)))
   acc)
 
+(defn pr-str [...]
+  (let [s (table.concat
+            (map (fn [x]
+                   (view.serialise x {:one-line true}))
+                 [...])
+            " ")]
+    (if (or (not s) (= "" s))
+      "nil"
+      s)))
+
 (defn println [...]
   (->> [...]
+       (map
+         (fn [s]
+           (if (string? s)
+             s
+             (pr-str s))))
        (map-indexed
          (fn [[i s]]
            (if (= 1 i)
@@ -168,6 +183,9 @@
            (.. acc s))
          "")
        (*printer*)))
+
+(defn pr [...]
+  (println (pr-str ...)))
 
 (defn slurp [path]
   "Read the file into a string."
@@ -185,19 +203,6 @@
         (f:write content)
         (f:close)
         nil)))
-
-(defn pr-str [...]
-  (let [s (table.concat
-            (map (fn [x]
-                   (view.serialise x {:one-line true}))
-                 [...])
-            " ")]
-    (if (or (not s) (= "" s))
-      "nil"
-      s)))
-
-(defn pr [...]
-  (println (pr-str ...)))
 
 (defn merge [...]
   (reduce

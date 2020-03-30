@@ -474,6 +474,30 @@ do
   _0_0["aniseed/locals"]["with-out-str"] = v_23_0_
   with_out_str = v_23_0_
 end
+local pr_str = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function pr_str0(...)
+      local s = nil
+      local function _3_(x)
+        return view.serialise(x, {["one-line"] = true})
+      end
+      s = table.concat(map(_3_, {...}), " ")
+      if (not s or ("" == s)) then
+        return "nil"
+      else
+        return s
+      end
+    end
+    v_23_0_0 = pr_str0
+    _0_0["pr-str"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["pr-str"] = v_23_0_
+  pr_str = v_23_0_
+end
 local println = nil
 do
   local v_23_0_ = nil
@@ -493,7 +517,14 @@ do
           return (" " .. s)
         end
       end
-      return _2aprinter_2a(reduce(_3_, "", map_indexed(_4_, {...})))
+      local function _6_(s)
+        if string_3f(s) then
+          return s
+        else
+          return pr_str(s)
+        end
+      end
+      return _2aprinter_2a(reduce(_3_, "", map_indexed(_4_, map(_6_, {...}))))
     end
     v_23_0_0 = println0
     _0_0["println"] = v_23_0_0
@@ -501,6 +532,21 @@ do
   end
   _0_0["aniseed/locals"]["println"] = v_23_0_
   println = v_23_0_
+end
+local pr = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function pr0(...)
+      return println(pr_str(...))
+    end
+    v_23_0_0 = pr0
+    _0_0["pr"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["pr"] = v_23_0_
+  pr = v_23_0_
 end
 local slurp = nil
 do
@@ -553,45 +599,6 @@ do
   end
   _0_0["aniseed/locals"]["spit"] = v_23_0_
   spit = v_23_0_
-end
-local pr_str = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function pr_str0(...)
-      local s = nil
-      local function _3_(x)
-        return view.serialise(x, {["one-line"] = true})
-      end
-      s = table.concat(map(_3_, {...}), " ")
-      if (not s or ("" == s)) then
-        return "nil"
-      else
-        return s
-      end
-    end
-    v_23_0_0 = pr_str0
-    _0_0["pr-str"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["pr-str"] = v_23_0_
-  pr_str = v_23_0_
-end
-local pr = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function pr0(...)
-      return println(pr_str(...))
-    end
-    v_23_0_0 = pr0
-    _0_0["pr"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["pr"] = v_23_0_
-  pr = v_23_0_
 end
 local merge = nil
 do
