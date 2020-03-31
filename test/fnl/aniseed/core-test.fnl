@@ -117,6 +117,12 @@
   (t.= 0 (a.count "") "empty strings")
   (t.= 0 (a.count {:a 1 :b 2}) "associative doesn't work"))
 
+(deftest empty?
+  (t.= true (a.empty? []) "empty table")
+  (t.= false (a.empty? [1]) "full table")
+  (t.= true (a.empty? "") "empty string")
+  (t.= false (a.empty? "a") "full string"))
+
 (deftest merge
   (t.pr= {:a 1 :b 2} (a.merge {} {:a 1} {:b 2}) "simple maps")
   (t.pr= {} (a.merge) "always start with an empty table")

@@ -87,6 +87,21 @@ do
   _0_0["aniseed/locals"]["count"] = v_23_0_
   count = v_23_0_
 end
+local empty_3f = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function empty_3f0(xs)
+      return (0 == count(xs))
+    end
+    v_23_0_0 = empty_3f0
+    _0_0["empty?"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["empty?"] = v_23_0_
+  empty_3f = v_23_0_
+end
 local first = nil
 do
   local v_23_0_ = nil

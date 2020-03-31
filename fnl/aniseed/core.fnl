@@ -16,6 +16,9 @@
     (not xs) 0
     (length xs)))
 
+(defn empty? [xs]
+  (= 0 (count xs)))
+
 (defn first [xs]
   (when xs
     (. xs 1)))
