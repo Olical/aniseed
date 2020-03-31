@@ -148,6 +148,9 @@
       [...])
     result))
 
+(defn mapcat [f xs]
+  (concat (unpack (map f xs))))
+
 (def- *printer* print)
 
 (defn with-out-str [f]

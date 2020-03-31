@@ -90,6 +90,9 @@
     (t.pr= [4 5 6 1 2 3] (a.concat [4 5 6] orig) "order is important")
     (t.pr= [1 2 3] orig "original hasn't been modified")))
 
+(deftest mapcat
+  (t.pr= [1 :x 2 :x 3 :x] (a.mapcat (fn [n] [n :x]) [1 2 3]) "simple list"))
+
 (deftest with-out-str
   (t.= "" (a.with-out-str (fn [] (+ 1 1))) "nothing")
   (t.pr= (values false "oh no")

@@ -455,6 +455,21 @@ do
   _0_0["aniseed/locals"]["concat"] = v_23_0_
   concat = v_23_0_
 end
+local mapcat = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function mapcat0(f, xs)
+      return concat(unpack(map(f, xs)))
+    end
+    v_23_0_0 = mapcat0
+    _0_0["mapcat"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["mapcat"] = v_23_0_
+  mapcat = v_23_0_
+end
 local _2aprinter_2a = nil
 do
   local v_23_0_ = print
