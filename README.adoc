@@ -260,7 +260,7 @@ We can then refer to our Aniseed copy from `my-plugin.init`.
 (module my-plugin.init
   {require {a my-plugin.aniseed.core}})
 
-(a.pr {:msg "Hello, World!"})
+(a.println {:msg "Hello, World!"})
 ----
 
 == Testing
