@@ -134,8 +134,15 @@
     (->> (kv-pairs xs)
          (filter
            (fn [[n v]]
-             (< n total)))
+             (not= n total)))
          (map second))))
+
+(defn rest [xs]
+  (->> (kv-pairs xs)
+       (filter
+         (fn [[n v]]
+           (not= n 1)))
+       (map second)))
 
 (defn concat [...]
   "Concatinats the sequential table arguments together."

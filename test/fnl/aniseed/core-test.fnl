@@ -15,6 +15,12 @@
   (t.pr= [] (a.butlast [1]) "one item is empty")
   (t.pr= [1 2] (a.butlast [1 2 3]) "more than one works"))
 
+(deftest rest
+  (t.pr= [] (a.rest nil) "nothing is empty")
+  (t.pr= [] (a.rest []) "empty is empty")
+  (t.pr= [] (a.rest [1]) "one item is empty")
+  (t.pr= [2 3] (a.rest [1 2 3]) "more than one works"))
+
 (deftest second
   (t.= nil (a.second []) "nil when empty")
   (t.= nil (a.second nil) "nil when nil")

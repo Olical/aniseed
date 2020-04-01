@@ -421,7 +421,7 @@ do
         local _5_ = _4_0
         local n = _5_[1]
         local v = _5_[2]
-        return (n < total)
+        return (n ~= total)
       end
       return map(second, filter(_3_, kv_pairs(xs)))
     end
@@ -431,6 +431,27 @@ do
   end
   _0_0["aniseed/locals"]["butlast"] = v_23_0_
   butlast = v_23_0_
+end
+local rest = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function rest0(xs)
+      local function _3_(_4_0)
+        local _5_ = _4_0
+        local n = _5_[1]
+        local v = _5_[2]
+        return (n ~= 1)
+      end
+      return map(second, filter(_3_, kv_pairs(xs)))
+    end
+    v_23_0_0 = rest0
+    _0_0["rest"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["rest"] = v_23_0_
+  rest = v_23_0_
 end
 local concat = nil
 do
