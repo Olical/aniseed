@@ -1,6 +1,10 @@
 (module aniseed.core-test
   {require {a aniseed.core}})
 
+(deftest rand
+  (t.ok? (not (= (a.rand) (a.rand))))
+  (t.ok? (= :number (type (a.rand)))))
+
 (deftest first
   (t.= 1 (a.first [1 2 3]) "1 is first")
   (t.= nil (a.first nil) "first of nil is nil"))
@@ -98,22 +102,6 @@
 
 (deftest mapcat
   (t.pr= [1 :x 2 :x 3 :x] (a.mapcat (fn [n] [n :x]) [1 2 3]) "simple list"))
-
-(deftest with-out-str
-  (t.= "" (a.with-out-str (fn [] (+ 1 1))) "nothing")
-  (t.pr= (values false "oh no")
-         (pcall
-           a.with-out-str
-           (fn []
-             (a.println "foo")
-             (error "oh no")))
-         "error bubbles out but still resets *printer*")
-  (t.= "foo\nbar\n"
-       (a.with-out-str
-         (fn []
-           (a.println "foo")
-           (a.println "bar")))
-       "two lines"))
 
 (deftest count
   (t.= 3 (a.count [1 2 3]) "three values")

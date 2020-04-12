@@ -49,9 +49,9 @@ do
     local function display_results0(results, prefix)
       do
         local _3_ = results
-        local tests_passed = _3_["tests-passed"]
-        local assertions_passed = _3_["assertions-passed"]
         local tests = _3_["tests"]
+        local assertions_passed = _3_["assertions-passed"]
+        local tests_passed = _3_["tests-passed"]
         local assertions = _3_["assertions"]
         local function _4_()
           if ok_3f(results) then

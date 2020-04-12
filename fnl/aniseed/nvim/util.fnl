@@ -41,3 +41,16 @@
 (defn plug [cmd]
   "Wraps the given command in <Plug>(...)"
   (.. "<Plug>(" cmd ")"))
+
+(defn with-out-str [f ...]
+  "Capture all print output and return it."
+  (nvim.ex.redir "=> g:aniseed_nvim_util_out_str")
+  (f ...)
+  (nvim.ex.redir "END")
+
+  ;; This prevents the echoed messages appearing at the bottom.
+  (nvim.ex.redraw)
+
+  (string.gsub
+    nvim.g.aniseed_nvim_util_out_str
+    "^(\n?)(.*)$" "%2%1"))

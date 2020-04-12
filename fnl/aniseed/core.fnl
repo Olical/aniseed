@@ -1,6 +1,12 @@
 (module aniseed.core
   {require {view aniseed.view}})
 
+;; Useful to have this set by someone.
+(math.randomseed (os.time))
+
+(defn rand [n]
+  (* (math.random) (or n 1)))
+
 (defn string? [x]
   (= "string" (type x)))
 
@@ -158,17 +164,6 @@
 (defn mapcat [f xs]
   (concat (unpack (map f xs))))
 
-(def- *printer* print)
-
-(defn with-out-str [f]
-  (var acc "")
-  (set *printer* #(set acc (.. acc $1 "\n")))
-  (let [(ok? result) (pcall f)]
-    (set *printer* print)
-    (when (not ok?)
-      (error result)))
-  acc)
-
 (defn pr-str [...]
   (let [s (table.concat
             (map (fn [x]
@@ -195,7 +190,7 @@
          (fn [acc s]
            (.. acc s))
          "")
-       (*printer*)))
+       print))
 
 (defn pr [...]
   (println (pr-str ...)))
