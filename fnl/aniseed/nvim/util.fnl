@@ -42,14 +42,17 @@
   "Wraps the given command in <Plug>(...)"
   (.. "<Plug>(" cmd ")"))
 
-(defn with-out-str [f ...]
+(defn with-out-str [f]
   "Capture all print output and return it."
   (nvim.ex.redir "=> g:aniseed_nvim_util_out_str")
-  (f ...)
-  (nvim.ex.redir "END")
+  (let [(ok? err) (pcall f)]
+    (nvim.ex.redir "END")
 
-  ;; This prevents the echoed messages appearing at the bottom.
-  (nvim.ex.redraw)
+    ;; This prevents the echoed messages appearing at the bottom.
+    (nvim.ex.redraw)
+
+    (when (not ok?)
+      (error err)))
 
   (string.gsub
     nvim.g.aniseed_nvim_util_out_str

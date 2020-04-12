@@ -21,22 +21,6 @@ end
 local _2_ = _1_(...)
 local view = _2_[1]
 do local _ = ({nil, _0_0, nil})[2] end
-math.randomseed(os.time())
-local rand = nil
-do
-  local v_23_0_ = nil
-  do
-    local v_23_0_0 = nil
-    local function rand0(n)
-      return (math.random() * (n or 1))
-    end
-    v_23_0_0 = rand0
-    _0_0["rand"] = v_23_0_0
-    v_23_0_ = v_23_0_0
-  end
-  _0_0["aniseed/locals"]["rand"] = v_23_0_
-  rand = v_23_0_
-end
 local string_3f = nil
 do
   local v_23_0_ = nil

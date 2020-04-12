@@ -1,12 +1,6 @@
 (module aniseed.core
   {require {view aniseed.view}})
 
-;; Useful to have this set by someone.
-(math.randomseed (os.time))
-
-(defn rand [n]
-  (* (math.random) (or n 1)))
-
 (defn string? [x]
   (= "string" (type x)))
 
