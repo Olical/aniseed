@@ -1,6 +1,10 @@
 (module aniseed.core-test
   {require {a aniseed.core}})
 
+(deftest rand
+  (t.ok? (not (= (a.rand) (a.rand))))
+  (t.ok? (= :number (type (a.rand)))))
+
 (deftest first
   (t.= 1 (a.first [1 2 3]) "1 is first")
   (t.= nil (a.first nil) "first of nil is nil"))

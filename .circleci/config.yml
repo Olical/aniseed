@@ -2,8 +2,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: archlinux/base
+      - image: olical/aniseed-circleci:1.0.0
     steps:
       - checkout
-      - run: pacman -Sy --noconfirm make neovim
       - run: make test
