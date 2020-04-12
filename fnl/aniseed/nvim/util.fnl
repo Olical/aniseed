@@ -49,6 +49,7 @@
     (nvim.ex.redir "END")
 
     ;; This prevents the echoed messages appearing at the bottom.
+    (nvim.ex.echon "")
     (nvim.ex.redraw)
 
     (when (not ok?)
