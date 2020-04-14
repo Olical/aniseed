@@ -410,7 +410,7 @@ do
     local function some0(f, xs)
       local result = nil
       local n = 1
-      while (not result and (n <= count(xs))) do
+      while (nil_3f(result) and (n <= count(xs))) do
         local candidate = f(xs[n])
         if candidate then
           result = candidate
@@ -687,7 +687,17 @@ do
   do
     local v_23_0_0 = nil
     local function get0(t, k, d)
-      local res = ((t and t[k]) or nil)
+      local res = nil
+      if table_3f(t) then
+        local val = t[k]
+        if not nil_3f(val) then
+          res = val
+        else
+        res = nil
+        end
+      else
+      res = nil
+      end
       if nil_3f(res) then
         return d
       else

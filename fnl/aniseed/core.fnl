@@ -128,7 +128,7 @@
   "Return the first truthy result from (f x) or nil."
   (var result nil)
   (var n 1)
-  (while (and (not result) (<= n (count xs)))
+  (while (and (nil? result) (<= n (count xs)))
     (let [candidate (f (. xs n))]
       (when candidate
         (set result candidate))
@@ -234,7 +234,10 @@
     {}))
 
 (defn get [t k d]
-  (let [res (or (and t (. t k)) nil)]
+  (let [res (when (table? t)
+              (let [val (. t k)]
+                (when (not (nil? val))
+                  val)))]
     (if (nil? res)
       d
       res)))
