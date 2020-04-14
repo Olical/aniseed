@@ -518,7 +518,7 @@ do
         return view.serialise(x, {["one-line"] = true})
       end
       s = table.concat(map(_3_, {...}), " ")
-      if (not s or ("" == s)) then
+      if (nil_3f(s) or ("" == s)) then
         return "nil"
       else
         return s

@@ -170,7 +170,7 @@
                    (view.serialise x {:one-line true}))
                  [...])
             " ")]
-    (if (or (not s) (= "" s))
+    (if (or (nil? s) (= "" s))
       "nil"
       s)))
 
