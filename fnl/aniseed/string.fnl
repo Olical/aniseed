@@ -30,12 +30,16 @@
     result))
 
 (defn split [s pat]
-  "Split the given string into a sequential table using the pattern. Unlike
-  other splits, the pattern should match what you want in each item, it's not a
-  pattern for what to split on. So to split on commas you would use '[^,]+'"
-  (let [acc []]
-    (string.gsub
-      s pat
-      (fn [part]
-        (table.insert acc part)))
-    acc))
+  "Split the given string into a sequential table using the pattern."
+  (var s s)
+  (var acc [])
+  (while s
+    (let [(start end) (string.find s pat)]
+      (if (a.nil? start)
+        (do
+          (table.insert acc s)
+          (set s nil))
+        (do
+          (table.insert acc (string.sub s 1 (a.dec start)))
+          (set s (string.sub s (a.inc end)))))))
+  acc)
