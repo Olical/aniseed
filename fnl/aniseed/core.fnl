@@ -195,10 +195,10 @@
 (defn pr [...]
   (println (pr-str ...)))
 
-(defn slurp [path]
+(defn slurp [path silent?]
   "Read the file into a string."
   (match (io.open path "r")
-    (nil msg) (println (.. "Could not open file: " msg))
+    (nil msg) nil
     f (let [content (f:read "*all")]
         (f:close)
         content)))
@@ -206,7 +206,7 @@
 (defn spit [path content]
   "Spit the string into the file."
   (match (io.open path "w")
-    (nil msg) (println (.. "Could not open file: " msg))
+    (nil msg) (error (.. "Could not open file: " msg))
     f (do
         (f:write content)
         (f:close)
