@@ -81,12 +81,12 @@ do
       local acc = {}
       while s0 do
         local start, _end = string.find(s0, pat)
-        if a["nil?"](start) then
+        if ("nil" == type(start)) then
           table.insert(acc, s0)
           s0 = nil
         else
-          table.insert(acc, string.sub(s0, 1, a.dec(start)))
-          s0 = string.sub(s0, a.inc(_end))
+          table.insert(acc, string.sub(s0, 1, (start - 1)))
+          s0 = string.sub(s0, (_end + 1))
         end
       end
       return acc

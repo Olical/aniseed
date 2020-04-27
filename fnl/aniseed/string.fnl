@@ -35,11 +35,11 @@
   (var acc [])
   (while s
     (let [(start end) (string.find s pat)]
-      (if (a.nil? start)
+      (if (= :nil (type start))
         (do
           (table.insert acc s)
           (set s nil))
         (do
-          (table.insert acc (string.sub s 1 (a.dec start)))
-          (set s (string.sub s (a.inc end)))))))
+          (table.insert acc (string.sub s 1 (- start 1)))
+          (set s (string.sub s (+ end 1)))))))
   acc)
