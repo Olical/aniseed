@@ -11,4 +11,5 @@
   (t.pr= ["foo"] (str.split "foo" ","))
   (t.pr= ["foo" "bar" "baz"] (str.split "foo,bar,baz" ","))
   (t.pr= ["foo" "" "bar"] (str.split "foo,,bar" ","))
-  (t.pr= ["foo" "" "" "bar"] (str.split "foo,,,bar" ",")))
+  (t.pr= ["foo" "" "" "bar"] (str.split "foo,,,bar" ","))
+  (t.pr= ["foo" "baz"] (str.split "foobarbaz" "bar")))

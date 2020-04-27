@@ -77,16 +77,17 @@ do
   do
     local v_23_0_0 = nil
     local function split0(s, pat)
-      local s0 = s
+      local done_3f = false
       local acc = {}
-      while s0 do
-        local start, _end = string.find(s0, pat)
+      local index = 1
+      while not done_3f do
+        local start, _end = string.find(s, pat, index)
         if ("nil" == type(start)) then
-          table.insert(acc, s0)
-          s0 = nil
+          table.insert(acc, string.sub(s, index))
+          done_3f = true
         else
-          table.insert(acc, string.sub(s0, 1, (start - 1)))
-          s0 = string.sub(s0, (_end + 1))
+          table.insert(acc, string.sub(s, index, (start - 1)))
+          index = (_end + 1)
         end
       end
       return acc

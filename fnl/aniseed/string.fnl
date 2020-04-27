@@ -31,15 +31,16 @@
 
 (defn split [s pat]
   "Split the given string into a sequential table using the pattern."
-  (var s s)
+  (var done? false)
   (var acc [])
-  (while s
-    (let [(start end) (string.find s pat)]
+  (var index 1)
+  (while (not done?)
+    (let [(start end) (string.find s pat index)]
       (if (= :nil (type start))
         (do
-          (table.insert acc s)
-          (set s nil))
+          (table.insert acc (string.sub s index))
+          (set done? true))
         (do
-          (table.insert acc (string.sub s 1 (- start 1)))
-          (set s (string.sub s (+ end 1)))))))
+          (table.insert acc (string.sub s index (- start 1)))
+          (set index (+ end 1))))))
   acc)
