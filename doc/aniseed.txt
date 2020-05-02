@@ -9,13 +9,61 @@
 CONTENTS                                                    *aniseed-contents*
 
     1. Introduction ............................. |aniseed-introduction|
-    2. Conjure ....................................... |aniseed-conjure|
-    3. Examples ..................................... |aniseed-examples|
-    4. Plugins ....................................... |aniseed-plugins|
-    5. Dotfiles ..................................... |aniseed-dotfiles|
-    6. Scripts ....................................... |aniseed-scripts|
-    7. Macros ......................................... |aniseed-macros|
-    8. Functions ................................... |aniseed-functions|
-    9. Testing ....................................... |aniseed-testing|
+    2. Examples ..................................... |aniseed-examples|
+    3. Plugins ....................................... |aniseed-plugins|
+    4. Dotfiles ..................................... |aniseed-dotfiles|
+    5. Scripts ....................................... |aniseed-scripts|
+    6. Macros ......................................... |aniseed-macros|
+    7. Functions ................................... |aniseed-functions|
+    8. Testing ....................................... |aniseed-testing|
+
+==============================================================================
+INTRODUCTION                                            *aniseed-introduction*
+
+Aniseed bridges the gap between Fennel (a Lisp that compiles to Lua) and
+Neovim. Allowing you to easily write plugins (|aniseed-plugins|) or
+configuration (|aniseed-dotfiles|) in a Clojure-like Lisp with great runtime
+performance.
+https://fennel-lang.org/
+
+Interactive evaluation as you work is provided by the sister plugin, Conjure.
+You'll have to install and learn about it through Conjure's own documentation.
+https://github.com/Olical/conjure
+
+Before editing any Fennel code you'll want to make sure you have
+`bakpakin/fennel.vim` installed for syntax highlighting.
+https://github.com/bakpakin/fennel.vim
+
+A few scripts are provided to make writing build scripts and Makefiles for
+your plugins as simple as possible (|aniseed-scripts|).
+
+You'll also find a set of useful modules, functions (|aniseed-functions|) and
+macros (|aniseed-macros|) that Aniseed exposes to you. They're all modeled on
+Clojure's API so they should be very familiar if you're already a Clojurian.
+
+Once you're up and running you'll be able write a test suite for your Aniseed
+based tools (|aniseed-testing|), scripts are provided to make it easy to get
+them running in CI or your terminal right away.
+
+==============================================================================
+EXAMPLES                                                    *aniseed-examples*
+
+==============================================================================
+PLUGINS                                                      *aniseed-plugins*
+
+==============================================================================
+DOTFILES                                                    *aniseed-dotfiles*
+
+==============================================================================
+SCRIPTS                                                      *aniseed-scripts*
+
+==============================================================================
+MACROS                                                        *aniseed-macros*
+
+==============================================================================
+FUNCTIONS                                                  *aniseed-functions*
+
+==============================================================================
+TESTING                                                      *aniseed-testing*
 
 vim:tw=78:sw=2:ts=2:ft=help:norl:et:listchars=

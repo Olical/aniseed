@@ -2,3 +2,4 @@
 /deps/
 /.lnvim.lua
 /test/results.txt
+/doc/tags
