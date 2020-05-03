@@ -20,55 +20,6 @@ For interactive evaluation you need to install https://github.com/Olical/conjure
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
 
-== Module macros
-
-Lua and Fennel require you to use `(local ...)` and `(fn ...)` as well as a table as the last value in your file to define modules. This leads to inconsistent syntax and having to jump up and down in the buffer to keep your module's table in sync with what you want to expose.
-
-This unstructured approach also makes it really hard (maybe impossible?) to have an interactive REPL driven work flow. We want to be able to say in a structured way "here's what my module is called, here's what it requires and here's what it defines".
-
-Aniseed makes the following macros available to you which will allow you to write modules in a structured way using the evaluation mappings described previously. Let's get the most interesting and complex one out of the way first, the rest are just different ways of defining things.
-
-=== `(module NAME [REQUIRES] [BASE])`
-
-Define a module under the name given by the first argument, this should be the first form in your file. The module name should match the path to the source file with the slashes replaced with periods.
-
-So `fnl/my-plugin/features/backflip.fnl` would start with `(module my-plugin.features.backflip)`. By using the period syntax we get to build paths that work on any OS, even if their path separator varies from what we're used to.
-
-The requires are a table where the key is the function you want executed (`require` or `include`) and the values are tables of aliases and module names. Let's take our previous module example and require a utility module into it under an alias of `util`.
-
-[source,clojure]
-----
-(module my-plugin.features.backflip
-  {require {util my-plugin.util}})
-
-(util.do-thing)
-----
-
-____
-You're not limited to just `require` or `include`, any function name will do. If you write a special `require` called `require-py` that compiles Python to Lua and loads it, you can use that too!
-____
-
-The final argument can be used in rare scenarios where you want to build your module upon another Lua module which may not be related to Aniseed or Fennel in any way. Let's say you want to take a Lua library, wrap it with an Aniseed module and add some function to it.
-
-[source,clojure]
-----
-(module my-plugin.math {} (include :some-awesome-lua-math-lib))
-
-(defn inc [x]
-  (+ x 1))
-----
-
-Now we have a module that inherits from a Lua module but extends it with an extra function. You probably won't need this, but it's handy when you do! Aniseed actually uses it internally to wrap the `nvim.lua` library.
-
-=== The `(def...)` family
-
-The `def...` macros help you define values or functions publicly or privately. Every `def` macro can be suffixed with a hyphen to keep it private, like `(def- ten 10)`.
-
- * `(def NAME VALUE)` - just like `local` or `var` but Aniseed is now aware of the value and will allow you to refer to it in subsequent evaluations of forms within that module.
- * `(defonce NAME VALUE)` - the same as `def` but will only define once. Subsequent evaluations of this form will do nothing. This is great for keeping process IDs from background jobs between evaluations.
- * `(defn NAME ARGS ...)` - translates to `(def NAME (fn ARGS ...))`, so it's just like the regular `(fn ...)` form really.
- * `(deftest NAME ...)` - explained in greater detail in the testing section.
-
 == Standard library
 
 Aniseed provides a fair few functions that it uses internally but are designed for use by plugin authors. The best way to discover these is to delve into `fnl/aniseed` and have a look through the source, anything that isn't self explanatory has a documentation string attached to it.

@@ -184,7 +184,73 @@ changes, so you may want to add that to your git ignore.
 ==============================================================================
 MACROS                                                        *aniseed-macros*
 
-TODO
+Fennel and Lua don't have a well defined way of creating modules and exposing
+some things while keeping others private. Clojure has a nice way of describing
+this in the form of `def` forms and namespaces, we get something similar here.
+
+Aniseed throws out Fennel and Lua's notion of `local`, `fn` and returning a
+table from the bottom of your file and replaces them with it's own well
+defined module syntax. The result is a normal Lua module, the way you define
+it is just very different to what you may have seen before.
+
+Not only does this make it a lot easier to require and export values from your
+module, it also allows tools like Conjure to evaluate your code within the
+right context.
+
+`(module [name] [requires and imports] [base table])`
+  This form should be the first thing in your file. The name should be exactly
+  what you'd use to require your module, so `fnl/foo/bar.fnl` would have a
+  name of `foo.bar` and could be required in Lua with `require("foo.bar")`.
+
+  The second argument is an optional table that allows you to require or
+  include other modules, the key is a function (`require` or `include` for
+  example) and the value is another table mapping an alias to a module name.
+
+  The final optional argument is a base table you would like Aniseed to merge
+  your modules properties into, this can be useful for extending an existing
+  module.
+  >
+    (module foo.bar
+      {require {a aniseed.core}
+       include {baz foo.baz}}
+      {:xyz "this will be the base table that gets exported"})
+
+`(def [name] [value])`
+  Define a public value in the current module.
+  >
+    (def my-value {:foo :bar})
+    (a.get my-value :foo) // => "bar"
+
+`(def- [name] [value])`
+  The same as `def`, but private to your module, only functions and values
+  within you module can access it.
+
+`(defonce [name] [value])`
+  Like `def` but will only be defined once. Useful for defining stateful
+  values that you don't want reset every time you evaluate the file with
+  Conjure. You can store things like window or process IDs in here.
+
+`(defonce- [name] [value])`
+  Again, like `defonce` but isn't exposed publicly to everyone using your
+  module. Only internal values and functions in your module have access.
+
+`(defn [name] [...])`
+  Just like Lua's built in `fn` but the result is defined using `def`. So it
+  takes a name, argument list and optional documentation string.
+  >
+    (defn add [a b]
+      "Adds two numbers together."
+      (+ a b))
+
+`(defn- [name] [...])`
+  The same as `defn` but the function is private and only accessible within
+  your module.
+
+`(deftest [name] [...])`
+  See |aniseed-testing| for more on testing, but this is used to define tests
+  with `-test` suffixed modules for use with the `test.sh` test runner. It's a
+  bit like `defn` but you also get access to the `t` assertion table, as
+  described in the testing section.
 
 ==============================================================================
 FUNCTIONS                                                  *aniseed-functions*
