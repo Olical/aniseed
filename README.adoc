@@ -97,29 +97,6 @@ And here's some more useful modules you'll probably want to check out.
  * `aniseed.eval` allows you to run more Fennel code through Aniseed.
  * `aniseed.compile` lets you compile strings and files of Fennel into Lua.
 
-== Use case 1: Writing your dotfiles in Fennel
-
-My Neovim https://github.com/Olical/dotfiles/tree/master/neovim/.config/nvim[dotfiles] are written in Fennel using Aniseed, all you need to do is add the following to your `init.vim`.
-
-[source,viml]
-----
-lua require('aniseed.dotfiles')
-----
-
-Now try adding some Fennel, such as the example below, to `~/.config/nvim/fnl/dotfiles/init.fnl`. The next time you open Neovim you'll see `"Hello!"`.
-
-[source,clojure]
-----
-(module dotfiles.init
-  {require {a aniseed.core}})
-
-(a.pr "Hello!")
-----
-
-This will write the compiled Lua into `~/.config/nvim/lua`, it's only recompiled if the Fennel changes. You'll want to add the `lua` directory to your `.gitignore` if your dotfiles are in git.
-
-You can continue to add more files under `fnl/dotfiles` and require them using the `module` macro syntax.
-
 == Unlicenced
 
 The following files are excluded from my license and ownership:

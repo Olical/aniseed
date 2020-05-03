@@ -160,8 +160,27 @@ Once your plugin is taking shape you'll probably want to have a look at
 ==============================================================================
 DOTFILES                                                    *aniseed-dotfiles*
 
-TODO
+If you want to replace your Neovim configuration in your dotfiles with Fennel
+instead of Vim Script or Lua, you can do so by requiring the
+`aniseed.dotfiles` module in your `init.vim` after Aniseed is installed.
 >
+  lua require('aniseed.dotfiles')
+>
+You can now add as much Fennel as you want to
+`~/.config/nvim/fnl/dotfiles/init.fnl`. Let's add a simple greeting.
+>
+  (module dotfiles.init
+    {require {a aniseed.core}})
+  
+  (a.println "Hello, World!")
+>
+Next time you open Neovim you'll see "Hello, World!" in `:messages`! You can
+grow your configuration by adding more modules under `fnl/dotfiles` and
+requiring them into your `dotfiles.init` module.
+
+The Fennel will be compiled into `~/.config/nvim/lua` on startup whenever it
+changes, so you may want to add that to your git ignore.
+
 ==============================================================================
 MACROS                                                        *aniseed-macros*
 
