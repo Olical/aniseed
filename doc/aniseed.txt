@@ -10,9 +10,9 @@ CONTENTS                                                    *aniseed-contents*
 
     1. Introduction ............................. |aniseed-introduction|
     2. Examples ..................................... |aniseed-examples|
-    3. Plugins ....................................... |aniseed-plugins|
-    4. Dotfiles ..................................... |aniseed-dotfiles|
-    5. Scripts ....................................... |aniseed-scripts|
+    3. Scripts ....................................... |aniseed-scripts|
+    4. Plugins ....................................... |aniseed-plugins|
+    5. Dotfiles ..................................... |aniseed-dotfiles|
     6. Macros ......................................... |aniseed-macros|
     7. Functions ................................... |aniseed-functions|
     8. Testing ....................................... |aniseed-testing|
@@ -27,43 +27,160 @@ performance.
 https://fennel-lang.org/
 
 Interactive evaluation as you work is provided by the sister plugin, Conjure.
-You'll have to install and learn about it through Conjure's own documentation.
 https://github.com/Olical/conjure
-
-Before editing any Fennel code you'll want to make sure you have
-`bakpakin/fennel.vim` installed for syntax highlighting.
-https://github.com/bakpakin/fennel.vim
 
 A few scripts are provided to make writing build scripts and Makefiles for
 your plugins as simple as possible (|aniseed-scripts|).
 
-You'll also find a set of useful modules, functions (|aniseed-functions|) and
-macros (|aniseed-macros|) that Aniseed exposes to you. They're all modeled on
+You'll also find a set of useful functions (|aniseed-functions|) and macros
+(|aniseed-macros|) that Aniseed exposes to you. They're all modeled on
 Clojure's API so they should be very familiar if you're already a Clojurian.
 
 Once you're up and running you'll be able write a test suite for your Aniseed
-based tools (|aniseed-testing|), scripts are provided to make it easy to get
+based tools (|aniseed-testing|). Scripts are provided to make it easy to get
 them running in CI or your terminal right away.
 
 ==============================================================================
 EXAMPLES                                                    *aniseed-examples*
 
-==============================================================================
-PLUGINS                                                      *aniseed-plugins*
+Aniseed provides module macros that make writing Lua modules as easy as
+Clojure namespaces. Here's what a module looks like.
+>
+  (module my-module
+    {;; Require other modules with aliases.
+     require {a aniseed.core
+              nvim aniseed.nvim}
+  
+     ;; Inline modules at compile time.
+     include {some-dep my-other.dependency}})
+  
+  (def- some-private-value 2)
+  
+  (defn- some-private-fn [x]
+    (* x some-private-value))
+  
+  (defn a-public-fn [x]
+    (-> x
+        (some-private-fn)
+        (a.inc)))
+  
+  ;; Prevent this value being overwritten on each eval.
+  (defonce- some-stateful-thing (some-dep.start-server!))
+  
+  (comment
+    (a-public-fn 10) ;; => 21
+    (some-private-fn 10) ;; => 20
+    (set nvim.g.hello "world!"))
+>
+Some good examples of what you can do with Aniseed in practice:
 
-==============================================================================
-DOTFILES                                                    *aniseed-dotfiles*
+ * https://github.com/Olical/conjure
+ * https://github.com/Olical/nvim-local-fennel
+ * https://github.com/Olical/dotfiles (Neovim configured with Aniseed)
 
 ==============================================================================
 SCRIPTS                                                      *aniseed-scripts*
 
+These helper scripts aim to make plugin development as easy as possible. If
+they're not quite to your liking, feel free to copy and modify them in your
+own projects.
+
+All of them can be used from `deps/aniseed/scripts/*` once you have Aniseed
+installed by `dep.sh`. You should download `dep.sh` into your `scripts`
+directory since it's used to fetch Aniseed itself.
+
+`scripts/dep.sh [user] [repo] [revision]`
+  Clones a GitHub repo into `deps/{name}` if it's not there already. Will update
+  the repository each time and ensure the right revision is checked out.
+  When developing a plugin you'll want to manually copy this script into your
+  own repositories `script` directory and use it to fetch Aniseed.
+  Usage: `scripts/dep.sh Olical aniseed vX.Y.Z`
+
+`scripts/embed.sh [dep name] [your module prefix]`
+  Copies a dependency's Lua from deps (result of `dep.sh`) into your own Lua
+  directory under a prefix directory. Then munges the dependency to replace
+  all occurrences of the module paths with your unique project specific
+  prefix.
+  Usage: `deps/aniseed/scripts/embed.sh aniseed my-plugin-name`
+
+`scripts/compile.sh`
+  Compiles all Fennel code into Lua assuming you have Aniseed cloned into your
+  `deps` directory via `dep.sh`.
+  Usage: `deps/aniseed/scripts/compile.sh`
+
+`scripts/test.sh`
+  Executes all of your tests found in `test/fnl` using the Aniseed cloned by
+  `dep.sh`. Will leave behind files in `test/lua` and `test/results.txt` that
+  you'll want to git ignore. All test modules must end with `-test` (so the
+  file names need to end with `-test.fnl`).
+  Environment:
+   * `PREFIX` - Inserted before the arguments to Nevoim.
+   * `SUFFIX` - Inserted after the arguments to Neovim.
+  Usage: `deps/aniseed/scripts/test.sh`
+
+==============================================================================
+PLUGINS                                                      *aniseed-plugins*
+
+TODO
+
+==============================================================================
+DOTFILES                                                    *aniseed-dotfiles*
+
+TODO
+>
 ==============================================================================
 MACROS                                                        *aniseed-macros*
+
+TODO
 
 ==============================================================================
 FUNCTIONS                                                  *aniseed-functions*
 
+TODO
+
 ==============================================================================
 TESTING                                                      *aniseed-testing*
+
+Aniseed tests itself with it's own testing tools, so you can see an example
+inside this very repository. We start by creating a module within our project
+such as `fnl/foo/math.fnl`.
+>
+  (module foo.math)
+  
+  (defn add [a b]
+    (+ a b))
+>
+We can then create our test module in `test/fnl/foo/math-test.fnl`.
+>
+  (module foo.math-test
+    {require {math foo.math}})
+  
+  ;; The `t` assertion table is included automatically via the deftest macro.
+  (deftest add
+    (t.= 10 (math.add 6 4) "it adds things together"))
+>
+All of the tests can then be executed using the helper script which will
+startup Neovim, execute the tests, capture the results and finally display
+them in stdout. It exits with an appropriate status code for use with CI
+systems (you'll need to ensure `nvim` is available inside your CI).
+
+You'll want to git ignore `/test/lua/` and `/test/results.txt`. Provide a
+`SUFFIX` or `PREFIX` environment var to prepend or append code to the `nvim`
+command.
+>
+  deps/aniseed/scripts/test.sh
+>
+The `t` assertion table that's defined for you contains a few assertion
+functions.
+
+`(t.= expected result [description])`
+  Check for an expected result.
+
+`(t.pr= expected result [descrpition])`
+  The same but both values will be serialised to a string before comparison,
+  this allows you to compare deeply nested tables.
+
+`(t.ok? result [description])`
+  Check for some truthy value.
 
 vim:tw=78:sw=2:ts=2:ft=help:norl:et:listchars=
