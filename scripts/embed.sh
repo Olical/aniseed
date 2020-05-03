@@ -10,5 +10,5 @@
 # Usage: deps/aniseed/scripts/embed.sh aniseed conjure
 
 mkdir -p "lua/$2"
-rsync -avu --delete "deps/$1/lua/$1" "lua/$2/$1"  
+rsync -avu --delete "deps/$1/lua/$1/" "lua/$2/$1"
 find "lua/$2/$1" -type f -name "*.lua" -exec sed -i "s/\"$1\./\"$2.aniseed./g" {} \;
