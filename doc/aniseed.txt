@@ -121,8 +121,42 @@ directory since it's used to fetch Aniseed itself.
 ==============================================================================
 PLUGINS                                                      *aniseed-plugins*
 
-TODO
+When writing a plugin with Aniseed you'll first need to fetch the `dep.sh`
+script and place it in your own `scripts` directory. Then you can clone
+the latest Aniseed version into your `deps` directory with.
+>
+  scripts/dep.sh Olical aniseed vX.Y.Z
+>
+Let's start by adding the following Fennel code to `fnl/my-plugin/init.fnl`.
+>
+  (module my-plugin.init
+    {require {a my-plugin.aniseed.core}})
 
+  (a.println "Hello, World!")
+>
+Now execute `deps/aniseed/scripts/compile.sh` to compile this Fennel into Lua
+under the `lua` directory. Now your Fennel has been compiled to Lua but we
+need to embed a copy of Aniseed for runtime use by your plugin (the
+`my-plugin.aniseed.core` module doesn't exist until we do this!).
+>
+  deps/aniseed/scripts/embed.sh aniseed my-plugin
+
+Since running `compile.sh` and `embed.sh` every time you make a change is
+quite tedious, you should be using Conjure for interactive evaluation as you
+work and wrapping up your compile step in your own script or `Makefile`.
+>
+I'd recommend committing the compiled Lua so that your users can use your
+plugin without any sort of compile step.
+
+Your users can require your plugin as a Lua module whenever they want to, or
+you can put an initialisation script in `plugin/my-plugin.vim` that does it
+for them on startup.
+>
+  lua require("my-plugin.init")
+>
+Once your plugin is taking shape you'll probably want to have a look at
+|aniseed-testing| to provide some automated tests locally or in CI.
+>
 ==============================================================================
 DOTFILES                                                    *aniseed-dotfiles*
 
