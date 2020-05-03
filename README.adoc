@@ -4,7 +4,7 @@ Aniseed bridges the gap between https://fennel-lang.org/[Fennel] (a Lisp that co
 
 https://asciinema.org/a/326401[image:https://asciinema.org/a/326401.svg[asciicast]]
 
-Further documentation can be found in link:doc/aniseed.txt[`:help aniseed`].
+Further documentation can be found in link:doc/aniseed.txt[`:help aniseed`]. There you can learn about the scripts, macros, functions and use cases of Aniseed.
 
 == Installation
 
@@ -19,34 +19,6 @@ Plug 'bakpakin/fennel.vim'
 For interactive evaluation you need to install https://github.com/Olical/conjure[Conjure]. It'll allow you to send portions of your code off for evaluation as well as see the results in an interactive log buffer.
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
-
-== Standard library
-
-Aniseed provides a fair few functions that it uses internally but are designed for use by plugin authors. The best way to discover these is to delve into `fnl/aniseed` and have a look through the source, anything that isn't self explanatory has a documentation string attached to it.
-
-[source,clojure]
-----
-(module foo
-  {require {a aniseed.core
-            str aniseed.string}})
-
-(defn- add [a b]
-  (+ a b))
-
-(->> [1 2 3]
-     (a.map a.inc)
-     (a.reduce add 0))
-;; => 9
-
-(str.join ", " [1 2 3])
-;; => "1, 2, 3"
-----
-
-And here's some more useful modules you'll probably want to check out.
-
- * `aniseed.nvim` is actually https://github.com/norcalli/nvim.lua[nvim.lua], an extremely helpful library for controlling Neovim with a more expressive syntax.
- * `aniseed.eval` allows you to run more Fennel code through Aniseed.
- * `aniseed.compile` lets you compile strings and files of Fennel into Lua.
 
 == Unlicenced
 

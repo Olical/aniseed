@@ -5,7 +5,7 @@
   "(join xs) (join sep xs)
   Joins all items of a table together with an optional separator.
   Separator defaults to an empty string.
-  Values that aren't a string or nil will go through aniseed.a.pr-str."
+  Values that aren't a string or nil will go through aniseed.core/pr-str."
   (let [args [...]
         [sep xs] (if (= 2 (a.count args))
                    args

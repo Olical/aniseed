@@ -69,11 +69,6 @@
         (table.insert result [k v])))
     result))
 
-(defn update [tbl k f]
-  "Swap the value under key `k` in table `tbl` using function `f`."
-  (tset tbl k (f (. tbl k)))
-  tbl)
-
 (defn run! [f xs]
   "Execute the function (for side effects) for every xs."
   (when xs
@@ -151,7 +146,7 @@
        (map second)))
 
 (defn concat [...]
-  "Concatinats the sequential table arguments together."
+  "Concatenates the sequential table arguments together."
   (let [result []]
     (run! (fn [xs]
             (run!
@@ -273,3 +268,9 @@
            final
            v)
     t))
+
+(defn update [t k f]
+  (assoc t k (f (get t k))))
+
+(defn update-in [t ks f]
+  (assoc-in t ks (f (get-in t ks))))

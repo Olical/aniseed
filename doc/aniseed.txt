@@ -197,7 +197,7 @@ Not only does this make it a lot easier to require and export values from your
 module, it also allows tools like Conjure to evaluate your code within the
 right context.
 
-`(module [name] [requires and imports] [base table])`
+`(module name imports base)`
   This form should be the first thing in your file. The name should be exactly
   what you'd use to require your module, so `fnl/foo/bar.fnl` would have a
   name of `foo.bar` and could be required in Lua with `require("foo.bar")`.
@@ -215,26 +215,26 @@ right context.
        include {baz foo.baz}}
       {:xyz "this will be the base table that gets exported"})
 
-`(def [name] [value])`
+`(def name value)`
   Define a public value in the current module.
   >
     (def my-value {:foo :bar})
     (a.get my-value :foo) // => "bar"
 
-`(def- [name] [value])`
+`(def- name value)`
   The same as `def`, but private to your module, only functions and values
   within you module can access it.
 
-`(defonce [name] [value])`
+`(defonce name value)`
   Like `def` but will only be defined once. Useful for defining stateful
   values that you don't want reset every time you evaluate the file with
   Conjure. You can store things like window or process IDs in here.
 
-`(defonce- [name] [value])`
+`(defonce- name value)`
   Again, like `defonce` but isn't exposed publicly to everyone using your
   module. Only internal values and functions in your module have access.
 
-`(defn [name] [...])`
+`(defn name ...)`
   Just like Lua's built in `fn` but the result is defined using `def`. So it
   takes a name, argument list and optional documentation string.
   >
@@ -242,11 +242,11 @@ right context.
       "Adds two numbers together."
       (+ a b))
 
-`(defn- [name] [...])`
+`(defn- name ...)`
   The same as `defn` but the function is private and only accessible within
   your module.
 
-`(deftest [name] [...])`
+`(deftest name ...)`
   See |aniseed-testing| for more on testing, but this is used to define tests
   with `-test` suffixed modules for use with the `test.sh` test runner. It's a
   bit like `defn` but you also get access to the `t` assertion table, as
@@ -255,7 +255,260 @@ right context.
 ==============================================================================
 FUNCTIONS                                                  *aniseed-functions*
 
-TODO
+Lua doesn't come along with an extensive standard library like Clojure or
+other large languages. You can supplement that by using `dep.sh` and adding
+one of the various Lua toolbox libraries that exist out on the internet.
+
+Aniseed provides it's own set of Clojure inspired functions that you may find
+extremely useful. It's enough for me to implement Conjure so I hope it'll be
+enough for your needs too. If you write a function and you think others would
+benefit from it, please do add it to Aniseed and submit a pull request.
+
+The functions below are grouped by module, so you can require `aniseed.core`
+under the `a` alias and then access a function with `(a.string? "foo")`, for
+example.
+
+------------------------------------------------------------------------------
+`aniseed.core`
+
+  `(rand n)`
+    Generate a random float between `0` and `n`, defaults to `1`.
+
+  `(string? x)`
+    Is `x` a string? Returns a boolean.
+
+  `(nil? x)`
+    Is `x` a nil? Returns a boolean.
+
+  `(table? x)`
+    Is `x` a table? Returns a boolean.
+
+  `(count xs)`
+    Return the count of items in `xs`. Always returns a number, it's okay to
+    give it a `nil`.
+
+  `(empty? xs)`
+    Is the `count` of `xs` equal to `0`.
+
+  `(first xs)`
+    The first item of the sequential table.
+
+  `(second xs)`
+    The second item of the sequential table.
+
+  `(last xs)`
+    The last item of the sequential table.
+
+  `(inc n)`
+    Add `1` to `n`.
+
+  `(dec n)`
+    Subtract `1` from `n`.
+
+  `(keys t)`
+    A sequential table of the keys from the associative table `t`.
+
+  `(vals t)`
+    A sequential table of the values from the associative table `t`.
+
+  `(kv-pairs t)`
+    A sequential table of `[key value]` tuples from the associative table `t`.
+
+  `(run! f xs)`
+    Execute the function (for side effects) for every `xs`.
+
+  `(filter f xs)`
+    Filter `xs` down to a new sequential table containing every value that
+    `(f x)` returned true for.
+
+  `(map f xs)`
+    Map `xs` to a new sequential table by calling `(f x)` on each item.
+
+  `(map-indexed f xs)`
+    Map `xs` to a new sequential table by calling `(f [k v])` on each item. 
+
+  `(identity x)`
+    Returns what you pass it.
+
+  `(reduce f init xs)`
+    Reduce `xs` into a result by passing each subsequent value into the
+    function with the previous value as the first argument, starting with
+    `init`.
+
+  `(some f xs)`
+    Return the first truthy result from `(f x)` or `nil`.
+
+  `(butlast xs)`
+    Return every value from the sequential table except the last one.
+
+  `(rest xs)`
+    Return every value from the sequential table except the first one.
+
+  `(concat ...)`
+    Concatenates the sequential table arguments together. You can safely mix
+    `nil` values in with actual tables.
+
+  `(mapcat f xs)`
+    The same as `map` but then `concat` all lists within the result together.
+
+  `(pr-str ...)`
+    Convert the input arguments to a string.
+
+  `(println ...)`
+    Convert the input arguments to a string (if required) and print them.
+
+  `(pr ...)`
+    Print the arguments as data, strings will remain quoted.
+
+  `(slurp path silent?)`
+    Read the file into a string and return it. Will print a warning if it
+    fails, use the `silent?` argument to suppress this and just return `nil`.
+
+  `(spit path content)`
+    Write the string into the given path.
+
+  `(merge ...)`
+    Merge the tables together, `nil` will be skipped safely so you can use
+    `(when ...)` to conditionally include tables.
+
+  `(select-keys t ks)`
+    Extract the keys listed in `ks` from `t` and return it as a new table.
+
+  `(get t k d)`
+    Get the key `k` from table `t` while safely handling `nil`. If it's not
+    found it will return the optional default value `d`.
+
+  `(get-in t ks d)`
+    Get the key path `ks` from table `t` while safely handling `nil`. If it's
+    not found it will return the optional default value `d`.
+    `(get-in {:foo {:bar 10}} [:foo :bar]) // => 10`
+
+  `(assoc t k v)`
+    Set the key `k` in table `t` to the value `v` while safely handling `nil`.
+    Returns the table `t` once it has been mutated.
+
+  `(assoc-in t k v)`
+    Set the key path `ks` in table `t` to the value `v` while safely handling `nil`.
+    `(assoc-in {:foo {:bar 10}} [:foo :bar] 15) // => {:foo {:bar 11}}`
+
+  `(update t k f)`
+    Replace the key `k` in table `t` by passing the current value through the
+    function `f`. Returns the table after the key has been mutated.
+
+  `(update-in t ks f)`
+    Same as `update` but replace the key path at `ks` with the result of
+    passing the current value through the function `f`.
+
+------------------------------------------------------------------------------
+`aniseed.compile`
+
+  `(macros-prefix code)`
+    Prepends the given code with a require to the `aniseed.macros` module.
+
+  `(str code opts)`
+    Compile some Fennel code as a string into Lua. Maps to
+    `fennel.compileString` with some wrapping, returns an `(ok? result)`
+    tuple. Automatically requires the Aniseed macros.
+
+  `(file src dest opts)`
+    Compile the source file into the destination file if the source file was
+    modified more recently. Will create any required ancestor directories for
+    the destination file to exist.
+
+  `(glob src-expr src-dir dest-dir opts)`
+    Match all files against the `src-expr` under the `src-dir` then compile
+    them into the `dest-dir` as Lua.
+
+------------------------------------------------------------------------------
+`aniseed.dotfiles`
+
+Activates upon require, see |aniseed-dotfiles|.
+
+------------------------------------------------------------------------------
+`aniseed.eval`
+
+  `(str code opts)`
+    Like `aniseed.compile/str` but uses `fennel.eval`. Returns the result of
+    evaluating the given Fennel code with the Aniseed macros automatically
+    required.
+
+------------------------------------------------------------------------------
+`aniseed.fennel`
+
+Transparent wrapper around the base `fennel` module. Synchronises the
+`fennel.path` with Lua's `package.path` value on require.
+https://github.com/bakpakin/Fennel
+
+------------------------------------------------------------------------------
+`aniseed.fs`
+
+  `(basename path)`
+    Would return `"foo/bar"` when given `"foo/bar/baz.fnl"`.
+
+  `(mkdirp dir)`
+    Creates the directory and all intermediate directories if required.
+
+------------------------------------------------------------------------------
+`aniseed.nvim`
+
+Transparent wrapper around the fantastic `nvim.lua` library. Contains
+everything you need to interact with Neovim.
+https://github.com/norcalli/nvim.lua
+
+------------------------------------------------------------------------------
+`aniseed.nvim.util`
+
+  `(normal keys)`
+    Execute some command as if you were in normal mode silently.
+
+  `(fn-bridge viml-name mod lua-name opts)`
+    Creates a VimL function that calls through to a Lua function in the named
+    module. Takes an optional opts table, if that contains `:range true` it'll
+    plumb the range start and end into the function call's first two
+    arguments.
+
+  `(with-out-str f)`
+    Capture all print output from calling the function and return it.
+
+------------------------------------------------------------------------------
+`aniseed.string`
+
+  `(join [xs] [sep xs])`
+    Joins all items of a table together with an optional separator. Separator
+    defaults to an empty string. Values that aren't a string or nil will go
+    through `aniseed.core/pr-str`.
+
+  `(split s pat)`
+    Split the given string into a sequential table using the pattern.
+    Modeled on `clojure.string/split`.
+
+------------------------------------------------------------------------------
+`aniseed.test`
+
+You probably want to use the `test.sh` script.
+
+  `(ok? results)`
+    Returns true if all tests passed.
+
+  `(display-results results prefix)`
+    Display the test results with the given prefix.
+
+  `(run mod-name)`
+    Run the tests in the given module name and display their results.
+
+  `(run-all)`
+    Runs all tests in all loaded modules.
+
+  `(suite)`
+    Execute the test suite. Runs all tests, captures all output and exits
+    Neovim with the relevant exit status.
+
+------------------------------------------------------------------------------
+`aniseed.view`
+
+  `(serialise ...)`
+    Simply calls through to Fennel's `fennelview` module.
+    Turns the input data into a string.
 
 ==============================================================================
 TESTING                                                      *aniseed-testing*

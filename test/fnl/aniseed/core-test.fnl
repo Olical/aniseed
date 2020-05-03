@@ -173,3 +173,11 @@
          "two levels from nothing")
   (t.pr= {:a {:b [:c]}} (a.assoc-in nil [:a :b 1] :c)
          "mixing associative and sequential"))
+
+(deftest update
+  (t.pr= {:foo 2} (a.update {:foo 1} :foo a.inc) "increment a value"))
+
+(deftest update-in
+  (t.pr= {:foo {:bar 2}}
+         (a.update-in {:foo {:bar 1}} [:foo :bar] a.inc)
+         "increment a value"))

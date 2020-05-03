@@ -30,18 +30,6 @@
           "unpack(_A))\", a:000)
           endfunction"))))
 
-(defn ft-map [ft mode from to]
-  "Map some keys (prefixed by <localleader>) to a command for a filetype."
-  (nvim.ex.autocmd
-    :FileType ft
-    (.. mode :map) :<buffer>
-    (.. :<localleader> from)
-    to))
-
-(defn plug [cmd]
-  "Wraps the given command in <Plug>(...)"
-  (.. "<Plug>(" cmd ")"))
-
 (defn with-out-str [f]
   "Capture all print output and return it."
   (nvim.ex.redir "=> g:aniseed_nvim_util_out_str")
