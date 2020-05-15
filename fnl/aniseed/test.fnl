@@ -96,6 +96,8 @@
                (require)))))
 
   (let [results (run-all)]
+    (nvim.ex.redir :END)
+
     (if (ok? results)
       (nvim.ex.q)
       (nvim.ex.cq))))
