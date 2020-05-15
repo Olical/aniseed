@@ -482,6 +482,18 @@ https://github.com/norcalli/nvim.lua
     Split the given string into a sequential table using the pattern.
     Modeled on `clojure.string/split`.
 
+  `(blank? s)`
+    Check if the string is `nil`, empty or only whitespace.
+
+  `(triml s)`
+    Removes whitespace from the left side of string.
+
+  `(trimr s)`
+    Removes whitespace from the right side of string.
+
+  `(trim s)`
+    Removes whitespace from both ends of string.
+
 ------------------------------------------------------------------------------
 `aniseed.test`
 

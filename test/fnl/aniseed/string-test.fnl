@@ -21,3 +21,23 @@
   (t.ok? (str.blank? "   "))
   (t.ok? (str.blank? "   \n \n  "))
   (t.ok? (not (str.blank? "   \n . \n  "))))
+
+(deftest triml
+  (t.= "" (str.triml ""))
+  (t.= "foo" (str.triml "foo"))
+  (t.= "foo" (str.triml "    foo"))
+  (t.= "foo" (str.triml "  \n  foo"))
+  (t.= "foo  " (str.triml "  \n  foo  ")))
+
+(deftest trimr
+  (t.= "" (str.trimr ""))
+  (t.= "foo" (str.trimr "foo"))
+  (t.= "foo" (str.trimr "foo    "))
+  (t.= "foo" (str.trimr "foo  \n  "))
+  (t.= "  foo" (str.trimr "  foo  \n  ")))
+
+(deftest trim
+  (t.= "" (str.trim ""))
+  (t.= "foo" (str.trim "foo"))
+  (t.= "foo" (str.trim " \n foo \n \n    ") "basic")
+  (t.= "" (str.trim "           ") "just whitespace"))

@@ -49,3 +49,15 @@
   "Check if the string is nil, empty or only whitespace."
   (or (a.empty? s)
       (not (string.find s "[^%s]"))))
+
+(defn triml [s]
+  "Removes whitespace from the left side of string."
+  (string.gsub s "^%s*(.-)" "%1"))
+
+(defn trimr [s]
+  "Removes whitespace from the right side of string."
+  (string.gsub s "(.-)%s*$" "%1"))
+
+(defn trim [s]
+  "Removes whitespace from both ends of string."
+  (string.gsub s "^%s*(.-)%s*$" "%1"))
