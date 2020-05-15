@@ -44,3 +44,8 @@
           (table.insert acc (string.sub s index (- start 1)))
           (set index (+ end 1))))))
   acc)
+
+(defn blank? [s]
+  "Check if the string is nil, empty or only whitespace."
+  (or (a.empty? s)
+      (not (string.find s "[^%s]"))))

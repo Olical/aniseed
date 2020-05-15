@@ -99,4 +99,19 @@ do
   _0_0["aniseed/locals"]["split"] = v_23_0_
   split = v_23_0_
 end
+local blank_3f = nil
+do
+  local v_23_0_ = nil
+  do
+    local v_23_0_0 = nil
+    local function blank_3f0(s)
+      return (a["empty?"](s) or not string.find(s, "[^%s]"))
+    end
+    v_23_0_0 = blank_3f0
+    _0_0["blank?"] = v_23_0_0
+    v_23_0_ = v_23_0_0
+  end
+  _0_0["aniseed/locals"]["blank?"] = v_23_0_
+  blank_3f = v_23_0_
+end
 return nil

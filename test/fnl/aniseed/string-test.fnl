@@ -13,3 +13,11 @@
   (t.pr= ["foo" "" "bar"] (str.split "foo,,bar" ","))
   (t.pr= ["foo" "" "" "bar"] (str.split "foo,,,bar" ","))
   (t.pr= ["foo" "baz"] (str.split "foobarbaz" "bar")))
+
+(deftest blank?
+  (t.ok? (str.blank? nil))
+  (t.ok? (str.blank? ""))
+  (t.ok? (str.blank? " "))
+  (t.ok? (str.blank? "   "))
+  (t.ok? (str.blank? "   \n \n  "))
+  (t.ok? (not (str.blank? "   \n . \n  "))))
