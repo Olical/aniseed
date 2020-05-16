@@ -12,7 +12,7 @@ Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-p
 
 [source,viml]
 ----
-Plug 'Olical/aniseed', { 'tag': 'v3.3.0' }
+Plug 'Olical/aniseed', { 'tag': 'v3.4.0' }
 Plug 'bakpakin/fennel.vim'
 ----
 
