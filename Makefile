@@ -19,6 +19,6 @@ test:
 
 deps:
 	# TODO Set Fennel to a tag >v0.5.0 when released.
-	scripts/dep.sh bakpakin Fennel 28af6c4377942f368585a4233714fb30d0c4ad16
+	scripts/dep.sh bakpakin Fennel 3d28eca2d88754cdda5731ca7e11faaf4b7f4864
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make fennel
