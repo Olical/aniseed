@@ -18,7 +18,6 @@ test:
 	SUFFIX="test/fnl/foo.fnl" scripts/test.sh
 
 deps:
-	# TODO Set Fennel to a tag >v0.5.0 when released.
-	scripts/dep.sh bakpakin Fennel 3d28eca2d88754cdda5731ca7e11faaf4b7f4864
+	scripts/dep.sh bakpakin Fennel d8aee09c762e3db77e84855c42dd16cab39b92fa
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make fennel
