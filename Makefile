@@ -18,6 +18,6 @@ test:
 	SUFFIX="test/fnl/foo.fnl" scripts/test.sh
 
 deps:
-	scripts/dep.sh bakpakin Fennel d8aee09c762e3db77e84855c42dd16cab39b92fa
+	scripts/dep.sh bakpakin Fennel 0.4.1
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make fennel
