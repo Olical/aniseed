@@ -52,7 +52,10 @@ Clojure namespaces. Here's what a module looks like.
               nvim aniseed.nvim}
   
      ;; Inline modules at compile time.
-     include {some-dep my-other.dependency}})
+     include {some-dep my-other.dependency}
+
+     ;; Require macros for compile time.
+     require-macros [fnl.my-proj.macros]})
   
   (def- some-private-value 2)
   
@@ -206,13 +209,18 @@ right context.
   include other modules, the key is a function (`require` or `include` for
   example) and the value is another table mapping an alias to a module name.
 
+  For side effecting functions or macros such as `require-macros` you can pass
+  a sequential table as opposed to an associative one containing your required
+  macro module paths.
+
   The final optional argument is a base table you would like Aniseed to merge
   your modules properties into, this can be useful for extending an existing
   module.
   >
     (module foo.bar
       {require {a aniseed.core}
-       include {baz foo.baz}}
+       include {baz foo.baz}
+       require-macros [fnl.foo.bar]}
       {:xyz "this will be the base table that gets exported"})
 
 `(def name value)`
