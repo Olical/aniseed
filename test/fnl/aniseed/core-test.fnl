@@ -54,6 +54,14 @@
   (t.= 1 (a.dec 2))
   (t.= -6 (a.dec -5)))
 
+(deftest even?
+  (t.= true (a.even? 2))
+  (t.= false (a.even? 3)))
+
+(deftest odd?
+  (t.= false (a.odd? 2))
+  (t.= true (a.odd? 3)))
+
 (deftest keys
   (t.pr= [] (a.keys nil) "nil is empty")
   (t.pr= [] (a.keys {}) "empty is empty")
@@ -157,7 +165,13 @@
   (t.pr= {} (a.assoc nil nil :a) "nil key is noop")
   (t.pr= {:a 1} (a.assoc nil :a 1) "from nothing to one key")
   (t.pr= [:a] (a.assoc nil 1 :a) "sequential")
-  (t.pr= {:a 1 :b 2} (a.assoc {:a 1} :b 2) "adding to existing"))
+  (t.pr= {:a 1 :b 2} (a.assoc {:a 1} :b 2) "adding to existing")
+  (t.pr= {:a 1 :b 2 :c 3} (a.assoc {:a 1} :b 2 :c 3) "multi arg")
+  (t.pr= {:a 1 :b 2 :c 3 :d 4} (a.assoc {:a 1} :b 2 :c 3 :d 4) "more multi arg")
+  (let [(ok? msg) (pcall #(a.assoc {:a 1} :b 2 :c))]
+    (t.= false ok? "uneven args - ok?")
+    (t.= "expects even number"
+         (msg:match "expects even number") "uneven args - msg")))
 
 (deftest assoc-in
   (t.pr= {} (a.assoc-in nil nil nil) "empty as possible")

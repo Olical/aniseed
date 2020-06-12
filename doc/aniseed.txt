@@ -50,26 +50,26 @@ Clojure namespaces. Here's what a module looks like.
     {;; Require other modules with aliases.
      require {a aniseed.core
               nvim aniseed.nvim}
-  
+
      ;; Inline modules at compile time.
      include {some-dep my-other.dependency}
 
      ;; Require macros for compile time.
      require-macros [fnl.my-proj.macros]})
-  
+
   (def- some-private-value 2)
-  
+
   (defn- some-private-fn [x]
     (* x some-private-value))
-  
+
   (defn a-public-fn [x]
     (-> x
         (some-private-fn)
         (a.inc)))
-  
+
   ;; Prevent this value being overwritten on each eval.
   (defonce- some-stateful-thing (some-dep.start-server!))
-  
+
   (comment
     (a-public-fn 10) ;; => 21
     (some-private-fn 10) ;; => 20
@@ -174,7 +174,7 @@ You can now add as much Fennel as you want to
 >
   (module dotfiles.init
     {require {a aniseed.core}})
-  
+
   (a.println "Hello, World!")
 >
 Next time you open Neovim you'll see "Hello, World!" in `:messages`! You can
@@ -313,6 +313,12 @@ example.
   `(dec n)`
     Subtract `1` from `n`.
 
+  `(even? n)`
+    True if `n` is even.
+
+  `(odd? n)`
+    True if `n` is odd.
+
   `(keys t)`
     A sequential table of the keys from the associative table `t`.
 
@@ -333,7 +339,7 @@ example.
     Map `xs` to a new sequential table by calling `(f x)` on each item.
 
   `(map-indexed f xs)`
-    Map `xs` to a new sequential table by calling `(f [k v])` on each item. 
+    Map `xs` to a new sequential table by calling `(f [k v])` on each item.
 
   `(identity x)`
     Returns what you pass it.
@@ -391,8 +397,10 @@ example.
     not found it will return the optional default value `d`.
     `(get-in {:foo {:bar 10}} [:foo :bar]) // => 10`
 
-  `(assoc t k v)`
+  `(assoc t k v ...)`
     Set the key `k` in table `t` to the value `v` while safely handling `nil`.
+    Accepts more `k` and `v` pairs as after the initial pair. This allows you
+    to assoc multiple values in one call.
     Returns the table `t` once it has been mutated.
 
   `(assoc-in t k v)`
@@ -538,7 +546,7 @@ inside this very repository. We start by creating a module within our project
 such as `fnl/foo/math.fnl`.
 >
   (module foo.math)
-  
+
   (defn add [a b]
     (+ a b))
 >
@@ -546,7 +554,7 @@ We can then create our test module in `test/fnl/foo/math-test.fnl`.
 >
   (module foo.math-test
     {require {math foo.math}})
-  
+
   ;; The `t` assertion table is included automatically via the deftest macro.
   (deftest add
     (t.= 10 (math.add 6 4) "it adds things together"))

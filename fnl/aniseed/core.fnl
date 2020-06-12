@@ -45,6 +45,12 @@
   "Decrement n by 1."
   (- n 1))
 
+(defn even? [n]
+  (= (% n 2) 0))
+
+(defn odd? [n]
+  (not (even? n)))
+
 (defn keys [t]
   "Get all keys of a table."
   (let [result []]
@@ -247,10 +253,20 @@
       d
       res)))
 
-(defn assoc [t k v]
-  (let [t (or t {})]
+(defn assoc [t ...]
+  (let [[k v & xs] [...]
+        rem (count xs)
+        t (or t {})]
+
+    (when (odd? rem)
+      (error "assoc expects even number of arguments after table, found odd number"))
+
     (when (not (nil? k))
       (tset t k v))
+
+    (when (> rem 0)
+      (assoc t (unpack xs)))
+
     t))
 
 (defn assoc-in [t ks v]
