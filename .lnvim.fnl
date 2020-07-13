@@ -1,7 +1,4 @@
 (module aniseed.lnvim
-  {require {config conjure.config}})
+  {require {nvim aniseed.nvim}})
 
-(config.assoc
-  {:client :fennel.aniseed
-   :path [:aniseed-module-prefix]
-   :val "aniseed."})
+(set nvim.g.conjure#client#fennel#aniseed#aniseed_module_prefix "aniseed.")
