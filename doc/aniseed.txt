@@ -415,6 +415,9 @@ example.
     Same as `update` but replace the key path at `ks` with the result of
     passing the current value through the function `f`.
 
+  `(constantly v)`
+    Returns a function that takes any number of arguments and returns `v`.
+
 ------------------------------------------------------------------------------
 `aniseed.compile`
 

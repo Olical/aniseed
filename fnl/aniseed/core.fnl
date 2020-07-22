@@ -290,3 +290,6 @@
 
 (defn update-in [t ks f]
   (assoc-in t ks (f (get-in t ks))))
+
+(defn constantly [v]
+  (fn [] v))

@@ -195,3 +195,8 @@
   (t.pr= {:foo {:bar 2}}
          (a.update-in {:foo {:bar 1}} [:foo :bar] a.inc)
          "increment a value"))
+
+(deftest constantly
+  (let [f (a.constantly :foo)]
+    (t.= :foo (f))
+    (t.= :foo (f :bar))))
