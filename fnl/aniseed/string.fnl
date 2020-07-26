@@ -10,24 +10,20 @@
         [sep xs] (if (= 2 (a.count args))
                    args
                    ["" (a.first args)])
-        count (a.count xs)]
+        len (a.count xs)]
 
-    (var result "")
+    (var result [])
 
-    (when (> count 0)
-      (for [i 1 count]
+    (when (> len 0)
+      (for [i 1 len]
         (let [x (. xs i)]
-          (set result
-               (.. result
-                   (if (= 1 i)
-                     ""
-                     sep)
-                   (if
-                     (a.string? x) x
-                     (a.nil? x) ""
-                     (a.pr-str x)))))))
+          (-?>> (if
+                  (= :string (type x)) x
+                  (= nil x) x
+                  (a.pr-str x))
+                (table.insert result)))))
 
-    result))
+    (table.concat result sep)))
 
 (defn split [s pat]
   "Split the given string into a sequential table using the pattern."
