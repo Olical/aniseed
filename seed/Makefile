@@ -3,7 +3,7 @@
 default: deps compile test
 
 deps:
-	scripts/dep.sh Olical aniseed origin/develop
+	scripts/dep.sh Olical aniseed origin/master
 
 compile:
 	rm -rf lua
