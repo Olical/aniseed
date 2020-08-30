@@ -121,6 +121,14 @@ directory since it's used to fetch Aniseed itself.
    * `SUFFIX` - Inserted after the arguments to Neovim.
   Usage: `deps/aniseed/scripts/test.sh`
 
+`scripts/seed.sh`
+  Sets up a new Aniseed plugin project within the current directory.
+  Warning: Only run in new empty directories, it will replace your
+  `.gitignore`, `Makefile` and other such files!
+  Warning: Requires `make` as part of the workflow.
+  Usage:
+    `curl -fL https://raw.githubusercontent.com/Olical/aniseed/master/scripts/seed.sh | sh`
+
 ==============================================================================
 PLUGINS                                                      *aniseed-plugins*
 

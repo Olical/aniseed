@@ -20,6 +20,17 @@ For interactive evaluation you need to install https://github.com/Olical/conjure
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
 
+== Setting up a plugin project
+
+`scripts/seed.sh` is provided to make it a little easier to get a plugin up and running. In anew directory (because it will overwrite your `.gitignore` and `Makefile` etc) run the following command.
+
+[source,bash]
+----
+curl -fL https://raw.githubusercontent.com/Olical/aniseed/master/scripts/seed.sh | sh
+----
+
+This will create some example Fennel source and tests as well as a `Makefile` to help you compile and run it all. This should be enough to get you started without being overly opinionated.
+
 == Unlicenced
 
 The following files are excluded from my license and ownership:
