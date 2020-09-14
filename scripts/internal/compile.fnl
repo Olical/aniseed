@@ -1,4 +1,4 @@
-(local fennel (require :deps/Fennel/fennel))
+(local fennel (require :fennel))
 
 (set fennel.path (.. fennel.path ";fnl/?.fnl"))
 

@@ -14,15 +14,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
-local function _1_(...)
+local function _2_(...)
   _0_0["aniseed/local-fns"] = {require = {compile = "aniseed.compile", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
   return {require("aniseed.compile"), require("aniseed.fennel"), require("aniseed.fs"), require("aniseed.nvim")}
 end
-local _2_ = _1_(...)
-local compile = _2_[1]
-local fennel = _2_[2]
-local fs = _2_[3]
-local nvim = _2_[4]
+local _1_ = _2_(...)
+local compile = _1_[1]
+local fennel = _1_[2]
+local fs = _1_[3]
+local nvim = _1_[4]
 do local _ = ({nil, _0_0, {{}, nil}})[2] end
 local str = nil
 do
