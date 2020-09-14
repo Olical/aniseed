@@ -28,5 +28,6 @@ do
   _0_0["aniseed/locals"]["config-dir"] = v_0_
   config_dir = v_0_
 end
+compile["add-path"]((config_dir .. "/?.fnl"))
 compile.glob("**/*.fnl", (config_dir .. "/fnl"), (config_dir .. "/lua"))
 return require("dotfiles.init")

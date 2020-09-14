@@ -10,6 +10,10 @@
   (set fennel.path
        (.. (string.gsub fnl-suffixes "/lua/" "/fnl/") ";" fnl-suffixes)))
 
+(defn add-path [path]
+  (set fennel.path
+       (.. fennel.path ";" path)))
+
 (defn macros-prefix [code]
   (let [macros-module :aniseed.macros]
     (.. "(require-macros \"" macros-module "\")\n" code)))
