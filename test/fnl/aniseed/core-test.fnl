@@ -62,21 +62,30 @@
   (t.= false (a.odd? 2))
   (t.= true (a.odd? 3)))
 
+(defn- sort [t]
+  (table.sort
+    t
+    (fn [x y]
+      (if (= :table (type x))
+        (< (a.first x) (a.first y))
+        (< x y))))
+  t)
+
 (deftest keys
   (t.pr= [] (a.keys nil) "nil is empty")
   (t.pr= [] (a.keys {}) "empty is empty")
-  (t.pr= [:a :b] (a.keys {:a 1 :b 2}) "simple use"))
+  (t.pr= [:a :b] (sort (a.keys {:a 2 :b 2})) "simple use"))
 
 (deftest vals
   (t.pr= [] (a.vals nil) "nil is empty")
   (t.pr= [] (a.vals {}) "empty is empty")
-  (t.pr= [1 2] (a.vals {:a 1 :b 2}) "simple use"))
+  (t.pr= [1 2] (sort (a.vals {:a 1 :b 2})) "simple use"))
 
 (deftest kv-pairs
   (t.pr= [] (a.kv-pairs nil) "nil is empty")
   (t.pr= [] (a.kv-pairs {}) "empty is empty")
-  (t.pr= [[:a 1] [:b 2]] (a.kv-pairs {:a 1 :b 2}) "simple table")
-  (t.pr= [[1 :a] [2 :b]] (a.kv-pairs [:a :b]) "sequential works but is weird"))
+  (t.pr= [[:a 1] [:b 2]] (sort (a.kv-pairs {:a 1 :b 2})) "simple table")
+  (t.pr= [[1 :a] [2 :b]] (sort (a.kv-pairs [:a :b])) "sequential works but is weird"))
 
 (deftest pr-str
   (t.pr= "[1 2 3]" (a.pr-str [1 2 3]))
