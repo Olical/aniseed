@@ -20,6 +20,7 @@ compile:
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
 	cp deps/Fennel/fennelview.lua lua/aniseed/deps/fennelview.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
+	sed -i "s/\"fennel\./\"aniseed.fennel./gI" lua/aniseed/deps/fennel.lua
 
 test:
 	SUFFIX="test/fnl/foo.fnl" scripts/test.sh

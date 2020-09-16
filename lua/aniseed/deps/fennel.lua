@@ -1,8 +1,8 @@
-package.preload["fennel.repl"] = package.preload["fennel.repl"] or function(...)
-  local utils = require("fennel.utils")
-  local parser = require("fennel.parser")
-  local compiler = require("fennel.compiler")
-  local specials = require("fennel.specials")
+package.preload["aniseed.fennel.repl"] = package.preload["aniseed.fennel.repl"] or function(...)
+  local utils = require("aniseed.fennel.utils")
+  local parser = require("aniseed.fennel.parser")
+  local compiler = require("aniseed.fennel.compiler")
+  local specials = require("aniseed.fennel.specials")
   local function default_read_chunk(parser_state)
     local function _0_()
       if (0 < parser_state["stack-size"]) then
@@ -194,10 +194,10 @@ package.preload["fennel.repl"] = package.preload["fennel.repl"] or function(...)
   end
   return repl
 end
-package.preload["fennel.specials"] = package.preload["fennel.specials"] or function(...)
-  local utils = require("fennel.utils")
-  local parser = require("fennel.parser")
-  local compiler = require("fennel.compiler")
+package.preload["aniseed.fennel.specials"] = package.preload["aniseed.fennel.specials"] or function(...)
+  local utils = require("aniseed.fennel.utils")
+  local parser = require("aniseed.fennel.parser")
+  local compiler = require("aniseed.fennel.compiler")
   local unpack = (_G.unpack or table.unpack)
   local SPECIALS = compiler.scopes.global.specials
   local function wrap_env(env)
@@ -1163,10 +1163,10 @@ package.preload["fennel.specials"] = package.preload["fennel.specials"] or funct
   doc_special("eval-compiler", {"..."}, "Evaluate the body at compile-time. Use the macro system instead if possible.")
   return {["current-global-names"] = current_global_names, ["load-code"] = load_code, ["macro-loaded"] = macro_loaded, ["make-compiler-env"] = make_compiler_env, ["make-searcher"] = make_searcher, ["search-module"] = search_module, ["wrap-env"] = wrap_env, doc = doc_2a}
 end
-package.preload["fennel.compiler"] = package.preload["fennel.compiler"] or function(...)
-  local utils = require("fennel.utils")
-  local parser = require("fennel.parser")
-  local friend = require("fennel.friend")
+package.preload["aniseed.fennel.compiler"] = package.preload["aniseed.fennel.compiler"] or function(...)
+  local utils = require("aniseed.fennel.utils")
+  local parser = require("aniseed.fennel.parser")
+  local friend = require("aniseed.fennel.friend")
   local unpack = (_G.unpack or table.unpack)
   local scopes = {}
   local function make_scope(parent)
@@ -2044,7 +2044,7 @@ package.preload["fennel.compiler"] = package.preload["fennel.compiler"] or funct
   end
   return {["apply-manglings"] = apply_manglings, ["compile-stream"] = compile_stream, ["compile-string"] = compile_string, ["declare-local"] = declare_local, ["do-quote"] = do_quote, ["global-mangling"] = global_mangling, ["global-unmangling"] = global_unmangling, ["keep-side-effects"] = keep_side_effects, ["make-scope"] = make_scope, ["require-include"] = require_include, ["symbol-to-expression"] = symbol_to_expression, assert = assert_compile, autogensym = autogensym, compile = compile, compile1 = compile1, destructure = destructure, emit = emit, gensym = gensym, macroexpand = macroexpand_2a, metadata = make_metadata(), scopes = scopes, traceback = traceback}
 end
-package.preload["fennel.friend"] = package.preload["fennel.friend"] or function(...)
+package.preload["aniseed.fennel.friend"] = package.preload["aniseed.fennel.friend"] or function(...)
   local function ast_source(ast)
     local m = getmetatable(ast)
     if (m and m.line and m) then
@@ -2144,9 +2144,9 @@ package.preload["fennel.friend"] = package.preload["fennel.friend"] or function(
   end
   return {["assert-compile"] = assert_compile, ["parse-error"] = parse_error}
 end
-package.preload["fennel.parser"] = package.preload["fennel.parser"] or function(...)
-  local utils = require("fennel.utils")
-  local friend = require("fennel.friend")
+package.preload["aniseed.fennel.parser"] = package.preload["aniseed.fennel.parser"] or function(...)
+  local utils = require("aniseed.fennel.utils")
+  local friend = require("aniseed.fennel.friend")
   local unpack = (_G.unpack or table.unpack)
   local function granulate(getchunk)
     local c = ""
@@ -2423,7 +2423,7 @@ package.preload["fennel.parser"] = package.preload["fennel.parser"] or function(
   return {["string-stream"] = string_stream, granulate = granulate, parser = parser}
 end
 local utils = nil
-package.preload["fennel.utils"] = package.preload["fennel.utils"] or function(...)
+package.preload["aniseed.fennel.utils"] = package.preload["aniseed.fennel.utils"] or function(...)
   local function stablepairs(t)
     local keys = {}
     local succ = {}
@@ -2658,11 +2658,11 @@ package.preload["fennel.utils"] = package.preload["fennel.utils"] or function(..
   end
   return {["debug-on"] = debug_on, ["is-expr"] = is_expr, ["is-list"] = is_list, ["is-multi-sym"] = is_multi_sym, ["is-quoted"] = is_quoted, ["is-sequence"] = is_sequence, ["is-sym"] = is_sym, ["is-table"] = is_table, ["is-varg"] = is_varg, ["lua-keywords"] = lua_keywords, ["propagate-options"] = propagate_options, ["valid-lua-identifier?"] = valid_lua_identifier_3f, ["walk-tree"] = walk_tree, allpairs = allpairs, copy = copy, deref = deref, expr = expr, kvmap = kvmap, list = list, map = map, path = table.concat(_3_, ";"), root = root, sequence = sequence, stablepairs = stablepairs, sym = sym, varg = varg}
 end
-utils = require("fennel.utils")
-local parser = require("fennel.parser")
-local compiler = require("fennel.compiler")
-local specials = require("fennel.specials")
-local repl = require("fennel.repl")
+utils = require("aniseed.fennel.utils")
+local parser = require("aniseed.fennel.parser")
+local compiler = require("aniseed.fennel.compiler")
+local specials = require("aniseed.fennel.specials")
+local repl = require("aniseed.fennel.repl")
 local function eval(str, options, ...)
   local opts = utils.copy(options)
   local _ = nil
@@ -3008,7 +3008,7 @@ do
    : macro : macrodebug : import-macros
    : match}
   ]===]
-  local module_name = "fennel.macros"
+  local module_name = "aniseed.fennel.macros"
   local _ = nil
   local function _0_()
     return mod
