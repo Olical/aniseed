@@ -8,11 +8,8 @@ deps:
 compile:
 	rm -rf lua
 	deps/aniseed/scripts/compile.sh
-	## Uncomment and set CHANGEME to your project prefix if you need access to
-	## Aniseed at runtime, instead of just compile time.
-	## If your project modules are like myplugin.some-thing, you'd use myplugin
-	## in place of CHANGEME.
-	# deps/aniseed/scripts/embed.sh aniseed CHANGEME
+	## comment out if you don't need access to Aniseed at runtime.
+	deps/aniseed/scripts/embed.sh aniseed example
 
 test:
 	rm -rf test/lua
