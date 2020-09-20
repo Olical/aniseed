@@ -104,7 +104,7 @@ directory since it's used to fetch Aniseed itself.
   directory under a prefix directory. Then munges the dependency to replace
   all occurrences of the module paths with your unique project specific
   prefix.
-  Usage: `deps/aniseed/scripts/embed.sh aniseed my-plugin-name`
+  Usage: `deps/aniseed/scripts/embed.sh aniseed YOUR_PLUGIN_NAME`
 
 `scripts/compile.sh`
   Compiles all Fennel code into Lua assuming you have Aniseed cloned into your
@@ -150,7 +150,7 @@ under the `lua` directory. Now your Fennel has been compiled to Lua but we
 need to embed a copy of Aniseed for runtime use by your plugin (the
 `my-plugin.aniseed.core` module doesn't exist until we do this!).
 >
-  deps/aniseed/scripts/embed.sh aniseed my-plugin
+  deps/aniseed/scripts/embed.sh aniseed YOUR_PLUGIN_NAME
 
 Since running `compile.sh` and `embed.sh` every time you make a change is
 quite tedious, you should be using Conjure for interactive evaluation as you

@@ -7,8 +7,8 @@
 # other plugins. It might however completely break the Lua, so use at your own risk.
 # Should be totally safe with Aniseed but this script makes a LOT of assumptions.
 # Args: Dependency name, your project module prefix, optional src dir.
-# Usage: deps/aniseed/scripts/embed.sh aniseed conjure
-# Usage (with src): deps/aniseed/scripts/embed.sh sha1 conjure src/sha1/
+# Usage: deps/aniseed/scripts/embed.sh aniseed your-plugin-name
+# Usage (with src): deps/aniseed/scripts/embed.sh sha1 your-plugin-name src/sha1/
 
 mkdir -p "lua/$2"
 rsync -avu --delete "deps/$1/${3:-lua/$1/}" "lua/$2/$1"
