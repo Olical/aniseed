@@ -492,7 +492,8 @@ https://github.com/norcalli/nvim.lua
     Creates a VimL function that calls through to a Lua function in the named
     module. Takes an optional opts table, if that contains `:range true` it'll
     plumb the range start and end into the function call's first two
-    arguments.
+    arguments. Will return the result from the VimL function by default, this
+    can be turned off by setting `:return false` in the opts table.
 
   `(with-out-str f)`
     Capture all print output from calling the function and return it.
