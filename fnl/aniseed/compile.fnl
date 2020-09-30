@@ -26,7 +26,7 @@
     (fn []
       (fennel.compileString
         (macros-prefix code)
-        opts))
+        (a.merge {:compiler-env _G} opts)))
     fennel.traceback))
 
 (defn file [src dest opts]
