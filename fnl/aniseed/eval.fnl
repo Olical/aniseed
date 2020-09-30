@@ -1,5 +1,6 @@
 (module aniseed.eval
-  {require {fs aniseed.fs
+  {require {a aniseed.core
+            fs aniseed.fs
             nvim aniseed.nvim
             fennel aniseed.fennel
             compile aniseed.compile}})
@@ -12,5 +13,5 @@
     (fn []
       (-> code
           (compile.macros-prefix)
-          (fennel.eval opts)))
+          (fennel.eval (a.merge {:compiler-env _G} opts))))
     fennel.traceback))
