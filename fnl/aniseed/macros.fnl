@@ -37,9 +37,10 @@
                locals (-?> package.loaded
                            (. (tostring name))
                            (. :aniseed/locals))
-               local-fns (or (-?> package.loaded
-                                  (. (tostring name))
-                                  (. :aniseed/local-fns))
+               local-fns (or (and (not new-local-fns)
+                                  (-?> package.loaded
+                                       (. (tostring name))
+                                       (. :aniseed/local-fns)))
                              {})]
 
            (when new-local-fns
