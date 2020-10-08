@@ -50,8 +50,9 @@
                        (a.map (fn [path]
                                 (string.sub path src-dir-len))))]
     (each [_ path (ipairs src-paths)]
-      (file (.. src-dir path)
-            (string.gsub
-              (.. dest-dir path)
-              ".fnl$" ".lua")
-            opts))))
+      (when (not (string.gmatch path "macros.fnl$"))
+        (file (.. src-dir path)
+              (string.gsub
+                (.. dest-dir path)
+                ".fnl$" ".lua")
+              opts)))))
