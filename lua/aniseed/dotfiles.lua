@@ -21,7 +21,8 @@ end
 local _1_ = _2_(...)
 local compile = _1_[1]
 local nvim = _1_[2]
-do local _ = ({nil, _0_0, {{}, nil}})[2] end
+local _2amodule_2a = "aniseed.dotfiles"
+do local _ = ({nil, _0_0, {{}, nil, nil}})[2] end
 local config_dir = nil
 do
   local v_0_ = nvim.fn.stdpath("config")

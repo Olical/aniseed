@@ -23,7 +23,8 @@ local a = _1_[1]
 local fennel = _1_[2]
 local fs = _1_[3]
 local nvim = _1_[4]
-do local _ = ({nil, _0_0, {{}, nil}})[2] end
+local _2amodule_2a = "aniseed.compile"
+do local _ = ({nil, _0_0, {{}, nil, nil}})[2] end
 do
   local fnl_suffixes = string.gsub(string.gsub(package.path, "%.lua;", ".fnl;"), "%.lua$", ".fnl")
   fennel.path = (string.gsub(fnl_suffixes, "/lua/", "/fnl/") .. ";" .. fnl_suffixes)
