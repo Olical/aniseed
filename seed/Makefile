@@ -8,7 +8,8 @@ deps:
 compile:
 	rm -rf lua
 	deps/aniseed/scripts/compile.sh
-	## comment out if you don't need access to Aniseed at runtime.
+
+	# Remove this if you only want Aniseed at compile time.
 	deps/aniseed/scripts/embed.sh aniseed example
 
 test:
