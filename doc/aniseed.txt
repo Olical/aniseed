@@ -129,6 +129,8 @@ directory since it's used to fetch Aniseed itself.
   Warning: Only run in new empty directories, it will replace your
   `.gitignore`, `Makefile` and other such files!
   Warning: Requires `make` as part of the workflow.
+  Warning: Uses the name of your current directory as the name for the plugin.
+           Make sure it's a valid Fennel symbol! (no spaces etc)
   Usage:
     `curl -fL https://raw.githubusercontent.com/Olical/aniseed/master/scripts/seed.sh | sh`
 
