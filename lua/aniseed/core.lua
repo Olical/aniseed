@@ -20,8 +20,9 @@ local function _2_(...)
 end
 local _1_ = _2_(...)
 local view = _1_[1]
-local _2amodule_2a = "aniseed.core"
-do local _ = ({nil, _0_0, {{}, nil, nil}})[2] end
+local _2amodule_2a = _0_0
+local _2amodule_name_2a = "aniseed.core"
+do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
 math.randomseed(os.time())
 local rand = nil
 do

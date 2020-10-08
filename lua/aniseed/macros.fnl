@@ -82,7 +82,8 @@
                (do
                  (tset ,module-sym :aniseed/local-fns ,local-fns)
                  ,vals))
-             (local ,(sym "*module*") ,(tostring name))])]
+             (local ,(sym "*module*") ,module-sym)
+             (local ,(sym "*module-name*") ,(tostring name))])]
        (. 2)))
 
 (fn def- [name value]

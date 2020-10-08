@@ -230,6 +230,11 @@ right context.
        include {baz foo.baz}
        require-macros [fnl.foo.bar]}
       {:xyz "this will be the base table that gets exported"})
+<
+  You can access the current module table with `*module*` and the current
+  module name as a string with `*module-name*`. This can be useful for
+  introspection or modification of the module table without coupling your code
+  to the name of the module.
 
 `(def name value)`
   Define a public value in the current module.
