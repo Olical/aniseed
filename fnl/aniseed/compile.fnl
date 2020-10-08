@@ -50,7 +50,8 @@
                        (a.map (fn [path]
                                 (string.sub path src-dir-len))))]
     (each [_ path (ipairs src-paths)]
-      (when (not (string.gmatch path "macros.fnl$"))
+      (when (or (a.get opts :include-macros-suffix?)
+                (not (string.match path "macros.fnl$")))
         (file (.. src-dir path)
               (string.gsub
                 (.. dest-dir path)

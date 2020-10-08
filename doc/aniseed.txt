@@ -111,7 +111,11 @@ directory since it's used to fetch Aniseed itself.
 
 `scripts/compile.sh`
   Compiles all Fennel code into Lua assuming you have Aniseed cloned into your
-  `deps` directory via `dep.sh`.
+  `deps` directory via `dep.sh`. Any file path that ends in `macros.fnl` will
+  be ignored, this allows you to store macro files alongside your source code.
+  Fennel macro files cannot be directly compiled, they can only be executed at
+  compile time when referring to them with `require-macros` from a regular
+  Fennel source file.
   Usage: `deps/aniseed/scripts/compile.sh`
 
 `scripts/test.sh`
@@ -454,7 +458,8 @@ example.
 
   `(glob src-expr src-dir dest-dir opts)`
     Match all files against the `src-expr` under the `src-dir` then compile
-    them into the `dest-dir` as Lua.
+    them into the `dest-dir` as Lua. Any paths ending in `macros.fnl` will be
+    skipped unless you provide `{:include-macros-suffix? true}` in the `opts`.
 
 ------------------------------------------------------------------------------
 `aniseed.dotfiles`
