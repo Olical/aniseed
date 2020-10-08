@@ -73,7 +73,10 @@ Clojure namespaces. Here's what a module looks like.
   (comment
     (a-public-fn 10) ;; => 21
     (some-private-fn 10) ;; => 20
-    (set nvim.g.hello "world!"))
+    (set nvim.g.hello "world!")
+    *module* ;; => {...} the current Lua module table.
+    *module-name* ;; => "my-module"
+    )
 >
 Some good examples of what you can do with Aniseed in practice:
 
