@@ -12,6 +12,7 @@ CONTENTS                                                    *aniseed-contents*
     2. Examples ..................................... |aniseed-examples|
     3. Scripts ....................................... |aniseed-scripts|
     4. Plugins ....................................... |aniseed-plugins|
+    5. Env ............................................... |aniseed-env|
     5. Dotfiles ..................................... |aniseed-dotfiles|
     6. Macros ......................................... |aniseed-macros|
     7. Functions ................................... |aniseed-functions|
@@ -22,7 +23,7 @@ INTRODUCTION                                            *aniseed-introduction*
 
 Aniseed bridges the gap between Fennel (a Lisp that compiles to Lua) and
 Neovim. Allowing you to easily write plugins (|aniseed-plugins|) or
-configuration (|aniseed-dotfiles|) in a Clojure-like Lisp with great runtime
+configuration (|aniseed-env|) in a Clojure-like Lisp with great runtime
 performance.
 https://fennel-lang.org/
 
@@ -176,30 +177,53 @@ for them on startup.
 >
 Once your plugin is taking shape you'll probably want to have a look at
 |aniseed-testing| to provide some automated tests locally or in CI.
->
+
 ==============================================================================
-DOTFILES                                                    *aniseed-dotfiles*
+ENV                                                              *aniseed-env*
 
 If you want to replace your Neovim configuration in your dotfiles with Fennel
-instead of Vim Script or Lua, you can do so by requiring the
-`aniseed.dotfiles` module in your `init.vim` after Aniseed is installed.
+instead of Vim Script or Lua, you can do so with the `aniseed.env` module in
+your `init.vim`.
 >
-  lua require('aniseed.dotfiles')
+  lua require('aniseed.env').init()
 >
-You can now add as much Fennel as you want to
-`~/.config/nvim/fnl/dotfiles/init.fnl`. Let's add a simple greeting.
+This will compile all changed Fennel under `~/.config/nvim/fnl` to
+`~/.config/nvim/lua` when you open Neovim and then load the `init` module by
+default. The module that gets loaded can be configured by passing a string
+to `aniseed.env`'s `init` function.
+
+If we're using the default `init` module name we can add the following code to
+`~/.config/nvim/fnl/init.fnl` to produce a "Hello, World!".
 >
-  (module dotfiles.init
+  (module init
     {require {a aniseed.core}})
 
   (a.println "Hello, World!")
 >
 Next time you open Neovim you'll see "Hello, World!" in `:messages`! You can
-grow your configuration by adding more modules under `fnl/dotfiles` and
-requiring them into your `dotfiles.init` module.
+grow your configuration by adding more modules under the `fnl` directory and
+requiring them into your initial module.
 
-The Fennel will be compiled into `~/.config/nvim/lua` on startup whenever it
-changes, so you may want to add that to your git ignore.
+Be sure to `.gitignore` the `~/.config/nvim/lua` directory if you store your
+configuration in git since this will end up being compiled output that's
+recompiled whenever you make changes to your Fennel source.
+
+==============================================================================
+DOTFILES                                                    *aniseed-dotfiles*
+
+This module is deprecated in favour of the almost identical |aniseed-env|. To
+migrate while keeping your configuration exactly as it is, you should change
+the old require:
+>
+  lua require('aniseed.dotfiles')
+
+To the new module with the `module-name` argument provided:
+>
+  lua require('aniseed.env').init('aniseed.init')
+
+The new default module that gets required is simply called `init`, so you
+could move your `aniseed/init.fnl` to `init.fnl` if you so wish and then just
+not provide any arguments to the `.init()` function.
 
 ==============================================================================
 MACROS                                                        *aniseed-macros*
@@ -464,7 +488,15 @@ example.
 ------------------------------------------------------------------------------
 `aniseed.dotfiles`
 
-Activates upon require, see |aniseed-dotfiles|.
+Warning: Deprecated! Use `aniseed.env` instead! See |aniseed-dotfiles|.
+
+------------------------------------------------------------------------------
+`aniseed.env`
+
+  `(init module-name)`
+    Compile and load Fennel stored under your Neovim configuration directory.
+    See |aniseed-env| for more information. The `module-name` is optional and
+    defaults to `"init"`.
 
 ------------------------------------------------------------------------------
 `aniseed.eval`
