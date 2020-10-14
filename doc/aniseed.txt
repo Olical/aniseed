@@ -427,7 +427,7 @@ example.
 
   `(assoc-in t k v)`
     Set the key path `ks` in table `t` to the value `v` while safely handling `nil`.
-    `(assoc-in {:foo {:bar 10}} [:foo :bar] 15) // => {:foo {:bar 11}}`
+    `(assoc-in {:foo {:bar 10}} [:foo :bar] 15) // => {:foo {:bar 15}}`
 
   `(update t k f)`
     Replace the key `k` in table `t` by passing the current value through the
