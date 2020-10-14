@@ -2255,13 +2255,22 @@ package.preload["aniseed.fennel.parser"] = package.preload["aniseed.fennel.parse
           index = (index + 1)
           return b
         else
-          c = getchunk(parser_state)
-          if (not c or (c == "")) then
+          local _1_0, _2_0, _3_0 = getchunk(parser_state)
+          local _4_
+          do
+            local char = _1_0
+            _4_ = ((nil ~= _1_0) and (char ~= ""))
+          end
+          if _4_ then
+            local char = _1_0
+            c = char
+            index = 1
+            return c:byte()
+          else
+            local _ = _1_0
             done_3f = true
             return nil
           end
-          index = 2
-          return c:byte(1)
         end
       end
     end
@@ -2345,19 +2354,24 @@ package.preload["aniseed.fennel.parser"] = package.preload["aniseed.fennel.parse
       end
       local function badend()
         local accum = utils.map(stack, "closer")
-        return parse_error(string.format("expected closing delimiter%s %s", (((#stack == 1) and "") or "s"), string.char(unpack(accum))))
+        local _0_
+        if (#stack == 1) then
+          _0_ = ""
+        else
+          _0_ = "s"
+        end
+        return parse_error(string.format("expected closing delimiter%s %s", _0_, string.char(unpack(accum))))
+      end
+      local function skip_whitespace(b)
+        if (b and whitespace_3f(b)) then
+          whitespace_since_dispatch = true
+          return skip_whitespace(getb())
+        else
+          return b
+        end
       end
       while true do
-        local b = nil
-        while true do
-          b = getb()
-          if (b and whitespace_3f(b)) then
-            whitespace_since_dispatch = true
-          end
-          if (not b or not whitespace_3f(b)) then
-            break
-          end
-        end
+        local b = skip_whitespace(getb())
         if not b then
           if (#stack > 0) then
             badend()
