@@ -187,14 +187,23 @@ your `init.vim`.
 >
   lua require('aniseed.env').init()
 >
-This will compile all changed Fennel under `~/.config/nvim/fnl` to
+This will compile all modified Fennel under `~/.config/nvim/fnl` to
 `~/.config/nvim/lua` when you open Neovim and then load the `init` module by
 default. The module that gets loaded can be configured by passing an `opts`
 table like so.
 >
   lua require('aniseed.env').init({ module = 'foo.my-module' })
 
-If we're using the default `init` module name we can add the following code to
+You can also configure it to load `~/.config/nvim/init.fnl` and base all
+requires off of that root directory rather than prefixing everything under the
+`fnl` directory by configuring the following:
+>
+  lua require('aniseed.env').init({ input = '' })
+
+Where the default `input` is `"/fnl"` and `output` is `"/lua"` relative to your
+Neovim configuration directory.
+
+If we're using the default options we can add the following code to
 `~/.config/nvim/fnl/init.fnl` to produce a "Hello, World!".
 >
   (module init
