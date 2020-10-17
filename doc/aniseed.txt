@@ -189,8 +189,10 @@ your `init.vim`.
 >
 This will compile all changed Fennel under `~/.config/nvim/fnl` to
 `~/.config/nvim/lua` when you open Neovim and then load the `init` module by
-default. The module that gets loaded can be configured by passing a string
-to `aniseed.env`'s `init` function.
+default. The module that gets loaded can be configured by passing an `opts`
+table like so.
+>
+  lua require('aniseed.env').init({ module = 'foo.my-module' })
 
 If we're using the default `init` module name we can add the following code to
 `~/.config/nvim/fnl/init.fnl` to produce a "Hello, World!".
@@ -217,9 +219,9 @@ the old require:
 >
   lua require('aniseed.dotfiles')
 
-To the new module with the `module-name` argument provided:
+To the new module with the `opts.module` configuration provided:
 >
-  lua require('aniseed.env').init('aniseed.init')
+  lua require('aniseed.env').init({ module = 'aniseed.init' })
 
 The new default module that gets required is simply called `init`, so you
 could move your `aniseed/init.fnl` to `init.fnl` if you so wish and then just
@@ -499,10 +501,13 @@ Warning: Deprecated! Use `aniseed.env` instead! See |aniseed-dotfiles|.
 ------------------------------------------------------------------------------
 `aniseed.env`
 
-  `(init module-name)`
+  `(init opts)`
     Compile and load Fennel stored under your Neovim configuration directory.
-    See |aniseed-env| for more information. The `module-name` is optional and
-    defaults to `"init"`.
+    See |aniseed-env| for more information. `opts` is an optional table that
+    can contain the following:
+      `module` - name of the module to load on init, defaults to `"init"`.
+      `input` - dir under config for input, defaults to `"/fnl"`.
+      `output` - dir under config for compiled output, defaults to `"/lua"`.
 
 ------------------------------------------------------------------------------
 `aniseed.eval`
