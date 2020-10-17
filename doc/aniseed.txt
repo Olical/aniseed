@@ -306,6 +306,12 @@ right context.
   bit like `defn` but you also get access to the `t` assertion table, as
   described in the testing section.
 
+`(time ...)`
+  Time the execution of the code wrapped by this form and print the result in
+  milliseconds. Great for getting a feel for how long things take while you're
+  developing your code. Not intended to be used for programmatic measuring of
+  time, just as a quick and easy to use tool during development.
+
 ==============================================================================
 FUNCTIONS                                                  *aniseed-functions*
 
