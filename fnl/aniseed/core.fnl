@@ -213,15 +213,18 @@
         (f:close)
         nil)))
 
-(defn merge [...]
+(defn merge! [base ...]
   (reduce
     (fn [acc m]
       (when m
         (each [k v (pairs m)]
           (tset acc k v)))
       acc)
-    {}
+    (or base {})
     [...]))
+
+(defn merge [...]
+  (merge! {} ...))
 
 (defn select-keys [t ks]
   (if (and t ks)

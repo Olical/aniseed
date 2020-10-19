@@ -143,6 +143,11 @@
   (t.pr= {:a 1} (a.merge nil {:a 1}) "into nil")
   (t.pr= {:a 1 :c 3} (a.merge {:a 1} nil {:c 3}) "nil in the middle"))
 
+(deftest merge!
+  (let [result {:c 3}]
+    (t.pr= {:a 1 :b 2 :c 3} (a.merge! result {:a 1} {:b 2}) "simple maps")
+    (t.pr= {:a 1 :b 2 :c 3} result "the bang version side effects")))
+
 (deftest select-keys
   (t.pr= {} (a.select-keys nil [:a :b]) "no table")
   (t.pr= {} (a.select-keys {} [:a :b]) "empty table")

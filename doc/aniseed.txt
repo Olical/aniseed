@@ -446,7 +446,12 @@ example.
 
   `(merge ...)`
     Merge the tables together, `nil` will be skipped safely so you can use
-    `(when ...)` to conditionally include tables.
+    `(when ...)` to conditionally include tables. Merges into a fresh table so
+    no existing tables will be mutated.
+
+  `(merge! ...)`
+    The same as `merge` above but will mutate the first argument, so all
+    tables are merged into the first one.
 
   `(select-keys t ks)`
     Extract the keys listed in `ks` from `t` and return it as a new table.
