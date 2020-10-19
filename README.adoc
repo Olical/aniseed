@@ -22,7 +22,7 @@ You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-l
 
 == Setting up a plugin project
 
-`scripts/seed.sh` is provided to make it a little easier to get a plugin up and running. In anew directory (because it will overwrite your `.gitignore` and `Makefile` etc) run the following command.
+`scripts/seed.sh` is provided to make it a little easier to get a plugin up and running. In a new directory (because it will overwrite your `.gitignore` and `Makefile` etc) run the following command.
 
 It will name the plugin after the directory you're currently running it from. Make sure the directory name doesn't include any spaces or special characters because it will be inserted at some points in the seed code for you.
 
