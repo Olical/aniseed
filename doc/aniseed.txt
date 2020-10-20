@@ -233,7 +233,7 @@ To the new module with the `opts.module` configuration provided:
   lua require('aniseed.env').init({ module = 'dotfiles.init' })
 
 The new default module that gets required is simply called `init`, so you
-could move your `aniseed/init.fnl` to `init.fnl` if you so wish and then just
+could move your `dotfiles/init.fnl` to `init.fnl` if you so wish and then just
 not provide any arguments to the `.init()` function.
 
 ==============================================================================
