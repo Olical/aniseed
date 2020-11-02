@@ -23,4 +23,7 @@ compile:
 	sed -i "s/\"fennel\./\"aniseed.fennel./gI" lua/aniseed/deps/fennel.lua
 
 test:
+	@echo "Static modules..."
 	SUFFIX="test/fnl/foo.fnl" scripts/test.sh
+	@echo "Dynamic modules..."
+	SUFFIX="test/fnl/foo.fnl" ANISEED_DYNAMIC=true scripts/test.sh

@@ -13,5 +13,6 @@
     (fn []
       (-> code
           (compile.macros-prefix)
-          (fennel.eval (a.merge {:compiler-env _G} opts))))
+          (fennel.eval
+            (a.merge {:compiler-env (a.merge _G {:ANISEED_DYNAMIC true})} opts))))
     fennel.traceback))
