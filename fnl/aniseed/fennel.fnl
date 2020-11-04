@@ -3,10 +3,5 @@
             fennel aniseed.deps.fennel}}
   (require :aniseed.deps.fennel))
 
-(nvim.ex.let "&runtimepath = &runtimepath")
-
-(tset fennel :path
-      (-> package.path
-          (string.gsub "/lua/" "/fnl/")
-          (string.gsub ".lua;" ".fnl;")
-          (string.gsub ".lua$" ".fnl")))
+(let [suffix "/fnl/?.fnl"]
+  (tset fennel :path (.. (nvim.o.runtimepath:gsub "," (.. suffix ";")) suffix)))
