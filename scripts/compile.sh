@@ -4,6 +4,6 @@
 # Usage: deps/aniseed/scripts/compile.sh
 
 nvim -u NONE \
-    -c "set rtp+=deps/aniseed" \
+    -c "let &runtimepath = &runtimepath . ',deps/aniseed,' . getcwd()" \
     -c "lua require('aniseed.compile').glob('**/*.fnl', 'fnl', 'lua')" \
     +q
