@@ -16,6 +16,7 @@ compile:
 		deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	mkdir -p lua/aniseed/deps
+	cp fnl/aniseed/macros.fnl lua/aniseed
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
 	cp deps/Fennel/fennelview.lua lua/aniseed/deps/fennelview.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
