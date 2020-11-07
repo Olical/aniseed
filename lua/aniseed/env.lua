@@ -47,7 +47,9 @@ do
   do
     local v_0_0 = nil
     local function init0(opts)
-      compile.glob("**/*.fnl", (config_dir .. a.get(opts, "input", "/fnl")), (config_dir .. a.get(opts, "output", "/lua")))
+      if (a.get(opts, "compile", true) or os.getenv("ANISEED_ENV_COMPILE")) then
+        compile.glob("**/*.fnl", (config_dir .. a.get(opts, "input", "/fnl")), (config_dir .. a.get(opts, "output", "/lua")))
+      end
       return require(a.get(opts, "module", "init"))
     end
     v_0_0 = init0
