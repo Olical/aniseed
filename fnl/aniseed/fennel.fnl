@@ -3,5 +3,8 @@
             fennel aniseed.deps.fennel}}
   (require :aniseed.deps.fennel))
 
-(let [suffix "/fnl/?.fnl"]
-  (tset fennel :path (.. (nvim.o.runtimepath:gsub "," (.. suffix ";")) suffix)))
+(let [fnl-suffix "/fnl/?.fnl"
+      rtp nvim.o.runtimepath
+      fnl-path (.. (rtp:gsub "," (.. fnl-suffix ";")) fnl-suffix)
+      lua-path (fnl-path:gsub "/fnl/" "/lua/")]
+  (tset fennel :path (.. fnl-path ";" lua-path)))
