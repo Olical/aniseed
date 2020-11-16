@@ -1,17 +1,21 @@
-(module aniseed.env
-  {require {a aniseed.core
-            nvim aniseed.nvim
-            compile aniseed.compile}})
+(module aniseed.env)
 
-(def- config-dir (nvim.fn.stdpath :config))
-(compile.add-path (.. config-dir "/?.fnl"))
+(def- config-dir (vim.api.nvim_call_function :stdpath [:config]))
+(defonce- state {:path-added? false})
 
 (defn init [opts]
-  ;; TODO Document if it works well.
-  (when (or (a.get opts :compile true)
-            (os.getenv "ANISEED_ENV_COMPILE"))
-    (compile.glob
-      "**/*.fnl"
-      (.. config-dir (a.get opts :input "/fnl"))
-      (.. config-dir (a.get opts :output "/lua"))))
-  (require (a.get opts :module :init)))
+  (let [opts (or opts {})]
+    ;; TODO Document this option if it works well.
+    (when (or (not= false opts.compile)
+              (os.getenv "ANISEED_ENV_COMPILE"))
+      (let [compile (require :aniseed.compile)]
+
+        (when (not state.path-added?)
+          (compile.add-path (.. config-dir "/?.fnl"))
+          (set state.path-added? true))
+
+        (compile.glob
+          "**/*.fnl"
+          (.. config-dir (or opts.input "/fnl"))
+          (.. config-dir (or opts.output "/lua")))))
+    (require (or opts.module :init))))
