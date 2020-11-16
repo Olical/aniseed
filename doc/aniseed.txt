@@ -219,6 +219,18 @@ Be sure to `.gitignore` the `~/.config/nvim/lua` directory if you store your
 configuration in git since this will end up being compiled output that's
 recompiled whenever you make changes to your Fennel source.
 
+
+If startup time is extremely valuable to you and you're finding the
+compilation on Neovim start to be noticeable you can turn it off by default.
+>
+  lua require('aniseed.env').init({ compile = false })
+
+You can then opt into Fennel compilation by removing the option, setting it to
+true or setting the `ANISEED_ENV_COMPILE` environment variable to `true`. This
+means you could turn off your `aniseed.env` Fennel compilation for general use
+and then turn it back on when working on your configuration or synchronising
+your dotfiles.
+
 ==============================================================================
 DOTFILES                                                    *aniseed-dotfiles*
 

@@ -5,7 +5,6 @@
 
 (defn init [opts]
   (let [opts (or opts {})]
-    ;; TODO Document this option if it works well.
     (when (or (not= false opts.compile)
               (os.getenv "ANISEED_ENV_COMPILE"))
       (let [compile (require :aniseed.compile)]
