@@ -16,5 +16,7 @@ nvim --headless -u NONE \
     $SUFFIX
 
 EXIT_CODE=$?
+rm test/results.txt
+rm -rf test/lua 
 echo
 exit $EXIT_CODE
