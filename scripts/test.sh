@@ -6,7 +6,7 @@
 # Environment (optional): PREFIX (first-ish arg to nvim), SUFFIX (last arg to nvim)
 # Usage: PREFIX="-c 'syntax on'" SUFFIX="foo.clj" deps/aniseed/scripts/test.sh
 
-nvim -u NONE \
+nvim --headless -u NONE \
     $PREFIX \
     -c "let &runtimepath = &runtimepath . ',' . getcwd()" \
     -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/test'" \
@@ -16,6 +16,5 @@ nvim -u NONE \
     $SUFFIX
 
 EXIT_CODE=$?
-cat test/results.txt
 echo
 exit $EXIT_CODE
