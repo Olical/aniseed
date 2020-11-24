@@ -1,6 +1,6 @@
-.SILENT: test complile
 .PHONY: deps compile test
-default: compile test
+
+default: deps compile test
 
 deps:
 	scripts/dep.sh Olical aniseed origin/master

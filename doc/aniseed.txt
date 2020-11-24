@@ -121,9 +121,9 @@ directory since it's used to fetch Aniseed itself.
 
 `scripts/test.sh`
   Executes all of your tests found in `test/fnl` using the Aniseed cloned by
-  `dep.sh`. Will leave behind files in `test/lua` and `test/results.txt` that
-  you'll want to git ignore. All test modules must end with `-test` (so the
-  file names need to end with `-test.fnl`).
+  `dep.sh`. Will leave behind files in `test/lua` that you'll want to git
+  ignore. All test modules must end with `-test` (so the file names need to
+  end with `-test.fnl`).
   Environment:
    * `PREFIX` - Inserted before the arguments to Nevoim.
    * `SUFFIX` - Inserted after the arguments to Neovim.
@@ -660,9 +660,8 @@ startup Neovim, execute the tests, capture the results and finally display
 them in stdout. It exits with an appropriate status code for use with CI
 systems (you'll need to ensure `nvim` is available inside your CI).
 
-You'll want to git ignore `/test/lua/` and `/test/results.txt`. Provide a
-`SUFFIX` or `PREFIX` environment var to prepend or append code to the `nvim`
-command.
+You'll want to git ignore `/test/lua/`. Provide a `SUFFIX` or `PREFIX`
+environment var to prepend or append code to the `nvim` command.
 >
   deps/aniseed/scripts/test.sh
 >

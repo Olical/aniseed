@@ -85,8 +85,6 @@
       (display-results "[total]")))
 
 (defn suite []
-  (nvim.ex.redir_ "> test/results.txt")
-
   (->> (nvim.fn.globpath "test/fnl" "**/*-test.fnl" false true)
        (a.run!
          (fn [path]
@@ -95,9 +93,6 @@
                (string.gsub "/" ".")
                (require)))))
 
-  (let [results (run-all)]
-    (nvim.ex.redir :END)
-
-    (if (ok? results)
-      (nvim.ex.q)
-      (nvim.ex.cq))))
+  (if (ok? (run-all))
+    (nvim.ex.q)
+    (nvim.ex.cq)))

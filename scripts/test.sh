@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Executes all of your tests found in test/fnl using the Aniseed cloned by dep.sh.
-# Will leave behind files in test/lua and test/results.txt that you'll want to gitignore.
+# Will leave behind files in test/lua that you'll want to gitignore.
 # All test modules must end with -test (so the file names need to end with -test.fnl).
 # Environment (optional): PREFIX (first-ish arg to nvim), SUFFIX (last arg to nvim)
 # Usage: PREFIX="-c 'syntax on'" SUFFIX="foo.clj" deps/aniseed/scripts/test.sh
@@ -16,7 +16,5 @@ nvim --headless -u NONE \
     $SUFFIX
 
 EXIT_CODE=$?
-rm test/results.txt
-rm -rf test/lua 
 echo
 exit $EXIT_CODE
