@@ -16,5 +16,6 @@
         (compile.glob
           "**/*.fnl"
           (.. config-dir (or opts.input "/fnl"))
-          (.. config-dir (or opts.output "/lua")))))
+          (.. config-dir (or opts.output "/lua"))
+          opts)))
     (require (or opts.module :init))))
