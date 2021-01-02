@@ -1,4 +1,4 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Sets up a new Aniseed plugin project within the current directory.
 # Warning: Only run in new empty directories, it will replace your
