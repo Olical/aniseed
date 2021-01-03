@@ -1,10 +1,17 @@
-#!/usr/bin/env sh
+#!/usr/bin/env bash
 
 # Sets up a new Aniseed plugin project within the current directory.
 # Warning: Only run in new empty directories, it will replace your
 # `.gitignore`, `Makefile` and other such files!
 # Warning: Requires `make` as part of the workflow.
 # Usage: curl -fL https://raw.githubusercontent.com/Olical/aniseed/master/scripts/seed.sh | sh
+
+plug_name=${PWD##*/}
+if [[ $plug_name == *"."* ]]
+then
+    printf "ERROR: Invalid plugin name '$plug_name'. Dots (.) are not allowed.\n"
+    exit 1
+fi
 
 mkdir -p scripts
 
@@ -18,7 +25,6 @@ scripts/dep.sh Olical aniseed origin/master 2>/dev/null;
 printf "Creating your new plugin...\n\n"
 cp -r deps/aniseed/seed/* .
 cp deps/aniseed/seed/.gitignore .
-plug_name=${PWD##*/}
 mv ./fnl/example ./fnl/$plug_name
 mv ./test/fnl/example ./test/fnl/$plug_name
 mv ./plugin/example.vim ./plugin/$plug_name.vim
