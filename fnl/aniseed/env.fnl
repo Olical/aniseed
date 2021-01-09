@@ -7,10 +7,11 @@
   (let [opts (or opts {})]
     (when (or (not= false opts.compile)
               (os.getenv "ANISEED_ENV_COMPILE"))
-      (let [compile (require :aniseed.compile)]
+      (let [compile (require :aniseed.compile)
+            fennel (require :aniseed.fennel)]
 
         (when (not state.path-added?)
-          (compile.add-path (.. config-dir "/?.fnl"))
+          (fennel.add-path (.. config-dir "/?.fnl"))
           (set state.path-added? true))
 
         (compile.glob

@@ -4,10 +4,6 @@
             nvim aniseed.nvim
             fennel aniseed.fennel}})
 
-(defn add-path [path]
-  (set fennel.path
-       (.. fennel.path ";" path)))
-
 (defn macros-prefix [code]
   (let [macros-module :aniseed.macros]
     (.. "(require-macros \"" macros-module "\")\n" code)))

@@ -9,3 +9,7 @@
   (set fennel.path
        (.. (string.gsub fnl-suffixes "/lua/" "/fnl/")
            ";" fnl-suffixes)))
+
+(defn add-path [path]
+  (set fennel.path
+       (.. fennel.path ";" path)))
