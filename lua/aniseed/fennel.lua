@@ -33,10 +33,6 @@ local nvim = _local_0_[2]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.fennel"
 do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
-do
-  local fnl_suffixes = string.gsub(string.gsub(package.path, "%.lua;", ".fnl;"), "%.lua$", ".fnl")
-  fennel.path = (string.gsub(fnl_suffixes, "/lua/", "/fnl/") .. ";" .. fnl_suffixes)
-end
 local add_path = nil
 do
   local v_0_ = nil
@@ -53,4 +49,24 @@ do
   _0_0["aniseed/locals"]["add-path"] = v_0_
   add_path = v_0_
 end
-return nil
+local sync_rtp = nil
+do
+  local v_0_ = nil
+  do
+    local v_0_0 = nil
+    local function sync_rtp0()
+      local fnl_suffix = "/fnl/?.fnl"
+      local rtp = nvim.o.runtimepath
+      local fnl_path = (rtp:gsub(",", (fnl_suffix .. ";")) .. fnl_suffix)
+      local lua_path = fnl_path:gsub("/fnl/", "/lua/")
+      fennel["path"] = (fnl_path .. ";" .. lua_path)
+      return nil
+    end
+    v_0_0 = sync_rtp0
+    _0_0["sync-rtp"] = v_0_0
+    v_0_ = v_0_0
+  end
+  _0_0["aniseed/locals"]["sync-rtp"] = v_0_
+  sync_rtp = v_0_
+end
+return sync_rtp()
