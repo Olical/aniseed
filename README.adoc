@@ -20,6 +20,17 @@ For interactive evaluation you need to install https://github.com/Olical/conjure
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
 
+== Loading Fennel Neovim configuration
+
+Aniseed has a module called `aniseed.env` which will automatically compile and load Fennel code from your Neovim configuration directory as if it were natively supported by the editor, like Lua and VimL.
+
+See https://github.com/Olical/dotfiles/tree/a950167446c656a6ba10ddf7400072cd0107c24c/stowed/.config/nvim/fnl[Olical/dotfiles] for a detailed example configuration. To enable this same automatic loading of your Fennel configuration you need to install Aniseed and add the following option. This is documented further within `:help aniseed`.
+
+[source,viml]
+----
+let g:aniseed#env = v:true
+----
+
 == Setting up a plugin project
 
 `scripts/seed.sh` is provided to make it a little easier to get a plugin up and running. In a new directory (because it will overwrite your `.gitignore` and `Makefile` etc) run the following command.

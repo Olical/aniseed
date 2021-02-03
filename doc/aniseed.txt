@@ -185,6 +185,11 @@ If you want to replace your Neovim configuration in your dotfiles with Fennel
 instead of Vim Script or Lua, you can do so with the `aniseed.env` module in
 your `init.vim`.
 >
+  let g:aniseed#env = v:true
+
+  " Results in this call when Aniseed loads.
+  " If the option above doesn't work for your use case you can use this legacy
+  " method as a replacement.
   lua require('aniseed.env').init()
 >
 This will compile all modified Fennel under `~/.config/nvim/fnl` to
@@ -192,13 +197,16 @@ This will compile all modified Fennel under `~/.config/nvim/fnl` to
 default. The module that gets loaded can be configured by passing an `opts`
 table like so.
 >
+  let g:aniseed#env = { "module": "foo.my-module" }
+
+  " Again, this results in this underlying call, passing the options through.
   lua require('aniseed.env').init({ module = 'foo.my-module' })
 
 You can also configure it to load `~/.config/nvim/init.fnl` and base all
 requires off of that root directory rather than prefixing everything under the
 `fnl` directory by configuring the following:
 >
-  lua require('aniseed.env').init({ input = '' })
+  let g:aniseed#env = { "input": "" }
 
 Where the default `input` is `"/fnl"` and `output` is `"/lua"` relative to your
 Neovim configuration directory.
@@ -223,7 +231,7 @@ recompiled whenever you make changes to your Fennel source.
 If startup time is extremely valuable to you and you're finding the
 compilation on Neovim start to be noticeable you can turn it off by default.
 >
-  lua require('aniseed.env').init({ compile = false })
+  let g:aniseed#env = { "compile": v:false }
 
 You can then opt into Fennel compilation by removing the option, setting it to
 true or setting the `ANISEED_ENV_COMPILE` environment variable to `true`. This
@@ -534,6 +542,9 @@ Warning: Deprecated! Use `aniseed.env` instead! See |aniseed-dotfiles|.
       `module` - name of the module to load on init, defaults to `"init"`.
       `input` - dir under config for input, defaults to `"/fnl"`.
       `output` - dir under config for compiled output, defaults to `"/lua"`.
+    You should set the `g:aniseed#env` variable to `v:true` or your desired
+    configuration table rather than calling this directly for optimal
+    behaviour.
 
 ------------------------------------------------------------------------------
 `aniseed.eval`
