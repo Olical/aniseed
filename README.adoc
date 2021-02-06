@@ -32,6 +32,17 @@ See https://github.com/Olical/dotfiles/tree/a950167446c656a6ba10ddf7400072cd0107
 let g:aniseed#env = v:true
 ----
 
+Now the following code in `~/.config/nvim/fnl/init.fnl` will be compiled and executed when you open Neovim.
+
+[source,clojure]
+----
+;; The name is up to you.
+(module nvim-config
+  {require {a aniseed.core}})
+
+(a.println "Hello, World!")
+----
+
 == Setting up a plugin project
 
 `scripts/seed.sh` is provided to make it a little easier to get a plugin up and running. In a new directory (because it will overwrite your `.gitignore` and `Makefile` etc) run the following command.
