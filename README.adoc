@@ -1,4 +1,5 @@
-= Aniseed https://gitter.im/Olical/aniseed?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge[image:https://badges.gitter.im/Olical/aniseed.svg[Gitter]]
+= Aniseed +
+https://conjure.fun/discord[image:https://img.shields.io/discord/732957595249410108.svg?label=&logo=discord&logoColor=ffffff&color=7389D8&labelColor=6A7EC2[Discord]]
 
 Aniseed bridges the gap between https://fennel-lang.org/[Fennel] (a Lisp that compiles to Lua) and https://neovim.io/[Neovim]. Allowing you to easily write plugins or configuration in a https://clojure.org/[Clojure]-like Lisp with great runtime performance.
 
