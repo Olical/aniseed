@@ -4,7 +4,9 @@
 (defonce- state {:path-added? false})
 
 (defn init [opts]
-  (let [opts (or opts {})]
+  (let [opts (if (= :table (type opts))
+               opts
+               {})]
     (when (or (not= false opts.compile)
               (os.getenv "ANISEED_ENV_COMPILE"))
       (let [compile (require :aniseed.compile)
