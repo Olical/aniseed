@@ -1,7 +1,14 @@
-(module aniseed.env)
+(module aniseed.env
+  {require {nvim aniseed.nvim}})
 
 (def- config-dir (vim.api.nvim_call_function :stdpath [:config]))
 (defonce- state {:path-added? false})
+
+(defn- quiet-require [m]
+  (let [(ok? err) (pcall #(require m))]
+    (when (and (not ok?)
+               (not (err:find (.. "module '" m "' not found"))))
+      (nvim.ex.echoerr err))))
 
 (defn init [opts]
   (let [opts (if (= :table (type opts))
@@ -21,4 +28,4 @@
           (.. config-dir (or opts.input "/fnl"))
           (.. config-dir (or opts.output "/lua"))
           opts)))
-    (require (or opts.module :init))))
+    (quiet-require (or opts.module :init))))
