@@ -8,7 +8,7 @@ local _local_0_ = {require("aniseed.nvim")}
 local nvim = _local_0_[1]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.env"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
+do local _ = ({nil, _0_0, {{nil}, nil, nil, nil}})[2] end
 local config_dir = nvim.fn.stdpath("config")
 local state = {["path-added?"] = false}
 local function quiet_require(m)
@@ -25,6 +25,7 @@ local init
 do
   local v_0_
   local function init0(opts)
+    _G["ANISEED_LIGHT"] = true
     local opts0
     if ("table" == type(opts)) then
       opts0 = opts

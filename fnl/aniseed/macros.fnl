@@ -5,7 +5,7 @@
 
 ;; When ANISEED_LIGHT is set we use minimal module code.
 ;; This can't be interacted with directly but it's smaller and faster to load.
-(local light? (not= nil (os.getenv "ANISEED_LIGHT")))
+(local light? (or (not= nil (os.getenv "ANISEED_LIGHT")) (. _G "ANISEED_LIGHT")))
 
 (local module-sym (gensym))
 

@@ -1,5 +1,6 @@
 (module aniseed.env
-  {require {nvim aniseed.nvim}})
+  {require {nvim aniseed.nvim}
+   require-macros [aniseed.macros]})
 
 (def- config-dir (nvim.fn.stdpath :config))
 (defonce- state {:path-added? false})
@@ -11,6 +12,8 @@
       (nvim.ex.echoerr err))))
 
 (defn init [opts]
+  (tset _G :ANISEED_LIGHT true)
+
   (let [opts (if (= :table (type opts))
                opts
                {})]
