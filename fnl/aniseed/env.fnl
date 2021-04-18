@@ -1,7 +1,7 @@
 (module aniseed.env
   {require {nvim aniseed.nvim}})
 
-(def- config-dir (vim.api.nvim_call_function :stdpath [:config]))
+(def- config-dir (nvim.fn.stdpath :config))
 (defonce- state {:path-added? false})
 
 (defn- quiet-require [m]

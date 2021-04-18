@@ -36,7 +36,7 @@ local _2amodule_name_2a = "aniseed.env"
 do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
 local config_dir
 do
-  local v_0_ = vim.api.nvim_call_function("stdpath", {"config"})
+  local v_0_ = nvim.fn.stdpath("config")
   local t_0_ = (_0_0)["aniseed/locals"]
   t_0_["config-dir"] = v_0_
   config_dir = v_0_
