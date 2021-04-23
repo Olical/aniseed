@@ -175,6 +175,18 @@
       "nil"
       s)))
 
+(defn str [...]
+  (->> [...]
+       (map
+         (fn [s]
+           (if (string? s)
+             s
+             (pr-str s))))
+       (reduce
+         (fn [acc s]
+           (.. acc s))
+         "")))
+
 (defn println [...]
   (->> [...]
        (map
