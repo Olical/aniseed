@@ -457,6 +457,10 @@ example.
   `(pr-str ...)`
     Convert the input arguments to a string.
 
+  `(str ...)`
+    Concatenate the values into one string. Converting non-string values into
+    strings where required.
+
   `(println ...)`
     Convert the input arguments to a string (if required) and print them.
 
