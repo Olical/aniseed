@@ -92,6 +92,15 @@
   (t.pr= "1 2 3" (a.pr-str 1 2 3))
   (t.pr= "nil" (a.pr-str nil)))
 
+(deftest str
+  (t.pr= "" (a.str))
+  (t.pr= "" (a.str ""))
+  (t.pr= "" (a.str nil))
+  (t.pr= "abc" (a.str "abc"))
+  (t.pr= "abc" (a.str "a" "b" "c"))
+  (t.pr= "{:a \"abc\"}" (a.str {:a :abc}))
+  (t.pr= "[1 2 3]abc" (a.str [1 2 3] "a" "bc")))
+
 (deftest map
   (t.pr= [2 3 4] (a.map a.inc [1 2 3])))
 
