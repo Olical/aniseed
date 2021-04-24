@@ -13,7 +13,7 @@ compile:
 	rm -rf lua
 	for f in $(SRC_FILES); do \
 		mkdir -p lua/$$(dirname $$f); \
-		ANISEED_LIGHT=1 deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
+		deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	mkdir -p lua/aniseed/deps
 	cp fnl/aniseed/macros.fnl lua/aniseed
