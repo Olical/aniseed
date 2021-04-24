@@ -1,5 +1,5 @@
 (module aniseed.fs
-  {require {nvim aniseed.nvim}})
+  {autoload {nvim aniseed.nvim}})
 
 (defn basename [path]
   (nvim.fn.fnamemodify path ":h"))

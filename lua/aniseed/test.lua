@@ -16,14 +16,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {require("aniseed.core"), require("aniseed.nvim"), require("aniseed.string")}
+    return {autoload("aniseed.core"), autoload("aniseed.nvim"), autoload("aniseed.string")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {require = {a = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
+    _0_0["aniseed/local-fns"] = {autoload = {a = "aniseed.core", nvim = "aniseed.nvim", str = "aniseed.string"}}
     return val_0_
   else
     return print(val_0_)
@@ -35,7 +36,7 @@ local nvim = _local_0_[2]
 local str = _local_0_[3]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.test"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
+do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
 local ok_3f
 do
   local v_0_

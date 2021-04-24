@@ -16,6 +16,7 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
@@ -32,4 +33,4 @@ end
 local _local_0_ = _1_(...)
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.nvim"
-return ({nil, _0_0, {{}, nil, nil, nil}})[2]
+return ({nil, _0_0, nil, {{}, nil, nil, nil}})[2]

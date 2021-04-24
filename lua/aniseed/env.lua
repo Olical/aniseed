@@ -16,14 +16,15 @@ do
   package.loaded[name_0_] = module_0_
   _0_0 = module_0_
 end
+local autoload = (require("aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {require("aniseed.nvim")}
+    return {autoload("aniseed.nvim")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {require = {nvim = "aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {autoload = {nvim = "aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
@@ -33,7 +34,7 @@ local _local_0_ = _1_(...)
 local nvim = _local_0_[1]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.env"
-do local _ = ({nil, _0_0, {{}, nil, nil, nil}})[2] end
+do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
 local config_dir
 do
   local v_0_ = nvim.fn.stdpath("config")

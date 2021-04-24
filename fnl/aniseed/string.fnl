@@ -1,5 +1,5 @@
 (module aniseed.string
-  {require {a aniseed.core}})
+  {autoload {a aniseed.core}})
 
 (defn join [...]
   "(join xs) (join sep xs)

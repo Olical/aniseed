@@ -1,5 +1,5 @@
 (module aniseed.core
-  {require {view aniseed.view}})
+  {autoload {view aniseed.view}})
 
 ;; Useful to have this set by someone.
 (math.randomseed (os.time))

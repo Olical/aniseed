@@ -1,7 +1,7 @@
 (module aniseed.dotfiles
-  {require {nvim aniseed.nvim
-            compile aniseed.compile
-            fennel aniseed.fennel}})
+  {autoload {nvim aniseed.nvim
+             compile aniseed.compile
+             fennel aniseed.fennel}})
 
 (nvim.out_write "Warning: aniseed.dotfiles is deprecated, see :help aniseed-dotfiles\n")
 

@@ -31,6 +31,8 @@
 
         ,module-sym
 
+        (local ,(sym :autoload) (. (require :aniseed.autoload) :autoload))
+
         ,(let [aliases []
                vals []
                effects []

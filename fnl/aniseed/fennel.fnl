@@ -1,6 +1,6 @@
 (module aniseed.fennel
-  {require {nvim aniseed.nvim
-            fennel aniseed.deps.fennel}}
+  {autoload {nvim aniseed.nvim
+             fennel aniseed.deps.fennel}}
   (require :aniseed.deps.fennel))
 
 (defn add-path [path]

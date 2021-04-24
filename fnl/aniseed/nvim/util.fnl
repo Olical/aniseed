@@ -1,5 +1,5 @@
 (module aniseed.nvim.util
-  {require {nvim aniseed.nvim}})
+  {autoload {nvim aniseed.nvim}})
 
 (defn normal [keys]
   "Execute some command as if you were in normal mode silently."

@@ -1,8 +1,8 @@
 (module aniseed.compile
-  {require {a aniseed.core
-            fs aniseed.fs
-            nvim aniseed.nvim
-            fennel aniseed.fennel}})
+  {autoload {a aniseed.core
+             fs aniseed.fs
+             nvim aniseed.nvim
+             fennel aniseed.fennel}})
 
 (defn macros-prefix [code]
   (let [macros-module :aniseed.macros]

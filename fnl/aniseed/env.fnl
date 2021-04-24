@@ -1,5 +1,5 @@
 (module aniseed.env
-  {require {nvim aniseed.nvim}})
+  {autoload {nvim aniseed.nvim}})
 
 (def- config-dir (nvim.fn.stdpath :config))
 (defonce- state {:path-added? false})

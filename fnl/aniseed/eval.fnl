@@ -1,9 +1,9 @@
 (module aniseed.eval
-  {require {a aniseed.core
-            fs aniseed.fs
-            nvim aniseed.nvim
-            fennel aniseed.fennel
-            compile aniseed.compile}})
+  {autoload {a aniseed.core
+             fs aniseed.fs
+             nvim aniseed.nvim
+             fennel aniseed.fennel
+             compile aniseed.compile}})
 
 (defn str [code opts]
   "Like aniseed.compile/str but uses fennel.eval. Returns the result of

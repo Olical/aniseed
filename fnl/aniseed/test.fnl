@@ -1,7 +1,7 @@
 (module aniseed.test
-  {require {a aniseed.core
-            str aniseed.string
-            nvim aniseed.nvim}})
+  {autoload {a aniseed.core
+             str aniseed.string
+             nvim aniseed.nvim}})
 
 (defn ok? [{: tests : tests-passed}]
   (= tests tests-passed))
