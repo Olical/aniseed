@@ -1,5 +1,5 @@
 (module aniseed.fs-test
-  {require {fs aniseed.fs}})
+  {autoload {fs aniseed.fs}})
 
 (deftest basename
   (t.= "foo" (fs.basename "foo/bar.fnl")))

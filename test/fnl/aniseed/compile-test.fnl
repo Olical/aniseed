@@ -1,6 +1,6 @@
 (module aniseed.compile-test
-  {require {a aniseed.core
-            compile aniseed.compile}})
+  {autoload {a aniseed.core
+             compile aniseed.compile}})
 
 (deftest str
   (let [(success result) (compile.str "(+ 10 20)")]

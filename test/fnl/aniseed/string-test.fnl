@@ -1,5 +1,5 @@
 (module aniseed.string-test
-  {require {str aniseed.string}})
+  {autoload {str aniseed.string}})
 
 (deftest join
   (t.= "foo, bar, baz" (str.join ", " ["foo" "bar" "baz"]))

@@ -1,5 +1,5 @@
 (module aniseed.core-test
-  {require {a aniseed.core}})
+  {autoload {a aniseed.core}})
 
 (deftest rand
   (t.ok? (not (= (a.rand) (a.rand))))

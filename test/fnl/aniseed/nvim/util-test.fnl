@@ -1,7 +1,7 @@
 (module aniseed.nvim.util-test
-  {require {nvim aniseed.nvim
-            nu aniseed.nvim.util
-            a aniseed.core}})
+  {autoload {nvim aniseed.nvim
+             nu aniseed.nvim.util
+             a aniseed.core}})
 
 (deftest with-out-str
   (t.= "" (nu.with-out-str (fn [] (+ 1 1))) "nothing")

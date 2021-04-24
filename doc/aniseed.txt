@@ -52,6 +52,12 @@ Clojure namespaces. Here's what a module looks like.
      require {a aniseed.core
               nvim aniseed.nvim}
 
+     ;; Autoload the module when you access a value from it.
+     ;; Just like Vim Script's autoload system!
+     ;; I recommend using this by default and only using require if you run
+     ;; into issues.
+     autoload {my-big-module foo.bar.my-big-module}
+
      ;; Inline modules at compile time.
      include {some-dep my-other.dependency}
 
@@ -151,7 +157,7 @@ the latest Aniseed version into your `deps` directory with.
 Let's start by adding the following Fennel code to `fnl/my-plugin/init.fnl`.
 >
   (module my-plugin.init
-    {require {a my-plugin.aniseed.core}})
+    {autoload {a my-plugin.aniseed.core}})
 
   (a.println "Hello, World!")
 >
@@ -215,7 +221,7 @@ If we're using the default options we can add the following code to
 `~/.config/nvim/fnl/init.fnl` to produce a "Hello, World!".
 >
   (module init
-    {require {a aniseed.core}})
+    {autoload {a aniseed.core}})
 
   (a.println "Hello, World!")
 >
@@ -290,7 +296,7 @@ right context.
   module.
   >
     (module foo.bar
-      {require {a aniseed.core}
+      {autoload {a aniseed.core}
        include {baz foo.baz}
        require-macros [fnl.foo.bar]}
       {:xyz "this will be the base table that gets exported"})
@@ -660,7 +666,7 @@ such as `fnl/foo/math.fnl`.
 We can then create our test module in `test/fnl/foo/math-test.fnl`.
 >
   (module foo.math-test
-    {require {math foo.math}})
+    {autoload {math foo.math}})
 
   ;; The `t` assertion table is included automatically via the deftest macro.
   (deftest add

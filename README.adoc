@@ -37,7 +37,7 @@ Now the following code in `~/.config/nvim/fnl/init.fnl` will be compiled and exe
 ----
 ;; The name is up to you.
 (module nvim-config
-  {require {a aniseed.core}})
+  {autoload {a aniseed.core}})
 
 (a.println "Hello, World!")
 ----
