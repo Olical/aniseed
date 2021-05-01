@@ -9,7 +9,7 @@
   "Like aniseed.compile/str but uses fennel.eval. Returns the result of
   evaluating the given Fennel code with the Aniseed macros automatically
   equired."
-  (local [fnl (fennel.impl)]
+  (let [fnl (fennel.impl)]
     (xpcall
       (fn []
         (-> code
