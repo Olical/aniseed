@@ -14,5 +14,5 @@
       (fn []
         (-> code
             (compile.macros-prefix)
-            (impl.eval (a.merge {:compiler-env _G} opts))))
-      impl.traceback)))
+            (fnl.eval (a.merge {:compiler-env _G} opts))))
+      fnl.traceback)))
