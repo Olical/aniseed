@@ -12,12 +12,17 @@
   "Compile some Fennel code as a string into Lua. Maps to fennel.compileString
   with some wrapping, returns an (ok? result) tuple. Automatically requires the
   Aniseed macros."
-  (xpcall
-    (fn []
-      (fennel.compileString
-        (macros-prefix code)
-        (a.merge {:compiler-env _G} opts)))
-    fennel.traceback))
+
+  (when (and opts opts.on-pre-compile)
+    (opts.on-compile))
+
+  (let [fnl (fennel.impl)]
+    (xpcall
+      (fn []
+        (fnl.compileString
+          (macros-prefix code)
+          (a.merge {:compiler-env _G} opts)))
+      fnl.traceback)))
 
 (defn file [src dest opts]
   "Compile the source file into the destination file if the source file was

@@ -9,9 +9,10 @@
   "Like aniseed.compile/str but uses fennel.eval. Returns the result of
   evaluating the given Fennel code with the Aniseed macros automatically
   equired."
-  (xpcall
-    (fn []
-      (-> code
-          (compile.macros-prefix)
-          (fennel.eval (a.merge {:compiler-env _G} opts))))
-    fennel.traceback))
+  (local [fnl (fennel.impl)]
+    (xpcall
+      (fn []
+        (-> code
+            (compile.macros-prefix)
+            (impl.eval (a.merge {:compiler-env _G} opts))))
+      impl.traceback)))

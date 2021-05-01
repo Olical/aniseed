@@ -82,10 +82,14 @@ do
         opts0 = {}
       end
       if ((false ~= opts0.compile) or os.getenv("ANISEED_ENV_COMPILE")) then
-        if not state["path-added?"] then
-          fennel["add-path"]((config_dir .. "/?.fnl"))
-          state["path-added?"] = true
+        local function _3_()
+          if not state["path-added?"] then
+            fennel["add-path"]((config_dir .. "/?.fnl"))
+            state["path-added?"] = true
+            return nil
+          end
         end
+        opts0["on-pre-compile"] = _3_
         compile.glob("**/*.fnl", (config_dir .. (opts0.input or "/fnl")), (config_dir .. (opts0.output or "/lua")), opts0)
       end
       return quiet_require((opts0.module or "init"))

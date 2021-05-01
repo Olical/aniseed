@@ -18,9 +18,12 @@
                {})]
     (when (or (not= false opts.compile)
               (os.getenv "ANISEED_ENV_COMPILE"))
-      (when (not state.path-added?)
-        (fennel.add-path (.. config-dir "/?.fnl"))
-        (set state.path-added? true))
+
+      (tset opts :on-pre-compile
+            (fn []
+              (when (not state.path-added?)
+                (fennel.add-path (.. config-dir "/?.fnl"))
+                (set state.path-added? true))))
 
       (compile.glob
         "**/*.fnl"
