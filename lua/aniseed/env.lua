@@ -20,18 +20,20 @@ local autoload = (require("aniseed.autoload")).autoload
 local function _1_(...)
   local ok_3f_0_, val_0_ = nil, nil
   local function _1_()
-    return {autoload("aniseed.nvim")}
+    return {autoload("aniseed.compile"), autoload("aniseed.fennel"), autoload("aniseed.nvim")}
   end
   ok_3f_0_, val_0_ = pcall(_1_)
   if ok_3f_0_ then
-    _0_0["aniseed/local-fns"] = {autoload = {nvim = "aniseed.nvim"}}
+    _0_0["aniseed/local-fns"] = {autoload = {compile = "aniseed.compile", fennel = "aniseed.fennel", nvim = "aniseed.nvim"}}
     return val_0_
   else
     return print(val_0_)
   end
 end
 local _local_0_ = _1_(...)
-local nvim = _local_0_[1]
+local compile = _local_0_[1]
+local fennel = _local_0_[2]
+local nvim = _local_0_[3]
 local _2amodule_2a = _0_0
 local _2amodule_name_2a = "aniseed.env"
 do local _ = ({nil, _0_0, nil, {{}, nil, nil, nil}})[2] end
@@ -80,8 +82,6 @@ do
         opts0 = {}
       end
       if ((false ~= opts0.compile) or os.getenv("ANISEED_ENV_COMPILE")) then
-        local compile = require("aniseed.compile")
-        local fennel = require("aniseed.fennel")
         if not state["path-added?"] then
           fennel["add-path"]((config_dir .. "/?.fnl"))
           state["path-added?"] = true

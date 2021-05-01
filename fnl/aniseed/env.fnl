@@ -1,5 +1,7 @@
 (module aniseed.env
-  {autoload {nvim aniseed.nvim}})
+  {autoload {nvim aniseed.nvim
+             compile aniseed.compile
+             fennel aniseed.fennel}})
 
 (def- config-dir (nvim.fn.stdpath :config))
 (defonce- state {:path-added? false})
@@ -16,16 +18,13 @@
                {})]
     (when (or (not= false opts.compile)
               (os.getenv "ANISEED_ENV_COMPILE"))
-      (let [compile (require :aniseed.compile)
-            fennel (require :aniseed.fennel)]
+      (when (not state.path-added?)
+        (fennel.add-path (.. config-dir "/?.fnl"))
+        (set state.path-added? true))
 
-        (when (not state.path-added?)
-          (fennel.add-path (.. config-dir "/?.fnl"))
-          (set state.path-added? true))
-
-        (compile.glob
-          "**/*.fnl"
-          (.. config-dir (or opts.input "/fnl"))
-          (.. config-dir (or opts.output "/lua"))
-          opts)))
+      (compile.glob
+        "**/*.fnl"
+        (.. config-dir (or opts.input "/fnl"))
+        (.. config-dir (or opts.output "/lua"))
+        opts))
     (quiet-require (or opts.module :init))))
