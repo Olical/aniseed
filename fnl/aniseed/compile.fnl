@@ -14,7 +14,7 @@
   Aniseed macros."
 
   (when (and opts opts.on-pre-compile)
-    (opts.on-compile))
+    (opts.on-pre-compile))
 
   (let [fnl (fennel.impl)]
     (xpcall

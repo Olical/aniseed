@@ -62,7 +62,7 @@ do
     local v_0_0
     local function str0(code, opts)
       if (opts and opts["on-pre-compile"]) then
-        opts["on-compile"]()
+        opts["on-pre-compile"]()
       end
       local fnl = fennel.impl()
       local function _3_()
