@@ -12,7 +12,8 @@
   (xpcall
     (fn []
       (fennel.compileString
-        (.. "(require-macros :aniseed.macros)\n" content)
+        (.. "(local *file* \"" opts.filename "\")"
+            "(require-macros :aniseed.macros)\n" content)
         opts))
     fennel.traceback))
 
@@ -20,5 +21,5 @@
       (_ok? result) (-> filename
                         (read-file)
                         (compile {:filename filename
-                                  :compiler-env _G}))]
+                                  :compilerEnv false}))]
   (print result))

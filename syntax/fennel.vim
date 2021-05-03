@@ -100,6 +100,9 @@ syn keyword FennelSpecialForm defonce
 syn keyword FennelSpecialForm defonce-
 syn keyword FennelSpecialForm deftest
 syn keyword FennelSpecialForm time
+syn keyword FennelSpecialForm *module*
+syn keyword FennelSpecialForm *module-name*
+syn keyword FennelSpecialForm *file*
 
 " Lua keywords
 syntax keyword LuaSpecialValue

@@ -83,6 +83,7 @@ Clojure namespaces. Here's what a module looks like.
     (set nvim.g.hello "world!")
     *module* ;; => {...} the current Lua module table.
     *module-name* ;; => "my-module"
+    *file* ;; => "relative/path/to/source/file/my-module.fnl"
     )
 >
 Some good examples of what you can do with Aniseed in practice:
@@ -305,6 +306,9 @@ right context.
   module name as a string with `*module-name*`. This can be useful for
   introspection or modification of the module table without coupling your code
   to the name of the module.
+
+  If you need to perform some action relative to your source file, the
+  relative path to the source is stored in `*file*` at compile time.
 
 `(def name value)`
   Define a public value in the current module.
