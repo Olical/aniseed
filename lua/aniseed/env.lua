@@ -82,6 +82,9 @@ do
       else
         opts0 = {}
       end
+      local fnl_dir = (opts0.input or "/fnl")
+      local lua_dir = (opts0.output or "/lua")
+      package.path = (package.path .. ";" .. lua_dir .. "/?.lua")
       if ((false ~= opts0.compile) or os.getenv("ANISEED_ENV_COMPILE")) then
         local function _3_()
           if not state["path-added?"] then
@@ -91,7 +94,7 @@ do
           end
         end
         opts0["on-pre-compile"] = _3_
-        compile.glob("**/*.fnl", (config_dir .. (opts0.input or "/fnl")), (config_dir .. (opts0.output or "/lua")), opts0)
+        compile.glob("**/*.fnl", (config_dir .. fnl_dir), (config_dir .. lua_dir), opts0)
       end
       return quiet_require((opts0.module or "init"))
     end
