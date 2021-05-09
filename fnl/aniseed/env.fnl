@@ -1,10 +1,10 @@
 (module aniseed.env
   {autoload {nvim aniseed.nvim
+             fs aniseed.fs
              compile aniseed.compile
              fennel aniseed.fennel}})
 
 (def- config-dir (nvim.fn.stdpath :config))
-(defonce- state {:path-added? false})
 
 (defn- quiet-require [m]
   (let [(ok? err) (pcall #(require m))]
@@ -16,28 +16,32 @@
   (let [opts (if (= :table (type opts))
                opts
                {})
-        fnl-dir (or opts.input "/fnl")
-        lua-dir (or opts.output "/lua")]
+        glob-expr "**/*.fnl" 
+        fnl-dir (or opts.input (.. config-dir "/fnl"))
+        lua-dir (or opts.output (.. config-dir "/lua"))]
 
     ;; Support requiring Lua modules from non-standard output directories.
     (set package.path (.. package.path ";" lua-dir "/?.lua"))
 
-    (when (or (not= false opts.compile)
-              (os.getenv "ANISEED_ENV_COMPILE"))
+    (when
+      (and
+        ;; Need to have compiling enabled.
+        (or (not= false opts.compile)
+            (os.getenv "ANISEED_ENV_COMPILE"))
 
-      (tset opts :on-pre-compile
-            (fn []
-              (when (not state.path-added?)
-                ;; Allow finding Fennel source files and macros.
-                (fennel.add-path (.. config-dir "/?.fnl"))
+        ;; And a source Fennel file needs to be new than it's compiled
+        ;; Lua counterpart.
+        (fs.glob-dir-newer?
+          fnl-dir lua-dir glob-expr
+          (fn [path]
+            (if (fs.macro-file-path? path)
+              path
+              (string.gsub path ".fnl$" ".lua")))))
 
-                ;; We only want to do this once!
-                (set state.path-added? true))))
+      ;; Ensure the Fennel source files are findable.
+      (fennel.add-path (.. fnl-dir "/?.fnl"))
 
-      (compile.glob
-        "**/*.fnl"
-        (.. config-dir fnl-dir)
-        (.. config-dir lua-dir)
-        opts))
+      ;; Compile all source files.
+      (compile.glob glob-expr fnl-dir lua-dir opts))
 
     (quiet-require (or opts.module :init))))

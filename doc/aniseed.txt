@@ -531,15 +531,14 @@ example.
     `fennel.compileString` with some wrapping, returns an `(ok? result)`
     tuple. Automatically requires the Aniseed macros.
 
-  `(file src dest opts)`
+  `(file src dest)`
     Compile the source file into the destination file if the source file was
     modified more recently. Will create any required ancestor directories for
     the destination file to exist.
 
-  `(glob src-expr src-dir dest-dir opts)`
+  `(glob src-expr src-dir dest-dir)`
     Match all files against the `src-expr` under the `src-dir` then compile
-    them into the `dest-dir` as Lua. Any paths ending in `macros.fnl` will be
-    skipped unless you provide `{:include-macros-suffix? true}` in the `opts`.
+    them into the `dest-dir` as Lua.
 
 ------------------------------------------------------------------------------
 `aniseed.dotfiles`
