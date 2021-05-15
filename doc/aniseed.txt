@@ -13,7 +13,6 @@ CONTENTS                                                    *aniseed-contents*
     3. Scripts ....................................... |aniseed-scripts|
     4. Plugins ....................................... |aniseed-plugins|
     5. Env ............................................... |aniseed-env|
-    5. Dotfiles ..................................... |aniseed-dotfiles|
     6. Macros ......................................... |aniseed-macros|
     7. Functions ................................... |aniseed-functions|
     8. Testing ....................................... |aniseed-testing|
@@ -245,23 +244,6 @@ true or setting the `ANISEED_ENV_COMPILE` environment variable to `true`. This
 means you could turn off your `aniseed.env` Fennel compilation for general use
 and then turn it back on when working on your configuration or synchronising
 your dotfiles.
-
-==============================================================================
-DOTFILES                                                    *aniseed-dotfiles*
-
-This module is deprecated in favour of the almost identical |aniseed-env|. To
-migrate while keeping your configuration exactly as it is, you should change
-the old require:
->
-  lua require('aniseed.dotfiles')
-
-To the new module with the `opts.module` configuration provided:
->
-  lua require('aniseed.env').init({ module = 'dotfiles.init' })
-
-The new default module that gets required is simply called `init`, so you
-could move your `dotfiles/init.fnl` to `init.fnl` if you so wish and then just
-not provide any arguments to the `.init()` function.
 
 ==============================================================================
 MACROS                                                        *aniseed-macros*
@@ -539,11 +521,6 @@ example.
   `(glob src-expr src-dir dest-dir)`
     Match all files against the `src-expr` under the `src-dir` then compile
     them into the `dest-dir` as Lua.
-
-------------------------------------------------------------------------------
-`aniseed.dotfiles`
-
-Warning: Deprecated! Use `aniseed.env` instead! See |aniseed-dotfiles|.
 
 ------------------------------------------------------------------------------
 `aniseed.env`
