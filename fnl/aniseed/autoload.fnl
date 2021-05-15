@@ -10,13 +10,23 @@
   startup dramatically. Only works with table modules, if the module you're
   requiring is a function etc you need to use the normal require."
 
-  (setmetatable
-    {:aniseed/autoload? true}
+  (let [res {:aniseed.autoload/enabled? true
+             :aniseed.autoload/module false}]
 
-    {:__index
-     (fn [t k]
-       (. (require name) k))
+    (fn ensure []
+      (if (. res :aniseed.autoload/module)
+        (. res :aniseed.autoload/module)
+        (let [m (require name)]
+          (tset res :aniseed.autoload/module m)
+          m)))
 
-     :__newindex
-     (fn [t k v]
-       (tset (require name) k v))}))
+    (setmetatable
+      res
+
+      {:__index
+       (fn [t k]
+         (. (ensure) k))
+
+       :__newindex
+       (fn [t k v]
+         (tset (ensure) k v))})))

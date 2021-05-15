@@ -41,14 +41,24 @@ do
   do
     local v_0_0
     local function autoload1(name)
+      local res = {["aniseed.autoload/enabled?"] = true, ["aniseed.autoload/module"] = false}
+      local function ensure()
+        if res["aniseed.autoload/module"] then
+          return res["aniseed.autoload/module"]
+        else
+          local m = require(name)
+          res["aniseed.autoload/module"] = m
+          return m
+        end
+      end
       local function _2_(t, k)
-        return require(name)[k]
+        return ensure()[k]
       end
       local function _3_(t, k, v)
-        require(name)[k] = v
+        ensure()[k] = v
         return nil
       end
-      return setmetatable({["aniseed/autoload?"] = true}, {__index = _2_, __newindex = _3_})
+      return setmetatable(res, {__index = _2_, __newindex = _3_})
     end
     v_0_0 = autoload1
     _0_0["autoload"] = v_0_0
