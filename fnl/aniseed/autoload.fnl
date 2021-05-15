@@ -10,14 +10,14 @@
   startup dramatically. Only works with table modules, if the module you're
   requiring is a function etc you need to use the normal require."
 
-  (let [res {:aniseed.autoload/enabled? true
-             :aniseed.autoload/module false}]
+  (let [res {:aniseed/autoload-enabled? true
+             :aniseed/autoload-module false}]
 
     (fn ensure []
-      (if (. res :aniseed.autoload/module)
-        (. res :aniseed.autoload/module)
+      (if (. res :aniseed/autoload-module)
+        (. res :aniseed/autoload-module)
         (let [m (require name)]
-          (tset res :aniseed.autoload/module m)
+          (tset res :aniseed/autoload-module m)
           m)))
 
     (setmetatable
