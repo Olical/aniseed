@@ -55,14 +55,17 @@ do
           return m
         end
       end
-      local function _3_(t, k)
+      local function _3_(t, ...)
+        return ensure()(...)
+      end
+      local function _4_(t, k)
         return ensure()[k]
       end
-      local function _4_(t, k, v)
+      local function _5_(t, k, v)
         ensure()[k] = v
         return nil
       end
-      return setmetatable(res, {__index = _3_, __newindex = _4_})
+      return setmetatable(res, {__call = _3_, __index = _4_, __newindex = _5_})
     end
     v_0_0 = autoload1
     _0_["autoload"] = v_0_0

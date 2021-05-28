@@ -23,7 +23,11 @@
     (setmetatable
       res
 
-      {:__index
+      {:__call
+       (fn [t ...]
+         ((ensure) ...))
+
+       :__index
        (fn [t k]
          (. (ensure) k))
 
