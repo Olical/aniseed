@@ -8,6 +8,7 @@
 
 nvim --headless -u NONE \
     $PREFIX \
+    -c "set noswapfile" \
     -c "let &runtimepath = &runtimepath . ',' . getcwd()" \
     -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/test'" \
     -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/deps/aniseed'" \
