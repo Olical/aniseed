@@ -4,7 +4,13 @@
              compile aniseed.compile
              fennel aniseed.fennel}})
 
-(def- config-dir (nvim.fn.stdpath :config))
+;; The stdpath function can lead to mixed path separators on Windows.
+;; We unify them all as forward slashes.
+;; https://github.com/Olical/aniseed/issues/47
+(def- config-dir
+  (-> (nvim.fn.stdpath :config)
+      (string.gsub "\\" "/")))
+
 
 (defn- quiet-require [m]
   (let [(ok? err) (pcall #(require m))]
