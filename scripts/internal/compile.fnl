@@ -18,8 +18,10 @@
     fennel.traceback))
 
 (let [filename (. arg 1)
-      (_ok? result) (-> filename
-                        (read-file)
-                        (compile {:filename filename
-                                  :compilerEnv false}))]
-  (print result))
+      (ok? result) (-> filename
+                       (read-file)
+                       (compile {:filename filename
+                                 :compilerEnv false}))]
+  (if ok?
+    (print result)
+    (error result)))
