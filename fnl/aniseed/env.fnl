@@ -4,7 +4,8 @@
              compile aniseed.compile
              fennel aniseed.fennel}})
 
-(def- config-dir (nvim.fn.stdpath :config))
+(def- config-dir-unescaped (nvim.fn.stdpath :config))
+(def- config-dir (config-dir-unescaped:gsub "\\" "/"))
 
 (defn- quiet-require [m]
   (let [(ok? err) (pcall #(require m))]
