@@ -12,7 +12,7 @@
                         ""))]
     (.. "(local *file* "
         (if filename
-          (.. "\"" filename "\"")
+          (.. "\"" (string.gsub filename "\\" "\\\\") "\"")
           "nil")
         ")"
         "(require-macros \"" macros-module "\")\n" code)))
