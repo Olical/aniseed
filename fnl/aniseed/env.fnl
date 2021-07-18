@@ -4,13 +4,8 @@
              compile aniseed.compile
              fennel aniseed.fennel}})
 
-;; The stdpath function can lead to mixed path separators on Windows.
-;; We unify them all as forward slashes.
-;; https://github.com/Olical/aniseed/issues/47
 (def- config-dir
-  (-> (nvim.fn.stdpath :config)
-      (string.gsub "\\" "/")))
-
+  (nvim.fn.stdpath :config))
 
 (defn- quiet-require [m]
   (let [(ok? err) (pcall #(require m))]
@@ -23,11 +18,11 @@
                opts
                {})
         glob-expr "**/*.fnl" 
-        fnl-dir (or opts.input (.. config-dir "/fnl"))
-        lua-dir (or opts.output (.. config-dir "/lua"))]
+        fnl-dir (or opts.input (.. config-dir fs.path-sep "fnl"))
+        lua-dir (or opts.output (.. config-dir fs.path-sep "lua"))]
 
     ;; Support requiring Lua modules from non-standard output directories.
-    (set package.path (.. package.path ";" lua-dir "/?.lua"))
+    (set package.path (.. package.path ";" lua-dir fs.path-sep "?.lua"))
 
     (when
       (and
@@ -45,7 +40,7 @@
               (string.gsub path ".fnl$" ".lua")))))
 
       ;; Ensure the Fennel source files are findable.
-      (fennel.add-path (.. fnl-dir "/?.fnl"))
+      (fennel.add-path (.. fnl-dir fs.path-sep "?.fnl"))
 
       ;; Compile all source files.
       (compile.glob glob-expr fnl-dir lua-dir opts))

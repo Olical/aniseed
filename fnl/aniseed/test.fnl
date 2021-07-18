@@ -1,5 +1,6 @@
 (module aniseed.test
   {autoload {a aniseed.core
+             fs aniseed.fs
              str aniseed.string
              nvim aniseed.nvim}})
 
@@ -85,13 +86,14 @@
       (display-results "[total]")))
 
 (defn suite []
-  (->> (nvim.fn.globpath "test/fnl" "**/*-test.fnl" false true)
-       (a.run!
-         (fn [path]
-           (-> path
-               (string.match "^test/fnl/(.-).fnl$")
-               (string.gsub "/" ".")
-               (require)))))
+  (let [sep fs.path-sep]
+    (->> (nvim.fn.globpath (.. "test" sep "fnl") "**/*-test.fnl" false true)
+         (a.run!
+           (fn [path]
+             (-> path
+                 (string.match (.. "^test" sep "fnl" sep "(.-).fnl$"))
+                 (string.gsub sep ".")
+                 (require))))))
 
   (if (ok? (run-all))
     (nvim.ex.q)

@@ -1,12 +1,14 @@
 (module aniseed.fennel
-  {autoload {nvim aniseed.nvim}})
+  {autoload {nvim aniseed.nvim
+             fs aniseed.fs}})
 
 (defn sync-rtp [compiler]
   "Synchronises the runtimepath into the fennel.path"
-  (let [fnl-suffix "/fnl/?.fnl"
+  (let [sep fs.path-sep
+        fnl-suffix (.. sep "fnl" sep "?.fnl")
         rtp nvim.o.runtimepath
         fnl-path (.. (rtp:gsub "," (.. fnl-suffix ";")) fnl-suffix)
-        lua-path (fnl-path:gsub "/fnl/" "/lua/")]
+        lua-path (fnl-path:gsub (.. sep "fnl" sep) (.. sep "lua" sep))]
     (tset compiler :path (.. fnl-path ";" lua-path))))
 
 (def- state {:compiler-loaded? false})

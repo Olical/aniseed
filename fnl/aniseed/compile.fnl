@@ -8,7 +8,7 @@
   (let [macros-module :aniseed.macros
         filename (-?> (a.get opts :filename)
                       (string.gsub
-                        (.. (nvim.fn.getcwd) "/")
+                        (.. (nvim.fn.getcwd) fs.path-sep)
                         ""))]
     (.. "(local *file* "
         (if filename
