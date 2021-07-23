@@ -2,12 +2,16 @@
 ;; *file*
 ;; (module...)
 ;; autoload
-;; def, def-, defn, defn-, defonce, defonce-, time, deftest
+;; def, defn, defn-, defonce, defonce-, time, deftest
 
 (local root-module-sym (sym :module))
+(local def-private-sym (sym :def-))
 (local module-sym (sym :*module*))
 (local module-name-sym (sym :*module-name*))
 (local black-hole-sym (sym :_))
+
+(fn table? [x]
+  (= :table (type x)))
 
 (fn empty-table [t]
   (while (> (# t) 0)
@@ -25,10 +29,11 @@
         locals []]
 
     ;; Stringify the keys and values of new-local-fns.
-    (each [f aliases (pairs new-local-fns)]
-      (each [alias arg (pairs aliases)]
-        (tset aliases alias nil)
-        (tset aliases (tostring alias) (tostring arg))))
+    (when (table? new-local-fns)
+      (each [f aliases (pairs new-local-fns)]
+        (each [alias arg (pairs aliases)]
+          (tset aliases alias nil)
+          (tset aliases (tostring alias) (tostring arg)))))
 
     ;; Sync new-local-fns into local-fns if the module is loaded.
     ;; This is only used when reloading a module at runtime.
@@ -36,14 +41,7 @@
       (each [k v (pairs new-local-fns)]
         (tset (. existing-mod :aniseed/local-fns) k v)))
 
-    ;; Reset the AST.
     (empty-table ast)
-
-    ;; *module-name*
-    (table.insert locals [module-name-sym name-str])
-
-    ;; *module*
-    (table.insert locals [module-sym mod])
 
     ;; package.loaded[module-name] = module
     (table.insert
@@ -51,13 +49,20 @@
       [black-hole-sym
        `(tset package.loaded ,name-str ,mod)])
 
+    ;; *module-name*
+    (table.insert locals [module-name-sym name-str])
+
+    ;; *module*
+    (table.insert locals [module-sym `(. package.loaded ,name-str)])
+
     ;; local-fns -> local definitions
-    (each [f aliases (pairs new-local-fns)]
-      (each [alias arg (pairs aliases)]
-        (table.insert
-          locals
-          [(sym alias)
-           `(,f ,arg)])))
+    (when (table? new-local-fns)
+      (each [f aliases (pairs new-local-fns)]
+        (each [alias arg (pairs aliases)]
+          (table.insert
+            locals
+            [(sym alias)
+             `(,f ,arg)]))))
 
     ;; Now we build the AST from the locals table.
     (let [names []
@@ -79,9 +84,27 @@
       ;; (local ... <(xv yv zv)>)
       (table.insert ast (list `values (unpack vals))))))
 
+(fn def-private-form [ast scope]
+  (let [[_def- name value] ast]
+    (empty-table ast)
+    (table.insert ast `local)
+    (table.insert ast name)
+    (table.insert
+      ast
+      `(let [v# ,value]
+         (tset
+           (. ,module-sym :aniseed/locals)
+           ,(tostring name)
+           v#)
+         #v))))
+
 (fn call [ast scope]
-  (if
-    ;; (module ...)
-    (= root-module-sym (. ast 1)) (module-form ast scope)))
+  (let [head (. ast 1)]
+    (if
+      ;; (module ...)
+      (= root-module-sym head) (module-form ast scope)
+
+      ;; (def- ...)
+      (= def-private-sym head) (def-private-form ast scope))))
 
 {:call call}
