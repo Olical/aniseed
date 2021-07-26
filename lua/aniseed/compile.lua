@@ -1,146 +1,78 @@
-local _2afile_2a = "fnl/aniseed/compile.fnl"
-local _0_
-do
-  local name_0_ = "aniseed.compile"
-  local module_0_
-  do
-    local x_0_ = package.loaded[name_0_]
-    if ("table" == type(x_0_)) then
-      module_0_ = x_0_
-    else
-      module_0_ = {}
-    end
-  end
-  module_0_["aniseed/module"] = name_0_
-  module_0_["aniseed/locals"] = ((module_0_)["aniseed/locals"] or {})
-  do end (module_0_)["aniseed/local-fns"] = ((module_0_)["aniseed/local-fns"] or {})
-  do end (package.loaded)[name_0_] = module_0_
-  _0_ = module_0_
-end
 local autoload
-local function _1_(...)
+local function _0_(...)
   return (require("aniseed.autoload")).autoload(...)
 end
-autoload = _1_
-local function _2_(...)
-  local ok_3f_0_, val_0_ = nil, nil
-  local function _2_()
-    return {autoload("aniseed.core"), autoload("aniseed.fennel"), autoload("aniseed.fs"), autoload("aniseed.nvim")}
-  end
-  ok_3f_0_, val_0_ = pcall(_2_)
-  if ok_3f_0_ then
-    _0_["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}
-    return val_0_
-  else
-    return print(val_0_)
-  end
-end
-local _local_0_ = _2_(...)
-local a = _local_0_[1]
-local fennel = _local_0_[2]
-local fs = _local_0_[3]
-local nvim = _local_0_[4]
-local _2amodule_2a = _0_
-local _2amodule_name_2a = "aniseed.compile"
-do local _ = ({nil, _0_, nil, {{}, nil, nil, nil}})[2] end
-local macros_prefix
+autoload = _0_
+local nvim, fennel, fs, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local _1_
 do
-  local v_0_
-  do
-    local v_0_0
-    local function macros_prefix0(code, opts)
-      local macros_module = "aniseed.macros"
-      local filename
-      do
-        local _3_ = a.get(opts, "filename")
-        if _3_ then
-          filename = string.gsub(_3_, (nvim.fn.getcwd() .. fs["path-sep"]), "")
-        else
-          filename = _3_
-        end
-      end
-      local _4_
-      if filename then
-        _4_ = ("\"" .. string.gsub(filename, "\\", "\\\\") .. "\"")
-      else
-        _4_ = "nil"
-      end
-      return ("(local *file* " .. _4_ .. ")" .. "(require-macros \"" .. macros_module .. "\")\n" .. code)
+  local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.compile"}
+  package.loaded["aniseed.compile"] = mod_0_
+  _1_ = mod_0_
+end
+nvim, fennel, fs, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(fennel, "aniseed.fennel"), autoload(fs, "aniseed.fs"), autoload(a, "aniseed.core"), _1_, "aniseed.compile", "fnl/aniseed/compile.fnl"
+local base_path
+do
+  local _2_ = (debug.getinfo(1, "S")).source
+  if _2_ then
+    local _3_ = _2_:gsub("^.", "")
+    if _3_ then
+      base_path = _3_:gsub(string.gsub(_2afile_2a, "fnl", "lua"), "")
+    else
+      base_path = _3_
     end
-    v_0_0 = macros_prefix0
-    _0_["macros-prefix"] = v_0_0
-    v_0_ = v_0_0
+  else
+    base_path = _2_
   end
-  local t_0_ = (_0_)["aniseed/locals"]
-  t_0_["macros-prefix"] = v_0_
-  macros_prefix = v_0_
 end
 local str
-do
-  local v_0_
+local function _3_(code, opts)
+  local fnl = fennel.impl()
+  local plugins = {"module-system-plugin.fnl"}
+  local plugins0
   do
-    local v_0_0
-    local function str0(code, opts)
-      local fnl = fennel.impl()
-      local function _3_()
-        return fnl.compileString(macros_prefix(code, opts), a.merge({allowedGlobals = false}, opts))
-      end
-      return xpcall(_3_, fnl.traceback)
+    local tbl_0_ = {}
+    for _, plugin in ipairs(plugins) do
+      tbl_0_[(#tbl_0_ + 1)] = fnl.dofile((base_path .. plugin), {env = "_COMPILER", useMetadata = true})
     end
-    v_0_0 = str0
-    _0_["str"] = v_0_0
-    v_0_ = v_0_0
+    plugins0 = tbl_0_
   end
-  local t_0_ = (_0_)["aniseed/locals"]
-  t_0_["str"] = v_0_
-  str = v_0_
+  local function _4_()
+    return fnl.compileString(code, a.merge({allowedGlobals = false, plugins = plugins0}, opts))
+  end
+  return xpcall(_4_, fnl.traceback)
 end
+str = _3_
+_2amodule_2a["str"] = str
+_2amodule_2a["aniseed/locals"]["str"] = str
 local file
-do
-  local v_0_
-  do
-    local v_0_0
-    local function file0(src, dest)
-      local code = a.slurp(src)
-      local _3_, _4_ = str(code, {filename = src})
-      if ((_3_ == false) and (nil ~= _4_)) then
-        local err = _4_
-        return nvim.err_writeln(err)
-      elseif ((_3_ == true) and (nil ~= _4_)) then
-        local result = _4_
-        fs.mkdirp(fs.basename(dest))
-        return a.spit(dest, result)
-      end
-    end
-    v_0_0 = file0
-    _0_["file"] = v_0_0
-    v_0_ = v_0_0
+local function _4_(src, dest)
+  local code = a.slurp(src)
+  local _5_, _6_ = str(code, {filename = src})
+  if ((_5_ == false) and (nil ~= _6_)) then
+    local err = _6_
+    return nvim.err_writeln(err)
+  elseif ((_5_ == true) and (nil ~= _6_)) then
+    local result = _6_
+    fs.mkdirp(fs.basename(dest))
+    return a.spit(dest, result)
   end
-  local t_0_ = (_0_)["aniseed/locals"]
-  t_0_["file"] = v_0_
-  file = v_0_
 end
+file = _4_
+_2amodule_2a["file"] = file
+_2amodule_2a["aniseed/locals"]["file"] = file
 local glob
-do
-  local v_0_
-  do
-    local v_0_0
-    local function glob0(src_expr, src_dir, dest_dir)
-      for _, path in ipairs(fs.relglob(src_dir, src_expr)) do
-        if fs["macro-file-path?"](path) then
-          a.spit((dest_dir .. path), a.slurp((src_dir .. path)))
-        else
-          file((src_dir .. path), string.gsub((dest_dir .. path), ".fnl$", ".lua"))
-        end
-      end
-      return nil
+local function _5_(src_expr, src_dir, dest_dir)
+  for _, path in ipairs(fs.relglob(src_dir, src_expr)) do
+    if fs["macro-file-path?"](path) then
+      a.spit((dest_dir .. path), a.slurp((src_dir .. path)))
+    else
+      file((src_dir .. path), string.gsub((dest_dir .. path), ".fnl$", ".lua"))
     end
-    v_0_0 = glob0
-    _0_["glob"] = v_0_0
-    v_0_ = v_0_0
   end
-  local t_0_ = (_0_)["aniseed/locals"]
-  t_0_["glob"] = v_0_
-  glob = v_0_
+  return nil
 end
+glob = _5_
+_2amodule_2a["glob"] = glob
+_2amodule_2a["aniseed/locals"]["glob"] = glob
 return nil

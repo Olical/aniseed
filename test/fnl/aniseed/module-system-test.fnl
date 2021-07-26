@@ -1,4 +1,4 @@
-(module aniseed.macros-test)
+(module aniseed.module-system-test)
 
 (deftest defonce
   (var calls 0)

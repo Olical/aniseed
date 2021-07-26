@@ -4,29 +4,25 @@
              nvim aniseed.nvim
              fennel aniseed.fennel}})
 
-(defn macros-prefix [code opts]
-  (let [macros-module :aniseed.macros
-        filename (-?> (a.get opts :filename)
-                      (string.gsub
-                        (.. (nvim.fn.getcwd) fs.path-sep)
-                        ""))]
-    (.. "(local *file* "
-        (if filename
-          (.. "\"" (string.gsub filename "\\" "\\\\") "\"")
-          "nil")
-        ")"
-        "(require-macros \"" macros-module "\")\n" code)))
+(local base-path (-?> (. (debug.getinfo 1 :S) :source)
+                      (: :gsub :^. "")
+                      (: :gsub (string.gsub *file* :fnl :lua) "")))
 
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to
   fennel.compileString with some wrapping, returns an (ok? result)
   tuple. Automatically requires the Aniseed macros."
 
-  (let [fnl (fennel.impl)]
+  (let [fnl (fennel.impl)
+        plugins ["module-system-plugin.fnl"]
+        plugins (icollect [_ plugin (ipairs plugins)]
+                  (fnl.dofile (.. base-path plugin)
+                              {:env :_COMPILER
+                               :useMetadata true}))]
     (xpcall
       #(fnl.compileString
-         (macros-prefix code opts)
-         (a.merge {:allowedGlobals false} opts))
+         code
+         (a.merge {:allowedGlobals false : plugins} opts))
       fnl.traceback)))
 
 (defn file [src dest]

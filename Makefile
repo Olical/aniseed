@@ -5,7 +5,7 @@ SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.f
 default: deps compile test
 
 deps:
-	scripts/dep.sh bakpakin Fennel afebcb22999fe2a2f2174299f9c63b7e0f25022f
+	scripts/dep.sh sioonhho Fennel aniseed-comptime-module-system-support
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make build
 
@@ -13,10 +13,9 @@ compile:
 	rm -rf lua
 	for f in $(SRC_FILES); do \
 		mkdir -p lua/$$(dirname $$f); \
-		deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
+		deps/Fennel/fennel --compile --plugin module-system-plugin.fnl fnl/$$f.fnl > lua/$$f.lua; \
 	done
 	mkdir -p lua/aniseed/deps
-	cp fnl/aniseed/macros.fnl lua/aniseed
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
 	cp deps/Fennel/fennelview.lua lua/aniseed/deps/fennelview.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua

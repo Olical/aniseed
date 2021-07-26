@@ -965,10 +965,28 @@ package.preload["aniseed.fennel.specials"] = package.preload["aniseed.fennel.spe
   doc_special("fn", {"name?", "args", "docstring?", "..."}, "Function syntax. May optionally include a name and docstring.\nIf a name is provided, the function will be bound in the current scope.\nWhen called with the wrong number of args, excess args will be discarded\nand lacking args will be nil, use lambda for arity-checked functions.", true)
   SPECIALS.lua = function(ast, _, parent)
     compiler.assert(((#ast == 2) or (#ast == 3)), "expected 1 or 2 arguments", ast)
-    if (ast[2] ~= nil) then
+    local _1_
+    do
+      local _0_0 = utils["sym?"](ast[2])
+      if _0_0 then
+        _1_ = utils.deref(_0_0)
+      else
+        _1_ = _0_0
+      end
+    end
+    if ("nil" ~= _1_) then
       table.insert(parent, {ast = ast, leaf = tostring(ast[2])})
     end
-    if (ast[3] ~= nil) then
+    local _2_
+    do
+      local _1_0 = utils["sym?"](ast[3])
+      if _1_0 then
+        _2_ = utils.deref(_1_0)
+      else
+        _2_ = _1_0
+      end
+    end
+    if ("nil" ~= _2_) then
       return tostring(ast[3])
     end
   end
@@ -1894,7 +1912,7 @@ package.preload["aniseed.fennel.compiler"] = package.preload["aniseed.fennel.com
     else
       _0_ = 0
     end
-    return {autogensyms = setmetatable({}, {__index = (parent0 and parent0.autogensyms)}), depth = _0_, gensyms = setmetatable({}, {__index = (parent0 and parent0.gensyms)}), hashfn = (parent0 and parent0.hashfn), includes = setmetatable({}, {__index = (parent0 and parent0.includes)}), macros = setmetatable({}, {__index = (parent0 and parent0.macros)}), manglings = setmetatable({}, {__index = (parent0 and parent0.manglings)}), parent = parent0, refedglobals = setmetatable({}, {__index = (parent0 and parent0.refedglobals)}), specials = setmetatable({}, {__index = (parent0 and parent0.specials)}), symmeta = setmetatable({}, {__index = (parent0 and parent0.symmeta)}), unmanglings = setmetatable({}, {__index = (parent0 and parent0.unmanglings)}), vararg = (parent0 and parent0.vararg)}
+    return {autogensyms = setmetatable({}, {__index = (parent0 and parent0.autogensyms)}), depth = _0_, gensyms = setmetatable({}, {__index = (parent0 and parent0.gensyms)}), hashfn = (parent0 and parent0.hashfn), includes = setmetatable({}, {__index = (parent0 and parent0.includes)}), macros = setmetatable({}, {__index = (parent0 and parent0.macros)}), manglings = setmetatable({}, {__index = (parent0 and parent0.manglings)}), module = (parent0 and parent0.module), parent = parent0, refedglobals = setmetatable({}, {__index = (parent0 and parent0.refedglobals)}), specials = setmetatable({}, {__index = (parent0 and parent0.specials)}), symmeta = setmetatable({}, {__index = (parent0 and parent0.symmeta)}), unmanglings = setmetatable({}, {__index = (parent0 and parent0.unmanglings)}), vararg = (parent0 and parent0.vararg)}
   end
   local function assert_msg(ast, msg)
     local ast_tbl = nil
@@ -2402,7 +2420,15 @@ package.preload["aniseed.fennel.compiler"] = package.preload["aniseed.fennel.com
     return handle_compile_opts({utils.expr(call, "statement")}, parent, opts, ast)
   end
   local function compile_call(ast, scope, parent, opts, compile1)
-    utils.hook("call", ast, scope)
+    do
+      local opts0 = nil
+      do
+        local _0_0 = utils.copy(opts)
+        _0_0["filename"] = utils.root.options.filename
+        opts0 = _0_0
+      end
+      utils.hook("call", ast, scope, parent, opts0, compile1)
+    end
     local len = #ast
     local first = ast[1]
     local multi_sym_parts = utils["multi-sym?"](first)
@@ -3279,7 +3305,7 @@ package.preload["aniseed.fennel.parser"] = package.preload["aniseed.fennel.parse
         end
       end
       local function escape_char(c)
-        return ({nil, nil, nil, nil, nil, nil, "\\a", "\\b", "\\t", "\\n", "\\v", "\\f", "\\r"})[c:byte()]
+        return ({[10] = "\\n", [11] = "\\v", [12] = "\\f", [13] = "\\r", [7] = "\\a", [8] = "\\b", [9] = "\\t"})[c:byte()]
       end
       local function parse_string()
         table.insert(stack, {closer = 34})
