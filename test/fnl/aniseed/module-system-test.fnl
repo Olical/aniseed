@@ -1,5 +1,4 @@
-(module aniseed.module-system-test
-  {autoload {compile aniseed.compile}})
+(module aniseed.module-system-test)
 
 (deftest module
   (local initial {:foo :bar})
@@ -19,11 +18,7 @@
   (t.ok? (not= nil compile_) "autoload aniseed.compile failed")
 
   (t.= (. *module* :foo) (. initial :foo)
-       "failed to carry over initial-mod into *module*")
-
-  (let [(ok? result) (compile.str "(module)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected module name"))))
+       "failed to carry over initial-mod into *module*"))
 
 (deftest def
   (module def-test)
@@ -37,15 +32,7 @@
        36 "failed to set all *module* sub tables properly")
   
   (t.ok? (= nil (. package.loaded :def-test :b))
-         "def- declared variable is public")
-  
-  (let [(ok? result) (compile.str "(def)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected name")))
-
-  (let [(ok? result) (compile.str "(def- name)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected value"))))
+         "def- declared variable is public"))
 
 (deftest defn
   (module defn-test)
@@ -53,15 +40,7 @@
   (defn- f [x] (+ 2 x))
   (defn g [y z] (* 5 (- z (f y))))
 
-  (t.= ((. *module* :g) 2 7) 15 "failed to properly define defns")
-  
-  (let [(ok? result) (compile.str "(defn name)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected parameters table")))
-
-  (let [(ok? result) (compile.str "(defn- name [])")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected body expression"))))
+  (t.= ((. *module* :g) 2 7) 15 "failed to properly define defns"))
 
 (deftest defonce
   (var calls 0)
@@ -72,20 +51,7 @@
   (defonce foo (inc))
   (t.= 1 calls)
   (defonce foo (inc))
-  (t.= 1 calls)
-  
-  (let [(ok? result) (compile.str "(defonce)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected name"))))
-
-(deftest deftest-
-  (let [(ok? result) (compile.str "(deftest)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected name")))
-
-  (let [(ok? result) (compile.str "(deftest name)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected body expression"))))
+  (t.= 1 calls))
 
 (deftest time
   (local x 4)
@@ -94,8 +60,4 @@
          (* x y))
        20 "time function failed")
   
-  (t.= (time 42) 42 "second time function failed")
-  
-  (let [(ok? result) (compile.str "(time)")]
-    (t.ok? (not ok?) "compilation should return false")
-    (t.= 30 (result:find "expected body expression"))))
+  (t.= (time 42) 42 "second time function failed"))
