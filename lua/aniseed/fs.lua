@@ -3,14 +3,14 @@ local function _0_(...)
   return (require("aniseed.autoload")).autoload(...)
 end
 autoload = _0_
-local a, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil
+local nvim, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil
 local _1_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.fs"}
   package.loaded["aniseed.fs"] = mod_0_
   _1_ = mod_0_
 end
-a, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(nvim, "aniseed.nvim"), _1_, "aniseed.fs", "fnl/aniseed/fs.fnl"
+nvim, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(a, "aniseed.core"), _1_, "aniseed.fs", "fnl/aniseed/fs.fnl"
 local path_sep
 do
   local os = string.lower(jit.os)

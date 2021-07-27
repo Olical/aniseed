@@ -3,14 +3,14 @@ local function _0_(...)
   return (require("aniseed.autoload")).autoload(...)
 end
 autoload = _0_
-local nvim, fennel, fs, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local nvim, a, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
 local _1_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.compile"}
   package.loaded["aniseed.compile"] = mod_0_
   _1_ = mod_0_
 end
-nvim, fennel, fs, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(fennel, "aniseed.fennel"), autoload(fs, "aniseed.fs"), autoload(a, "aniseed.core"), _1_, "aniseed.compile", "fnl/aniseed/compile.fnl"
+nvim, a, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(a, "aniseed.core"), autoload(fs, "aniseed.fs"), autoload(fennel, "aniseed.fennel"), _1_, "aniseed.compile", "fnl/aniseed/compile.fnl"
 local base_path
 do
   local _2_ = (debug.getinfo(1, "S")).source

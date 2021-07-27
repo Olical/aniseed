@@ -1,7 +1,7 @@
 (local syms (setmetatable {} {:__index #(sym $2)}))
 
 (fn table? [x]
-  (= :table (type x)))
+  (and (= :table (type x)) x))
 
 (fn empty-table [t]
   (while (> (# t) 0)
@@ -36,7 +36,7 @@
 
 (fn module-form [ast {: scope : parent : opts : compile1}]
   (let [name-str (-?> (assert-compile
-                        (sym? (. ast 2)) "expected symbol for module name" ast)
+                        (sym? (. ast 2)) "expected module name" ast)
                       tostring)
         all-new-local-fns (stringify-table (or (. ast 3) []))
         (autoloads new-local-fns) (partition-by-key
@@ -91,9 +91,9 @@
       (copy [`local `(,(unpack names)) `(values ,(unpack vals))] ast))))
 
 (fn def-form [ast {: scope : parent : opts : compile1 &as state} private? value?]
-  (let [name (. ast 2)
+  (let [name (assert-compile (sym? (. ast 2)) "expected name" ast)
         name-str (tostring name)
-        value (or value? (. ast 3))
+        value (assert-compile (or value? (. ast 3)) "expected value" ast)
         mod-scope (if private? :locals :public)]
     (tset scope.module mod-scope name-str value)
     
@@ -107,6 +107,10 @@
 
 (fn defn-form [ast {: scope : parent : opts : compile1 &as state} private?]
   (let [[_ _ args & body] ast
+        args (assert-compile (table? (. ast 3)) "expected parameters table" ast)
+        body (assert-compile (-?>> (table? body)
+                                   (and (< 0 (length body))))
+                             "expected body expression" ast)
         fn-ast `(fn ,args)]
     (each [_ stmt (pairs body)]
       (table.insert fn-ast stmt))
@@ -114,8 +118,8 @@
     (def-form ast state private? fn-ast)))
 
 (fn defonce-form [ast {: scope : parent : opts : compile1 &as state} private?]
-  (let [[_ name value] ast
-        name-str (tostring name)
+  (let [name-str (-?> (assert-compile (. ast 2) "expected name")
+                      tostring)
         mod-scope (if private? :locals :public)]
     (if (. scope.module mod-scope name-str)
       (do
@@ -125,7 +129,11 @@
 
 (fn deftest-form [ast {: scope : parent : opts : compile1 &as state}]
   (let [[_ name & body] ast
-        name-str (tostring name)
+        name-str (-?> (assert-compile (. ast 2) "expected name")
+                      tostring)
+        body (assert-compile (-?>> (table? body)
+                                   (and (< 0 (length body))))
+                             "expected body expression" ast)
         fn-sym (gensym)
         fn-ast `(fn ,fn-sym [,syms.t])]
     (each [_ stmt (pairs body)]
@@ -143,6 +151,9 @@
 
 (fn time-form [ast {: scope : parent : opts : compile1 &as state}]
   (let [[_ & body] ast
+        body (assert-compile (-?>> (table? body)
+                                   (and (< 0 (length body))))
+                             "expected body expression" ast)
         time-fn-sym (. scope.module :time-fn-sym)
         body-ast `(do)]
     (when (not time-fn-sym)

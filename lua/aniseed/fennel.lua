@@ -3,14 +3,14 @@ local function _0_(...)
   return (require("aniseed.autoload")).autoload(...)
 end
 autoload = _0_
-local fs, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil
+local nvim, fs, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil
 local _1_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.fennel"}
   package.loaded["aniseed.fennel"] = mod_0_
   _1_ = mod_0_
 end
-fs, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(fs, "aniseed.fs"), autoload(nvim, "aniseed.nvim"), _1_, "aniseed.fennel", "fnl/aniseed/fennel.fnl"
+nvim, fs, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(fs, "aniseed.fs"), _1_, "aniseed.fennel", "fnl/aniseed/fennel.fnl"
 local sync_rtp
 local function _2_(compiler)
   local sep = fs["path-sep"]
