@@ -58,8 +58,7 @@
                          `(,(sym f) ,arg)]))))
 
     (when (next autoloads)
-      (compile1 `(local ,syms.autoload
-                   #((. (require :aniseed.autoload) :autoload) $...))
+      (compile1 `(local ,syms.autoload (. (require :aniseed.autoload) :autoload))
                 scope parent opts)
 
       (each [_ aliases (pairs autoloads)]
