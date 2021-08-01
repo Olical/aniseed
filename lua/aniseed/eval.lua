@@ -1,12 +1,12 @@
 local autoload = (require("aniseed.autoload")).autoload
-local fennel, a, fs, nvim, compile, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil, nil
+local fennel, a, fs, compile, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil, nil
 local _0_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", compile = "aniseed.compile", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.eval"}
   package.loaded["aniseed.eval"] = mod_0_
   _0_ = mod_0_
 end
-fennel, a, fs, nvim, compile, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(fennel, "aniseed.fennel"), autoload(a, "aniseed.core"), autoload(fs, "aniseed.fs"), autoload(nvim, "aniseed.nvim"), autoload(compile, "aniseed.compile"), _0_, "aniseed.eval", "fnl/aniseed/eval.fnl"
+fennel, a, fs, compile, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(fennel, "aniseed.fennel"), autoload(a, "aniseed.core"), autoload(fs, "aniseed.fs"), autoload(compile, "aniseed.compile"), autoload(nvim, "aniseed.nvim"), _0_, "aniseed.eval", "fnl/aniseed/eval.fnl"
 local str
 local function _1_(code, opts)
   local fnl = fennel.impl()

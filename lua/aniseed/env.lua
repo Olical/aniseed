@@ -1,12 +1,12 @@
 local autoload = (require("aniseed.autoload")).autoload
-local nvim, compile, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local fs, nvim, fennel, compile, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
 local _0_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {compile = "aniseed.compile", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.env"}
   package.loaded["aniseed.env"] = mod_0_
   _0_ = mod_0_
 end
-nvim, compile, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(compile, "aniseed.compile"), autoload(fs, "aniseed.fs"), autoload(fennel, "aniseed.fennel"), _0_, "aniseed.env", "fnl/aniseed/env.fnl"
+fs, nvim, fennel, compile, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(fs, "aniseed.fs"), autoload(nvim, "aniseed.nvim"), autoload(fennel, "aniseed.fennel"), autoload(compile, "aniseed.compile"), _0_, "aniseed.env", "fnl/aniseed/env.fnl"
 local config_dir = nvim.fn.stdpath("config")
 do end (_2amodule_2a)["aniseed/locals"]["config-dir"] = config_dir
 local quiet_require

@@ -1,12 +1,12 @@
 local autoload = (require("aniseed.autoload")).autoload
-local a, str, fs, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local a, nvim, fs, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
 local _0_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fs = "aniseed.fs", nvim = "aniseed.nvim", str = "aniseed.string"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.test"}
   package.loaded["aniseed.test"] = mod_0_
   _0_ = mod_0_
 end
-a, str, fs, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(str, "aniseed.string"), autoload(fs, "aniseed.fs"), autoload(nvim, "aniseed.nvim"), _0_, "aniseed.test", "fnl/aniseed/test.fnl"
+a, nvim, fs, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(nvim, "aniseed.nvim"), autoload(fs, "aniseed.fs"), autoload(str, "aniseed.string"), _0_, "aniseed.test", "fnl/aniseed/test.fnl"
 local ok_3f
 local function _2_(_1_)
   local _arg_0_ = _1_

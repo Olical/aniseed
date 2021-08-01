@@ -4,8 +4,8 @@
   (local initial {:foo :bar})
 
   (module module-test
-          {require {a_ aniseed.core}
-           autoload {compile_ aniseed.compile}}
+          {require {{: println &as a} aniseed.core}
+           autoload {compile aniseed.compile}}
           initial)
   
   (t.= *module-name* :module-test
@@ -14,8 +14,10 @@
   (t.= *file* :test/fnl/aniseed/module-system-test.fnl
        "*file* not defined")
   
-  (t.ok? (not= nil a_) "require aniseed.core failed")
-  (t.ok? (not= nil compile_) "autoload aniseed.compile failed")
+  (t.ok? (and (not= nil println)
+              (not= nil a.println)
+              (= println a.println)) "module-level `require` destructuring failed")
+  (t.ok? (not= nil compile) "autoload aniseed.compile failed")
 
   (t.= (. *module* :foo) (. initial :foo)
        "failed to carry over initial-mod into *module*"))

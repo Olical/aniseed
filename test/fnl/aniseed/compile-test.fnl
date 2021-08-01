@@ -14,7 +14,10 @@
   (compile-fail t "(+ 10 20" 28 "expected closing delimiter"))
 
 (deftest module
-  (compile-fail t "(module)" 30 "expected module name"))
+  (compile-fail t "(module)" 30 "expected name")
+
+  (compile-fail t "(module _ {autoload {{&as root} base}})"
+                30 "expected symbol, destructuring not yet supported for `autoload`"))
 
 (deftest def
   (compile-fail t "(def)" 30 "expected name")
