@@ -6,7 +6,7 @@ do
   _0_ = mod_0_
 end
 _2amodule_2a, _2amodule_name_2a, _2afile_2a = _0_, "aniseed.autoload", "fnl/aniseed/autoload.fnl"
-local autoload
+local autoload = nil
 local function _1_(alias, name)
   local function ensure()
     alias = require(name)

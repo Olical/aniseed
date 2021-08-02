@@ -110,7 +110,10 @@
         mod-scope (if private? :locals :public)]
     (tset scope.module mod-scope name-str value)
     
-    (compile `(local ,name ,value))
+    ;; this has been separated into two statements now
+    ;;   to support self reference within the value
+    (compile `(local ,name nil))
+    (compile `(set-forcibly! ,name ,value))
 
     (when (not private?)
       (compile `(tset ,syms.*module* ,name-str ,name)))

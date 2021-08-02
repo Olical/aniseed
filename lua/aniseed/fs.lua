@@ -7,7 +7,7 @@ do
   _0_ = mod_0_
 end
 nvim, a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(a, "aniseed.core"), _0_, "aniseed.fs", "fnl/aniseed/fs.fnl"
-local path_sep
+local path_sep = nil
 do
   local os = string.lower(jit.os)
   if (("linux" == os) or ("osx" == os) or ("bsd" == os)) then
@@ -18,21 +18,21 @@ do
 end
 _2amodule_2a["path-sep"] = path_sep
 _2amodule_2a["aniseed/locals"]["path-sep"] = path_sep
-local basename
+local basename = nil
 local function _1_(path)
   return nvim.fn.fnamemodify(path, ":h")
 end
 basename = _1_
 _2amodule_2a["basename"] = basename
 _2amodule_2a["aniseed/locals"]["basename"] = basename
-local mkdirp
+local mkdirp = nil
 local function _2_(dir)
   return nvim.fn.mkdir(dir, "p")
 end
 mkdirp = _2_
 _2amodule_2a["mkdirp"] = mkdirp
 _2amodule_2a["aniseed/locals"]["mkdirp"] = mkdirp
-local relglob
+local relglob = nil
 local function _3_(dir, expr)
   local dir_len = a.inc(string.len(dir))
   local function _4_(_241)
@@ -43,7 +43,7 @@ end
 relglob = _3_
 _2amodule_2a["relglob"] = relglob
 _2amodule_2a["aniseed/locals"]["relglob"] = relglob
-local glob_dir_newer_3f
+local glob_dir_newer_3f = nil
 local function _4_(a_dir, b_dir, expr, b_dir_path_fn)
   local newer_3f = false
   for _, path in ipairs(relglob(a_dir, expr)) do
@@ -56,7 +56,7 @@ end
 glob_dir_newer_3f = _4_
 _2amodule_2a["glob-dir-newer?"] = glob_dir_newer_3f
 _2amodule_2a["aniseed/locals"]["glob-dir-newer?"] = glob_dir_newer_3f
-local macro_file_path_3f
+local macro_file_path_3f = nil
 local function _5_(path)
   return string.match(path, "macros.fnl$")
 end

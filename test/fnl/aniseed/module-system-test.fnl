@@ -42,7 +42,14 @@
   (defn- f [x] (+ 2 x))
   (defn g [y z] (* 5 (- z (f y))))
 
-  (t.= ((. *module* :g) 2 7) 15 "failed to properly define defns"))
+  (t.= ((. *module* :g) 2 7) 15 "failed to properly define defns")
+  
+  (defn h [x] (if (< x 21) (h (+ 1 x)) x))
+  
+  (t.ok? (= (h 2)
+            (h 20)
+            (h -4)
+            21) "self reference/recursion failure"))
 
 (deftest defonce
   (var calls 0)

@@ -7,14 +7,14 @@ do
   _0_ = mod_0_
 end
 nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), _0_, "aniseed.nvim.util", "fnl/aniseed/nvim/util.fnl"
-local normal
+local normal = nil
 local function _1_(keys)
   return nvim.ex.silent(("exe \"normal! " .. keys .. "\""))
 end
 normal = _1_
 _2amodule_2a["normal"] = normal
 _2amodule_2a["aniseed/locals"]["normal"] = normal
-local fn_bridge
+local fn_bridge = nil
 local function _2_(viml_name, mod, lua_name, opts)
   local _let_0_ = (opts or {})
   local range = _let_0_["range"]
@@ -42,7 +42,7 @@ end
 fn_bridge = _2_
 _2amodule_2a["fn-bridge"] = fn_bridge
 _2amodule_2a["aniseed/locals"]["fn-bridge"] = fn_bridge
-local with_out_str
+local with_out_str = nil
 local function _3_(f)
   nvim.ex.redir("=> g:aniseed_nvim_util_out_str")
   do

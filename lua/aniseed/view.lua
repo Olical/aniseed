@@ -6,7 +6,7 @@ do
   _0_ = mod_0_
 end
 _2amodule_2a, _2amodule_name_2a, _2afile_2a = _0_, "aniseed.view", "fnl/aniseed/view.fnl"
-local serialise
+local serialise = nil
 local function _1_(...)
   return require("aniseed.deps.fennelview")(...)
 end

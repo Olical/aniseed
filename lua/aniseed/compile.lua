@@ -1,12 +1,12 @@
 local autoload = (require("aniseed.autoload")).autoload
-local a, nvim, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local a, fs, fennel, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
 local _0_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fennel = "aniseed.fennel", fs = "aniseed.fs", nvim = "aniseed.nvim"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.compile"}
   package.loaded["aniseed.compile"] = mod_0_
   _0_ = mod_0_
 end
-a, nvim, fs, fennel, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(nvim, "aniseed.nvim"), autoload(fs, "aniseed.fs"), autoload(fennel, "aniseed.fennel"), _0_, "aniseed.compile", "fnl/aniseed/compile.fnl"
+a, fs, fennel, nvim, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(fs, "aniseed.fs"), autoload(fennel, "aniseed.fennel"), autoload(nvim, "aniseed.nvim"), _0_, "aniseed.compile", "fnl/aniseed/compile.fnl"
 local base_path
 do
   local _1_ = (debug.getinfo(1, "S")).source
@@ -21,7 +21,7 @@ do
     base_path = _1_
   end
 end
-local str
+local str = nil
 local function _2_(code, opts)
   local fnl = fennel.impl()
   local plugins = {"module-system-plugin.fnl"}
@@ -41,7 +41,7 @@ end
 str = _2_
 _2amodule_2a["str"] = str
 _2amodule_2a["aniseed/locals"]["str"] = str
-local file
+local file = nil
 local function _3_(src, dest)
   local code = a.slurp(src)
   local _4_, _5_ = str(code, {filename = src})
@@ -57,7 +57,7 @@ end
 file = _3_
 _2amodule_2a["file"] = file
 _2amodule_2a["aniseed/locals"]["file"] = file
-local glob
+local glob = nil
 local function _4_(src_expr, src_dir, dest_dir)
   for _, path in ipairs(fs.relglob(src_dir, src_expr)) do
     if fs["macro-file-path?"](path) then

@@ -1,13 +1,13 @@
 local autoload = (require("aniseed.autoload")).autoload
-local a, nvim, fs, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
+local a, fs, nvim, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = nil, nil, nil, nil, nil, nil, nil
 local _0_
 do
   local mod_0_ = {["aniseed/local-fns"] = {autoload = {a = "aniseed.core", fs = "aniseed.fs", nvim = "aniseed.nvim", str = "aniseed.string"}}, ["aniseed/locals"] = {}, ["aniseed/module"] = "aniseed.test"}
   package.loaded["aniseed.test"] = mod_0_
   _0_ = mod_0_
 end
-a, nvim, fs, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(nvim, "aniseed.nvim"), autoload(fs, "aniseed.fs"), autoload(str, "aniseed.string"), _0_, "aniseed.test", "fnl/aniseed/test.fnl"
-local ok_3f
+a, fs, nvim, str, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), autoload(fs, "aniseed.fs"), autoload(nvim, "aniseed.nvim"), autoload(str, "aniseed.string"), _0_, "aniseed.test", "fnl/aniseed/test.fnl"
+local ok_3f = nil
 local function _2_(_1_)
   local _arg_0_ = _1_
   local tests = _arg_0_["tests"]
@@ -17,7 +17,7 @@ end
 ok_3f = _2_
 _2amodule_2a["ok?"] = ok_3f
 _2amodule_2a["aniseed/locals"]["ok?"] = ok_3f
-local display_results
+local display_results = nil
 local function _3_(results, prefix)
   do
     local _let_0_ = results
@@ -38,7 +38,7 @@ end
 display_results = _3_
 _2amodule_2a["display-results"] = display_results
 _2amodule_2a["aniseed/locals"]["display-results"] = display_results
-local run
+local run = nil
 local function _4_(mod_name)
   local mod = package.loaded[mod_name]
   local tests = (a["table?"](mod) and mod["aniseed/tests"])
@@ -120,7 +120,7 @@ end
 run = _4_
 _2amodule_2a["run"] = run
 _2amodule_2a["aniseed/locals"]["run"] = run
-local run_all
+local run_all = nil
 local function _5_()
   local function _6_(totals, results)
     for k, v in pairs(results) do
@@ -133,7 +133,7 @@ end
 run_all = _5_
 _2amodule_2a["run-all"] = run_all
 _2amodule_2a["aniseed/locals"]["run-all"] = run_all
-local suite
+local suite = nil
 local function _6_()
   do
     local sep = fs["path-sep"]

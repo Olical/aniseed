@@ -7,7 +7,7 @@ do
   _0_ = mod_0_
 end
 nvim, fs, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(nvim, "aniseed.nvim"), autoload(fs, "aniseed.fs"), _0_, "aniseed.fennel", "fnl/aniseed/fennel.fnl"
-local sync_rtp
+local sync_rtp = nil
 local function _1_(compiler)
   local sep = fs["path-sep"]
   local fnl_suffix = (sep .. "fnl" .. sep .. "?.fnl")
@@ -20,9 +20,10 @@ end
 sync_rtp = _1_
 _2amodule_2a["sync-rtp"] = sync_rtp
 _2amodule_2a["aniseed/locals"]["sync-rtp"] = sync_rtp
-local state = {["compiler-loaded?"] = false}
+local state = nil
+state = {["compiler-loaded?"] = false}
 _2amodule_2a["aniseed/locals"]["state"] = state
-local impl
+local impl = nil
 local function _2_()
   local compiler = require("aniseed.deps.fennel")
   if not state["compiler-loaded?"] then
@@ -34,7 +35,7 @@ end
 impl = _2_
 _2amodule_2a["impl"] = impl
 _2amodule_2a["aniseed/locals"]["impl"] = impl
-local add_path
+local add_path = nil
 local function _3_(path)
   local fnl = impl()
   do end (fnl)["path"] = (fnl.path .. ";" .. path)

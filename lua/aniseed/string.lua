@@ -7,7 +7,7 @@ do
   _0_ = mod_0_
 end
 a, _2amodule_2a, _2amodule_name_2a, _2afile_2a = autoload(a, "aniseed.core"), _0_, "aniseed.string", "fnl/aniseed/string.fnl"
-local join
+local join = nil
 local function _1_(...)
   local args = {...}
   local function _2_(...)
@@ -44,7 +44,7 @@ end
 join = _1_
 _2amodule_2a["join"] = join
 _2amodule_2a["aniseed/locals"]["join"] = join
-local split
+local split = nil
 local function _2_(s, pat)
   local done_3f = false
   local acc = {}
@@ -64,28 +64,28 @@ end
 split = _2_
 _2amodule_2a["split"] = split
 _2amodule_2a["aniseed/locals"]["split"] = split
-local blank_3f
+local blank_3f = nil
 local function _3_(s)
   return (a["empty?"](s) or not string.find(s, "[^%s]"))
 end
 blank_3f = _3_
 _2amodule_2a["blank?"] = blank_3f
 _2amodule_2a["aniseed/locals"]["blank?"] = blank_3f
-local triml
+local triml = nil
 local function _4_(s)
   return string.gsub(s, "^%s*(.-)", "%1")
 end
 triml = _4_
 _2amodule_2a["triml"] = triml
 _2amodule_2a["aniseed/locals"]["triml"] = triml
-local trimr
+local trimr = nil
 local function _5_(s)
   return string.gsub(s, "(.-)%s*$", "%1")
 end
 trimr = _5_
 _2amodule_2a["trimr"] = trimr
 _2amodule_2a["aniseed/locals"]["trimr"] = trimr
-local trim
+local trim = nil
 local function _6_(s)
   return string.gsub(s, "^%s*(.-)%s*$", "%1")
 end
