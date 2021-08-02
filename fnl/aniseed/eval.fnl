@@ -13,6 +13,5 @@
     (xpcall
       (fn []
         (-> code
-            (compile.macros-prefix opts)
             (fnl.eval (a.merge {:compiler-env _G} opts))))
       fnl.traceback)))
