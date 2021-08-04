@@ -81,8 +81,8 @@ do
         opts0 = {}
       end
       local glob_expr = "**/*.fnl"
-      local fnl_dir = (opts0.input or (config_dir .. fs["path-sep"] .. "fnl"))
-      local lua_dir = (opts0.output or (config_dir .. fs["path-sep"] .. "lua"))
+      local fnl_dir = nvim.fn.expand((opts0.input or (config_dir .. fs["path-sep"] .. "fnl")))
+      local lua_dir = nvim.fn.expand((opts0.output or (config_dir .. fs["path-sep"] .. "lua")))
       package.path = (package.path .. ";" .. lua_dir .. fs["path-sep"] .. "?.lua")
       local function _4_(path)
         if fs["macro-file-path?"](path) then
