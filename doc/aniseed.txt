@@ -530,8 +530,8 @@ example.
     See |aniseed-env| for more information. `opts` is an optional table that
     can contain the following:
       `module` - name of the module to load on init, defaults to `"init"`.
-      `input` - dir under config for input, defaults to `"/fnl"`.
-      `output` - dir under config for compiled output, defaults to `"/lua"`.
+      `input` - dir for input, defaults to `"/fnl"` under config.
+      `output` - dir for compiled output, defaults to `"/lua"` under config.
     You should set the `g:aniseed#env` variable to `v:true` or your desired
     configuration table rather than calling this directly for optimal
     behaviour.
