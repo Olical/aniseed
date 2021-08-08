@@ -17,9 +17,9 @@
   (let [opts (if (= :table (type opts))
                opts
                {})
-        glob-expr "**/*.fnl" 
-        fnl-dir (or opts.input (.. config-dir fs.path-sep "fnl"))
-        lua-dir (or opts.output (.. config-dir fs.path-sep "lua"))]
+        glob-expr "**/*.fnl"
+        fnl-dir (nvim.fn.expand (or opts.input (.. config-dir fs.path-sep "fnl")))
+        lua-dir (nvim.fn.expand (or opts.output (.. config-dir fs.path-sep "lua")))]
 
     ;; Support requiring Lua modules from non-standard output directories.
     (set package.path (.. package.path ";" lua-dir fs.path-sep "?.lua"))
