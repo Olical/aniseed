@@ -23,7 +23,7 @@
   results)
 
 (defn run [mod-name]
-  (let [mod (. package.loaded mod-name)
+  (let [mod (. _G.package.loaded mod-name)
         tests (and (a.table? mod) (. mod :aniseed/tests))]
     (when (a.table? tests)
       (let [results {:tests (length tests)
@@ -71,7 +71,7 @@
         (display-results results (.. "[" mod-name "]"))))))
 
 (defn run-all []
-  (-> (a.keys package.loaded)
+  (-> (a.keys _G.package.loaded)
       (->> (a.map run)
            (a.filter a.table?)
            (a.reduce

@@ -8,8 +8,10 @@
         fnl-suffix (.. sep "fnl" sep "?.fnl")
         rtp nvim.o.runtimepath
         fnl-path (.. (rtp:gsub "," (.. fnl-suffix ";")) fnl-suffix)
-        lua-path (fnl-path:gsub (.. sep "fnl" sep) (.. sep "lua" sep))]
-    (tset compiler :path (.. fnl-path ";" lua-path))))
+        lua-path (fnl-path:gsub (.. sep "fnl" sep) (.. sep "lua" sep))
+        full-path (.. fnl-path ";" lua-path)]
+    (tset compiler :path full-path)
+    (tset compiler :macro-path full-path)))
 
 (def- state {:compiler-loaded? false})
 

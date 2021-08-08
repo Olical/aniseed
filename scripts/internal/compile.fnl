@@ -1,6 +1,7 @@
 (local fennel (require :fennel))
 
 (set fennel.path (.. fennel.path ";fnl/?.fnl"))
+(set fennel.macro-path (.. fennel.macro-path ";fnl/?.fnl"))
 
 (fn read-file [path]
   (let [file (io.open path "rb")
@@ -21,7 +22,7 @@
       (ok? result) (-> filename
                        (read-file)
                        (compile {:filename filename
-                                 :compilerEnv false}))]
+                                 :compilerEnv _G}))]
   (if ok?
     (print result)
     (error result)))

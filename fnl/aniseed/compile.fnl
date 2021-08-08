@@ -26,7 +26,8 @@
     (xpcall
       #(fnl.compileString
          (macros-prefix code opts)
-         (a.merge {:allowedGlobals false} opts))
+         (a.merge {:allowedGlobals false
+                   :compilerEnv _G} opts))
       fnl.traceback)))
 
 (defn file [src dest]
