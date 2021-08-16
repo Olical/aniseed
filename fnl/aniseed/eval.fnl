@@ -16,3 +16,23 @@
             (compile.macros-prefix opts)
             (fnl.eval (a.merge {:compiler-env _G} opts))))
       fnl.traceback)))
+
+(defn repl [opts]
+  (var eval-values nil)
+  (let [fnl (fennel.impl)
+        co (coroutine.create
+             (fn []
+               (fnl.repl
+                 (a.merge {:readChunk coroutine.yield
+                           :onValues #(set eval-values $1)
+                           :onError #(error $2)}
+                          opts))))]
+
+    (coroutine.resume co)
+    (coroutine.resume co (compile.macros-prefix nil opts))
+
+    (fn [code]
+      (coroutine.resume co code)
+      (let [prev-eval-values eval-values]
+        (set eval-values nil)
+        prev-eval-values))))

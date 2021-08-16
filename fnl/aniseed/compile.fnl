@@ -15,7 +15,7 @@
           (.. "\"" (string.gsub filename "\\" "\\\\") "\"")
           "nil")
         ")"
-        "(require-macros \"" macros-module "\")\n" code)))
+        "(require-macros \"" macros-module "\")\n" (or code ""))))
 
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to
