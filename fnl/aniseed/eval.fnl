@@ -14,7 +14,7 @@
       (fn []
         (-> code
             (compile.macros-prefix opts)
-            (fnl.eval (a.merge {:compiler-env _G} opts))))
+            (fnl.eval (a.merge {:compilerEnv _G} opts))))
       fnl.traceback)))
 
 (defn repl [opts]
@@ -23,9 +23,10 @@
         co (coroutine.create
              (fn []
                (fnl.repl
-                 (a.merge {:readChunk coroutine.yield
+                 (a.merge {:compilerEnv _G
+                           :readChunk coroutine.yield
                            :onValues #(set eval-values $1)
-                           :onError #(error $2)}
+                           :onError #(nvim.err_writeln $2)}
                           opts))))]
 
     (coroutine.resume co)
