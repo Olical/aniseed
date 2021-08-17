@@ -12,16 +12,15 @@
 (deftest repl
   ;; Basic usage with state carrying over!
   (let [eval (eval.repl)]
-    (t.pr= ["3"] (eval "(+ 1 2)"))
-    (t.pr= ["nil"] (eval "(local foo 10)"))
-    (t.pr= ["25"] (eval "(+ 15 foo)")))
+    (t.pr= [3] (eval "(+ 1 2)"))
+    (t.pr= [nil] (eval "(local foo 10)"))
+    (t.pr= [25] (eval "(+ 15 foo)")))
 
   ;; Error handling.
   (var last-error nil)
-  (let [eval (eval.repl
-               {:onError #(set last-error [$1 $2 $3])})]
-    (t.pr= ["3"] (eval "(+ 1 2)"))
-    (t.pr= ["nil"] (eval "(local foo 10)"))
+  (let [eval (eval.repl {:onError #(set last-error [$1 $2 $3])})]
+    (t.pr= [3] (eval "(+ 1 2)"))
+    (t.pr= [nil] (eval "(local foo 10)"))
 
     (t.= nil (eval "(ohno)"))
     (t.pr= ["Runtime"
@@ -32,10 +31,16 @@
     (t.= "Compile" (a.first last-error))
     (t.= "expected a function" (string.match (a.last last-error) "expected a function"))
 
-    (t.pr= ["15"] (eval "(+ foo 5)")))
+    (t.pr= [15] (eval "(+ foo 5)")))
 
   ;; Using Aniseed module macros.
   (let [eval (eval.repl)]
-    (t.= "table: 0x" (string.match (a.first (eval "(module henlo)")) "table: 0x"))
-    (t.pr= ["nil"] (eval "(def world 25)"))
-    (t.pr= ["40"] (eval "(+ 15 world)"))))
+    ;; Ensure you can run this test multiple times in one session.
+    (tset package.loaded :eval-test-module nil)
+
+    (t.pr= [{:aniseed/local-fns {}
+             :aniseed/locals {}
+             :aniseed/module "eval-test-module"}]
+           (eval "(module eval-test-module)"))
+    (t.pr= [nil] (eval "(def world 25)"))
+    (t.pr= [40] (eval "(+ 15 world)"))))

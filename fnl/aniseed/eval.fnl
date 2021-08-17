@@ -18,12 +18,15 @@
       fnl.traceback)))
 
 (defn repl [opts]
+  "Create a new REPL instance which is a function you repeatedly call with more
+  code for evaluation. The results of the evaluations are returned in a table."
   (var eval-values nil)
   (let [fnl (fennel.impl)
         co (coroutine.create
              (fn []
                (fnl.repl
                  (a.merge {:compilerEnv _G
+                           :pp a.identity
                            :readChunk coroutine.yield
                            :onValues #(set eval-values $1)
                            :onError #(nvim.err_writeln $2)}
