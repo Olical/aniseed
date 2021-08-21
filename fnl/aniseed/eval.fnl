@@ -27,10 +27,7 @@
                (fnl.repl
                  (a.merge {:compilerEnv _G
                            :pp a.identity
-                           :correlate true
-                           :useMetadata true
                            :readChunk coroutine.yield
-
                            :onValues #(set eval-values $1)
                            :onError #(nvim.err_writeln $2)}
                           opts))))]
