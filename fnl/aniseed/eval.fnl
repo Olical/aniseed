@@ -27,13 +27,17 @@
                (fnl.repl
                  (a.merge {:compilerEnv _G
                            :pp a.identity
+                           :correlate true
+                           :useMetadata true
                            :readChunk coroutine.yield
+
                            :onValues #(set eval-values $1)
                            :onError #(nvim.err_writeln $2)}
                           opts))))]
 
     (coroutine.resume co)
     (coroutine.resume co (compile.macros-prefix nil opts))
+    (set eval-values nil)
 
     (fn [code]
       (coroutine.resume co code)
