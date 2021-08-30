@@ -17,6 +17,10 @@
         ")"
         "(require-macros \"" macros-module "\")\n" (or code ""))))
 
+;; Magic strings from the macros that allow us to emit clean code.
+(def- delete-marker-pat "\n[^\n]-\"ANISEED_DELETE_ME\".-")
+(def- replace-marker-pat "\n[^\n]-\"ANISEED_REPLACE_ME\".-")
+
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to
   fennel.compileString with some wrapping, returns an (ok? result)
@@ -24,10 +28,15 @@
 
   (let [fnl (fennel.impl)]
     (xpcall
-      #(fnl.compileString
-         (macros-prefix code opts)
-         (a.merge {:allowedGlobals false
-                   :compilerEnv _G} opts))
+      (fn []
+        (-> (macros-prefix code opts)
+            (fnl.compileString
+              (a.merge {:allowedGlobals false
+                        :compilerEnv _G} opts))
+            (string.gsub (.. delete-marker-pat "\n") "\n")
+            (string.gsub (.. delete-marker-pat "$") "")
+            (string.gsub (.. replace-marker-pat "\n") "*module*\n")
+            (string.gsub (.. replace-marker-pat "$") "*module*")))
       fnl.traceback)))
 
 (defn file [src dest]

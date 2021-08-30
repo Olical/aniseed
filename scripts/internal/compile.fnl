@@ -9,13 +9,16 @@
     (file:close)
     content))
 
+(local delete-marker-pat "\n[^\n]-\"ANISEED_DELETE_ME\".-")
+
 (fn compile [content opts]
   (xpcall
     (fn []
-      (fennel.compileString
-        (.. "(local *file* \"" opts.filename "\")"
-            "(require-macros :aniseed.macros)\n" content)
-        opts))
+      (-> (.. "(local *file* \"" opts.filename "\")"
+              "(require-macros :aniseed.macros)\n" content)
+          (fennel.compileString opts)
+          (string.gsub (.. delete-marker-pat "\n") "\n")
+          (string.gsub (.. delete-marker-pat "$") "")))
     fennel.traceback))
 
 (let [filename (. arg 1)
