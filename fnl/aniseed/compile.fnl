@@ -18,8 +18,11 @@
         "(require-macros \"" macros-module "\")\n" (or code ""))))
 
 ;; Magic strings from the macros that allow us to emit clean code.
-(def- delete-marker-pat "\n[^\n]-\"ANISEED_DELETE_ME\".-")
-(def- replace-marker-pat "\n[^\n]-\"ANISEED_REPLACE_ME\".-")
+(def marker-prefix "ANISEED_")
+(def delete-marker (.. marker-prefix "DELETE_ME"))
+(def replace-marker (.. marker-prefix "REPLACE_ME"))
+(def- delete-marker-pat (.. "\n[^\n]-\"" delete-marker "\".-"))
+(def- replace-marker-pat (.. "\n[^\n]-\"" replace-marker "\".-"))
 
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to

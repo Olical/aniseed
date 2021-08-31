@@ -17,6 +17,15 @@
             (fnl.eval (a.merge {:compilerEnv _G} opts))))
       fnl.traceback)))
 
+(defn- clean-values [vals]
+  (a.filter
+    (fn [val]
+      (if (a.table? val)
+        (and (not= compile.delete-marker (a.first val))
+             (not= compile.replace-marker (a.first val)))
+        true))
+    vals))
+
 (defn repl [opts]
   "Create a new REPL instance which is a function you repeatedly call with more
   code for evaluation. The results of the evaluations are returned in a table."
@@ -28,7 +37,7 @@
                  (a.merge {:compilerEnv _G
                            :pp a.identity
                            :readChunk coroutine.yield
-                           :onValues #(set eval-values $1)
+                           :onValues #(set eval-values (clean-values $1))
                            :onError #(nvim.err_writeln $2)}
                           opts))))]
 

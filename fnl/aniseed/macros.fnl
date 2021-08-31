@@ -47,7 +47,7 @@
 (fn module [mod-name mod-fns mod-base]
   (let [;; So we can check for existing values and know if we're in an interactive eval.
         ;; If the module doesn't exist we're compiling and can skip interactive tooling.
-        existing-mod (. package.loaded mod-name)
+        existing-mod (. package.loaded (tostring mod-name))
 
         ;; The final result table that gets returned from the macro.
         ;; This is the best way I've found to introduce many (local ...) forms from one macro.
@@ -109,15 +109,16 @@
 
     ;; Now we can expand any existing locals into the current scope.
     ;; Since this will only happen in interactive evals we can generate messy code.
-    (when (and existing-mod existing-mod._LOCALS)
+    (when existing-mod
       ;; Expand exported values into the current scope, except _LOCALS.
       (each [k v (pairs existing-mod)]
         (when (not= k locals-key)
           (table.insert result `(local ,(sym k) (. ,mod-sym ,k)))))
 
       ;; Expand locals into the current scope.
-      (each [k v (pairs existing-mod._LOCALS)]
-        (table.insert result `(local ,(sym k) (. ,mod-locals-sym ,k)))))
+      (when existing-mod._LOCALS
+        (each [k v (pairs existing-mod._LOCALS)]
+          (table.insert result `(local ,(sym k) (. ,mod-locals-sym ,k))))))
 
     result))
 

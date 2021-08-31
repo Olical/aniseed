@@ -34,13 +34,16 @@
     (t.pr= [15] (eval "(+ foo 5)")))
 
   ;; Using Aniseed module macros.
-  (let [eval (eval.repl)]
+  (let [eval1 (eval.repl)
+        eval2 (eval.repl)]
     ;; Ensure you can run this test multiple times in one session.
     (tset package.loaded :eval-test-module nil)
 
-    (t.pr= [{:aniseed/local-fns {}
-             :aniseed/locals {}
-             :aniseed/module "eval-test-module"}]
-           (eval "(module eval-test-module)"))
-    (t.pr= [nil] (eval "(def world 25)"))
-    (t.pr= [40] (eval "(+ 15 world)"))))
+    ;; Creating a new module
+    (t.pr= [] (eval1 "(module eval-test-module)"))
+    (t.pr= [] (eval1 "(def world 25)"))
+    (t.pr= [40] (eval1 "(+ 15 world)"))
+
+    ;; Entering an existing module
+    (t.pr= [] (eval2 "(module eval-test-module)"))
+    (t.pr= [40] (eval2 "(+ 15 world)"))))
