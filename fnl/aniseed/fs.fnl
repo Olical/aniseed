@@ -37,4 +37,4 @@
   "Check if the path is a specially treated Aniseed / Fennel macros file.
   We preserve these and don't try to compile them to Lua since you can't
   do that."
-  (string.match path "macros.fnl$"))
+  (a.string? (string.match path "macros?.fnl$")))
