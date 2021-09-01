@@ -11,11 +11,11 @@ do
   _2amodule_locals_2a = (_2amodule_2a)._LOCALS
 end
 local autoload = (require("aniseed.autoload")).autoload
-local str, nvim, a, fs = autoload("aniseed.string"), autoload("aniseed.nvim"), autoload("aniseed.core"), autoload("aniseed.fs")
-do end (_2amodule_locals_2a)["str"] = str
-_2amodule_locals_2a["nvim"] = nvim
-_2amodule_locals_2a["a"] = a
+local a, fs, nvim, str = autoload("aniseed.core"), autoload("aniseed.fs"), autoload("aniseed.nvim"), autoload("aniseed.string")
+do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fs"] = fs
+_2amodule_locals_2a["nvim"] = nvim
+_2amodule_locals_2a["str"] = str
 local function ok_3f(_1_)
   local _arg_2_ = _1_
   local tests = _arg_2_["tests"]

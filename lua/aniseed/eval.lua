@@ -11,12 +11,12 @@ do
   _2amodule_locals_2a = (_2amodule_2a)._LOCALS
 end
 local autoload = (require("aniseed.autoload")).autoload
-local fennel, compile, a, nvim, fs = autoload("aniseed.fennel"), autoload("aniseed.compile"), autoload("aniseed.core"), autoload("aniseed.nvim"), autoload("aniseed.fs")
-do end (_2amodule_locals_2a)["fennel"] = fennel
+local a, compile, fennel, fs, nvim = autoload("aniseed.core"), autoload("aniseed.compile"), autoload("aniseed.fennel"), autoload("aniseed.fs"), autoload("aniseed.nvim")
+do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["compile"] = compile
-_2amodule_locals_2a["a"] = a
-_2amodule_locals_2a["nvim"] = nvim
+_2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["fs"] = fs
+_2amodule_locals_2a["nvim"] = nvim
 local function str(code, opts)
   local fnl = fennel.impl()
   local function _1_()

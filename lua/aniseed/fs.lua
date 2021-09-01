@@ -11,9 +11,9 @@ do
   _2amodule_locals_2a = (_2amodule_2a)._LOCALS
 end
 local autoload = (require("aniseed.autoload")).autoload
-local nvim, a = autoload("aniseed.nvim"), autoload("aniseed.core")
-do end (_2amodule_locals_2a)["nvim"] = nvim
-_2amodule_locals_2a["a"] = a
+local a, nvim = autoload("aniseed.core"), autoload("aniseed.nvim")
+do end (_2amodule_locals_2a)["a"] = a
+_2amodule_locals_2a["nvim"] = nvim
 local path_sep
 do
   local os = string.lower(jit.os)

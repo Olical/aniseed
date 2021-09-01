@@ -9,6 +9,22 @@
 (fn seq? [x]
   (not (nil? (. x 1))))
 
+(fn str [x]
+  (if (= :string (type x))
+    x
+    (tostring x)))
+
+(fn sorted-each [f x]
+  (let [acc []]
+    (each [k v (pairs x)]
+      (table.insert acc [k v]))
+    (table.sort
+      acc
+      (fn [a b]
+        (< (str (. a 1)) (str (. b 1)))))
+    (each [_ [k v] (ipairs acc)]
+      (f k v))))
+
 (fn contains? [t target]
   (var seen? false)
   (each [k v (pairs t)]
@@ -84,15 +100,19 @@
 
     ;; For each function / value pair...
     (when mod-fns
-      (each [mod-fn args (pairs mod-fns)]
-        (if (seq? args)
-          ;; If it's sequential, we execute the fn for side effects.
-          (each [_ arg (ipairs args)]
-            (=> :_ `(,mod-fn ,(tostring arg))))
+      (sorted-each
+        (fn [mod-fn args]
+          (if (seq? args)
+            ;; If it's sequential, we execute the fn for side effects.
+            (each [_ arg (ipairs args)]
+              (=> :_ `(,mod-fn ,(tostring arg))))
 
-          ;; Otherwise we need to bind the execution to a name.
-          (each [bind arg (pairs args)]
-            (=> (tostring bind) `(,mod-fn ,(tostring arg))))))
+            ;; Otherwise we need to bind the execution to a name.
+            (sorted-each
+              (fn [bind arg]
+                (=> (tostring bind) `(,mod-fn ,(tostring arg))))
+              args)))
+         mod-fns)
 
       ;; Only require autoload if it's used.
       (when (contains? mod-fns autoload-sym)
@@ -111,14 +131,18 @@
     ;; Since this will only happen in interactive evals we can generate messy code.
     (when existing-mod
       ;; Expand exported values into the current scope, except _LOCALS.
-      (each [k v (pairs existing-mod)]
-        (when (not= k locals-key)
-          (table.insert result `(local ,(sym k) (. ,mod-sym ,k)))))
+      (sorted-each
+        (fn [k v]
+          (when (not= k locals-key)
+            (table.insert result `(local ,(sym k) (. ,mod-sym ,k)))))
+        existing-mod)
 
       ;; Expand locals into the current scope.
       (when existing-mod._LOCALS
-        (each [k v (pairs existing-mod._LOCALS)]
-          (table.insert result `(local ,(sym k) (. ,mod-locals-sym ,k))))))
+        (sorted-each
+          (fn [k v]
+            (table.insert result `(local ,(sym k) (. ,mod-locals-sym ,k))))
+          existing-mod._LOCALS)))
 
     result))
 

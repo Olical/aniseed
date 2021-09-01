@@ -11,11 +11,11 @@ do
   _2amodule_locals_2a = (_2amodule_2a)._LOCALS
 end
 local autoload = (require("aniseed.autoload")).autoload
-local nvim, fennel, fs, a = autoload("aniseed.nvim"), autoload("aniseed.fennel"), autoload("aniseed.fs"), autoload("aniseed.core")
-do end (_2amodule_locals_2a)["nvim"] = nvim
+local a, fennel, fs, nvim = autoload("aniseed.core"), autoload("aniseed.fennel"), autoload("aniseed.fs"), autoload("aniseed.nvim")
+do end (_2amodule_locals_2a)["a"] = a
 _2amodule_locals_2a["fennel"] = fennel
 _2amodule_locals_2a["fs"] = fs
-_2amodule_locals_2a["a"] = a
+_2amodule_locals_2a["nvim"] = nvim
 local function macros_prefix(code, opts)
   local macros_module = "aniseed.macros"
   local filename
