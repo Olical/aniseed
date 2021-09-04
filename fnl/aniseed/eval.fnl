@@ -35,6 +35,7 @@
              (fn []
                (fnl.repl
                  (a.merge {:compilerEnv _G
+                           :allowedGlobals false
                            :pp a.identity
                            :readChunk coroutine.yield
                            :onValues #(set eval-values (clean-values $1))

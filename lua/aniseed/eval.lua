@@ -48,7 +48,7 @@ local function repl(opts)
     local function _6_(_241, _242)
       return nvim.err_writeln(_242)
     end
-    return fnl.repl(a.merge({compilerEnv = _G, pp = a.identity, readChunk = coroutine.yield, onValues = _5_, onError = _6_}, opts))
+    return fnl.repl(a.merge({compilerEnv = _G, allowedGlobals = false, pp = a.identity, readChunk = coroutine.yield, onValues = _5_, onError = _6_}, opts))
   end
   co = coroutine.create(_4_)
   coroutine.resume(co)
