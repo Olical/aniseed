@@ -26,10 +26,10 @@ _2amodule_2a["ok?"] = ok_3f
 local function display_results(results, prefix)
   do
     local _let_3_ = results
-    local assertions = _let_3_["assertions"]
-    local assertions_passed = _let_3_["assertions-passed"]
     local tests = _let_3_["tests"]
     local tests_passed = _let_3_["tests-passed"]
+    local assertions = _let_3_["assertions"]
+    local assertions_passed = _let_3_["assertions-passed"]
     local _4_
     if ok_3f(results) then
       _4_ = "OK"
@@ -45,7 +45,7 @@ local function run(mod_name)
   local mod = _G.package.loaded[mod_name]
   local tests = (a["table?"](mod) and mod._TESTS)
   if a["table?"](tests) then
-    local results = {["assertions-passed"] = 0, ["tests-passed"] = 0, assertions = 0, tests = #tests}
+    local results = {tests = #tests, ["tests-passed"] = 0, assertions = 0, ["assertions-passed"] = 0}
     for label, f in pairs(tests) do
       local test_failed = false
       a.update(results, "tests", a.inc)
@@ -82,15 +82,7 @@ local function run(mod_name)
             return fail(desc, "Expected '", a["pr-str"](e), "' but received '", a["pr-str"](r), "'")
           end
         end
-        local function _13_(r, desc)
-          begin()
-          if r then
-            return pass()
-          else
-            return fail(desc, "Expected truthy result but received '", a["pr-str"](r), "'")
-          end
-        end
-        local function _15_(e, r, desc)
+        local function _13_(e, r, desc)
           begin()
           local se = a["pr-str"](e)
           local sr = a["pr-str"](r)
@@ -100,7 +92,15 @@ local function run(mod_name)
             return fail(desc, "Expected (with pr) '", se, "' but received '", sr, "'")
           end
         end
-        t = {["="] = _11_, ["ok?"] = _13_, ["pr="] = _15_}
+        local function _15_(r, desc)
+          begin()
+          if r then
+            return pass()
+          else
+            return fail(desc, "Expected truthy result but received '", a["pr-str"](r), "'")
+          end
+        end
+        t = {["="] = _11_, ["pr="] = _13_, ["ok?"] = _15_}
         local _17_, _18_ = nil, nil
         local function _19_()
           return f(t)
@@ -126,7 +126,7 @@ local function run_all()
     end
     return totals
   end
-  return display_results(a.reduce(_23_, {["assertions-passed"] = 0, ["tests-passed"] = 0, assertions = 0, tests = 0}, a.filter(a["table?"], a.map(run, a.keys(_G.package.loaded)))), "[total]")
+  return display_results(a.reduce(_23_, {tests = 0, ["tests-passed"] = 0, assertions = 0, ["assertions-passed"] = 0}, a.filter(a["table?"], a.map(run, a.keys(_G.package.loaded)))), "[total]")
 end
 _2amodule_2a["run-all"] = run_all
 local function suite()

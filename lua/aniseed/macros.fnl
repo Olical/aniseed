@@ -63,7 +63,7 @@
 (fn module [mod-name mod-fns mod-base]
   (let [;; So we can check for existing values and know if we're in an interactive eval.
         ;; If the module doesn't exist we're compiling and can skip interactive tooling.
-        existing-mod (. package.loaded (tostring mod-name))
+        existing-mod (. _G.package.loaded (tostring mod-name))
 
         ;; The final result table that gets returned from the macro.
         ;; This is the best way I've found to introduce many (local ...) forms from one macro.
