@@ -2,15 +2,6 @@
   {autoload {nvim aniseed.nvim
              a aniseed.core}})
 
-(def path-sep
-  ;; https://github.com/nvim-lua/plenary.nvim/blob/8bae2c1fadc9ed5bfcfb5ecbd0c0c4d7d40cb974/lua/plenary/path.lua#L20-L31
-  (let [os (string.lower jit.os)]
-    (if (or (= :linux os)
-            (= :osx os)
-            (= :bsd os))
-      "/"
-      "\\")))
-
 (defn basename [path]
   (nvim.fn.fnamemodify path ":h"))
 
@@ -38,3 +29,12 @@
   We preserve these and don't try to compile them to Lua since you can't
   do that."
   (a.string? (string.match path "macros?.fnl$")))
+
+(def path-sep
+  ;; https://github.com/nvim-lua/plenary.nvim/blob/8bae2c1fadc9ed5bfcfb5ecbd0c0c4d7d40cb974/lua/plenary/path.lua#L20-L31
+  (let [os (string.lower jit.os)]
+    (if (or (= :linux os)
+            (= :osx os)
+            (= :bsd os))
+      "/"
+      "\\")))
