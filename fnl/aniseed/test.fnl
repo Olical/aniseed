@@ -24,7 +24,7 @@
 
 (defn run [mod-name]
   (let [mod (. _G.package.loaded mod-name)
-        tests (and (a.table? mod) (. mod :_TESTS))]
+        tests (and (a.table? mod) (. mod :aniseed/tests))]
     (when (a.table? tests)
       (let [results {:tests (length tests)
                      :tests-passed 0

@@ -7,8 +7,8 @@ do
 end
 local _2amodule_locals_2a
 do
-  _2amodule_2a["_LOCALS"] = {}
-  _2amodule_locals_2a = (_2amodule_2a)._LOCALS
+  _2amodule_2a["aniseed/locals"] = {}
+  _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("aniseed.autoload")).autoload
 local a, compile, fennel, fs, nvim = autoload("aniseed.core"), autoload("aniseed.compile"), autoload("aniseed.fennel"), autoload("aniseed.fs"), autoload("aniseed.nvim")
