@@ -3,7 +3,11 @@
              a aniseed.core}})
 
 (defn contains? [s substr]
-  (values substr (string.match s substr)))
+  (values
+    substr
+    (if (string.find s substr)
+      substr
+      s)))
 
 (deftest str
   (t.pr= [true 10] [(eval.str "(+ 4 6)")])
@@ -25,11 +29,16 @@
     (t.pr= [nil] (eval! "(local foo 10)"))
 
     (t.= nil (eval! "(ohno)"))
-    (t.= "Runtime" (a.first last-error))
-    (t.= (contains? (a.second last-error) "attempt to call global 'ohno'"))
+    (t.= "Compile" (a.first last-error))
+    (t.= (contains? (a.second last-error) "unknown global in strict mode: ohno"))
+
     (t.= nil (eval! "(())"))
     (t.= "Compile" (a.first last-error))
     (t.= (contains? (a.second last-error) "expected a function"))
+
+    (t.= nil (eval! "(let [x nil] (.. :foo x :bar))"))
+    (t.= "Runtime" (a.first last-error))
+    (t.= (contains? (a.second last-error) "attempt to concatenate local 'x' %(a nil value%)"))
 
     (t.pr= [15] (eval! "(+ foo 5)"))
 
