@@ -42,6 +42,11 @@
 
     (t.pr= [15] (eval! "(+ foo 5)"))
 
+    (t.pr= nil (eval! "(((("))
+    (t.pr= nil (eval! "))))"))
+    (t.= "Compile" (a.first last-error))
+    (t.= (contains? (a.second last-error) "expected a function, macro, or special to call"))
+
     (t.= nil (eval! "(error :ohno)"))
     (t.= "Runtime" (a.first last-error))
     (t.= (contains? (a.second last-error) "ohno")))
