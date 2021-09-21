@@ -22,7 +22,8 @@
         lua-dir (nvim.fn.expand (or opts.output (.. config-dir fs.path-sep "lua")))]
 
     ;; Support requiring Lua modules from non-standard output directories.
-    (set package.path (.. package.path ";" lua-dir fs.path-sep "?.lua"))
+    (when opts.output
+      (set package.path (.. package.path ";" lua-dir fs.path-sep "?.lua")))
 
     (when
       (and
@@ -30,8 +31,7 @@
         (or (not= false opts.compile)
             (os.getenv "ANISEED_ENV_COMPILE"))
 
-        ;; And a source Fennel file needs to be new than it's compiled
-        ;; Lua counterpart.
+        ;; And a source Fennel file needs to be newer than the compiled Lua counterpart.
         (fs.glob-dir-newer?
           fnl-dir lua-dir glob-expr
           (fn [path]
