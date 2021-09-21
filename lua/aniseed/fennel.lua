@@ -18,10 +18,19 @@ _2amodule_locals_2a["nvim"] = nvim
 _2amodule_locals_2a["str"] = str
 local function sync_rtp(compiler)
   local fnl_suffix = (fs["path-sep"] .. "fnl" .. fs["path-sep"] .. "?.fnl")
+  local lua_suffix = (fs["path-sep"] .. "lua" .. fs["path-sep"] .. "?.fnl")
+  local rtps = nvim.list_runtime_paths()
+  local fnl_paths
   local function _1_(_241)
     return (_241 .. fnl_suffix)
   end
-  compiler["macro-path"] = str.join(";", a.map(_1_, nvim.list_runtime_paths()))
+  fnl_paths = a.map(_1_, rtps)
+  local lua_paths
+  local function _2_(_241)
+    return (_241 .. lua_suffix)
+  end
+  lua_paths = a.map(_2_, rtps)
+  do end (compiler)["macro-path"] = str.join(";", a.concat(fnl_paths, lua_paths))
   return nil
 end
 _2amodule_2a["sync-rtp"] = sync_rtp

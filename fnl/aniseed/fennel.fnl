@@ -6,11 +6,16 @@
 
 (defn sync-rtp [compiler]
   "Synchronises the runtime paths into the fennel.macro-path"
-  (let [fnl-suffix (.. fs.path-sep "fnl" fs.path-sep "?.fnl")]
-    (tset compiler :macro-path
-          (->> (nvim.list_runtime_paths)
-               (a.map #(.. $ fnl-suffix))
-               (str.join ";")))))
+  (let [;; For direct macros under the fnl dir.
+        fnl-suffix (.. fs.path-sep "fnl" fs.path-sep "?.fnl")
+
+        ;; For macros embedded from other tools under your lua dir.
+        lua-suffix (.. fs.path-sep "lua" fs.path-sep "?.fnl")
+
+        rtps (nvim.list_runtime_paths)
+        fnl-paths (a.map #(.. $ fnl-suffix) rtps)
+        lua-paths (a.map #(.. $ lua-suffix) rtps)]
+    (tset compiler :macro-path (str.join ";" (a.concat fnl-paths lua-paths)))))
 
 (def- state {:compiler-loaded? false})
 
