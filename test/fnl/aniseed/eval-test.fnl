@@ -15,6 +15,14 @@
     (t.= false success?)
     (t.= (contains? err "unknown global in strict mode: ohno"))))
 
+(deftest clean-error
+  (t.= "[nope] it's okay" (eval.clean-error "[nope] it's okay"))
+  (t.= "oh no" (eval.clean-error "[string [[[]]:10: oh no"))
+  (t.= "attempt to call field 'secone' (a nil value)"
+       (eval.clean-error "[string \"local a0 = ___replLocals___['a0']...\"]:49: attempt to call field 'secone' (a nil value)"))
+  (t.= "expected a..."
+       (eval.clean-error "Compile error in unknown:1\n  expected a...")))
+
 (deftest repl
   ;; Basic usage with state carrying over!
   (let [eval! (eval.repl)]
@@ -24,32 +32,27 @@
 
   ;; Error handling.
   (var last-error nil)
-  (let [eval! (eval.repl {:onError #(set last-error [$1 $2 $3])})]
+  (let [eval! (eval.repl {:error-handler #(set last-error $1)})]
     (t.pr= [3] (eval! "(+ 1 2)"))
     (t.pr= [nil] (eval! "(local foo 10)"))
 
     (t.= nil (eval! "(ohno)"))
-    (t.= "Compile" (a.first last-error))
-    (t.= (contains? (a.second last-error) "unknown global in strict mode: ohno"))
+    (t.= (contains? last-error "unknown global in strict mode: ohno"))
 
     (t.= nil (eval! "(())"))
-    (t.= "Compile" (a.first last-error))
-    (t.= (contains? (a.second last-error) "expected a function"))
+    (t.= (contains? last-error "expected a function"))
 
     (t.= nil (eval! "(let [x nil] (.. :foo x :bar))"))
-    (t.= "Runtime" (a.first last-error))
-    (t.= (contains? (a.second last-error) "attempt to concatenate local 'x' %(a nil value%)"))
+    (t.= (contains? last-error "attempt to concatenate local 'x' %(a nil value%)"))
 
     (t.pr= [15] (eval! "(+ foo 5)"))
 
     (t.pr= nil (eval! "(((("))
     (t.pr= nil (eval! "))))"))
-    (t.= "Compile" (a.first last-error))
-    (t.= (contains? (a.second last-error) "expected a function, macro, or special to call"))
+    (t.= (contains? last-error "expected a function, macro, or special to call"))
 
     (t.= nil (eval! "(error :ohno)"))
-    (t.= "Runtime" (a.first last-error))
-    (t.= (contains? (a.second last-error) "ohno")))
+    (t.= (contains? last-error "ohno")))
 
   ;; Using Aniseed module macros.
   (let [eval-a! (eval.repl)

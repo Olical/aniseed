@@ -26,6 +26,11 @@
         true))
     vals))
 
+(defn clean-error [err]
+  (-> err
+      (string.gsub "^%b[string .-%b]:%d+: " "")
+      (string.gsub "^Compile error in .-:%d+\n%s+" "")))
+
 (defn repl [opts]
   "Create a new REPL instance which is a function you repeatedly call with more
   code for evaluation. The results of the evaluations are returned in a table."
@@ -38,7 +43,9 @@
                            :pp a.identity
                            :readChunk coroutine.yield
                            :onValues #(set eval-values (clean-values $1))
-                           :onError #(nvim.err_writeln $2)}
+                           :onError #((or opts.error-handler
+                                          nvim.err_writeln)
+                                      (clean-error $2))}
                           opts))))]
 
     (coroutine.resume co)
