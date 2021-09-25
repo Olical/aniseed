@@ -13,7 +13,7 @@
   (t.pr= [true 10] [(eval.str "(+ 4 6)")])
   (let [(success? err) (eval.str "(ohno)")]
     (t.= false success?)
-    (t.= (contains? err "unknown global in strict mode: ohno"))))
+    (t.= (contains? err "unknown identifier in strict mode: ohno"))))
 
 (deftest clean-error
   (t.= "[nope] it's okay" (eval.clean-error "[nope] it's okay"))
@@ -37,7 +37,7 @@
     (t.pr= [nil] (eval! "(local foo 10)"))
 
     (t.= nil (eval! "(ohno)"))
-    (t.= (contains? last-error "unknown global in strict mode: ohno"))
+    (t.= (contains? last-error "attempt to call global 'ohno' (a nil value)"))
 
     (t.= nil (eval! "(())"))
     (t.= (contains? last-error "expected a function"))
