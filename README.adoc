@@ -12,7 +12,7 @@ Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-p
 
 [source,viml]
 ----
-Plug 'Olical/aniseed', { 'tag': 'v3.21.0' }
+Plug 'Olical/aniseed', { 'tag': 'v3.22.0' }
 ----
 
 For interactive evaluation you need to install https://github.com/Olical/conjure[Conjure]. It'll allow you to send portions of your code off for evaluation as well as see the results in an interactive log buffer.
