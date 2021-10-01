@@ -20,9 +20,7 @@
 ;; Magic strings from the macros that allow us to emit clean code.
 (def marker-prefix "ANISEED_")
 (def delete-marker (.. marker-prefix "DELETE_ME"))
-(def replace-marker (.. marker-prefix "REPLACE_ME"))
 (def- delete-marker-pat (.. "\n[^\n]-\"" delete-marker "\".-"))
-(def- replace-marker-pat (.. "\n[^\n]-\"" replace-marker "\".-"))
 
 (defn str [code opts]
   "Compile some Fennel code as a string into Lua. Maps to
@@ -37,9 +35,7 @@
               (a.merge {:allowedGlobals false
                         :compilerEnv _G} opts))
             (string.gsub (.. delete-marker-pat "\n") "\n")
-            (string.gsub (.. delete-marker-pat "$") "")
-            (string.gsub (.. replace-marker-pat "\n") "*module*\n")
-            (string.gsub (.. replace-marker-pat "$") "*module*")))
+            (string.gsub (.. delete-marker-pat "$") "")))
       fnl.traceback)))
 
 (defn file [src dest]
