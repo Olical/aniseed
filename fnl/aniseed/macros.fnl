@@ -62,6 +62,10 @@
         ;; If the module doesn't exist we're compiling and can skip interactive tooling.
         existing-mod (. package.loaded (tostring mod-name))
 
+        ;; We don't count userdata as a module, there seems to be a case where
+        ;; the module has userdata under it's name but I don't know why.
+        existing-mod? (and existing-mod (not= :userdata (type existing-mod)))
+
         ;; The final result table that gets returned from the macro.
         ;; This is the best way I've found to introduce many (local ...) forms from one macro.
         result `[,delete-marker
@@ -71,7 +75,7 @@
                  (local ,mod-name-sym ,(tostring mod-name))
 
                  ;; Only expose the module table if it doesn't exist yet.
-                 (local ,mod-sym ,(if existing-mod
+                 (local ,mod-sym ,(if existing-mod?
                                     `(. package.loaded ,mod-name-sym)
                                     `(do
                                        (tset package.loaded ,mod-name-sym ,(or mod-base {}))
@@ -79,7 +83,7 @@
 
                  ;; As we def values we insert them into locals.
                  ;; This table is then expanded in subsequent interactive evals.
-                 (local ,mod-locals-sym ,(if existing-mod
+                 (local ,mod-locals-sym ,(if existing-mod?
                                            `(. ,mod-sym ,locals-key)
                                            `(do
                                               (tset ,mod-sym ,locals-key {})
@@ -124,7 +128,7 @@
 
     ;; Now we can expand any existing locals into the current scope.
     ;; Since this will only happen in interactive evals we can generate messy code.
-    (when existing-mod
+    (when existing-mod?
       ;; Expand exported values into the current scope, except aniseed/locals.
       (sorted-each
         (fn [k v]
