@@ -27,28 +27,34 @@
   fennel.compileString with some wrapping, returns an (ok? result)
   tuple. Automatically requires the Aniseed macros."
 
+  (global ANISEED_STATIC_MODULES (= true (a.get opts :static?)))
+
   (let [fnl (fennel.impl)]
     (xpcall
       (fn []
         (-> (macros-prefix code opts)
             (fnl.compileString
-              (a.merge {:allowedGlobals false
-                        :compilerEnv _G} opts))
+              (a.merge! {:allowedGlobals false
+                         :compilerEnv _G} opts))
             (string.gsub (.. delete-marker-pat "\n") "\n")
             (string.gsub (.. delete-marker-pat "$") "")))
       fnl.traceback)))
 
-(defn file [src dest]
+(defn file [src dest opts]
   "Compile the source file into the destination file. Will create any
   required ancestor directories for the destination file to exist."
   (let [code (a.slurp src)]
-    (match (str code {:filename src})
+    (match (str code
+                (a.merge!
+                  {:filename src
+                   :static? true}
+                  opts))
       (false err) (nvim.err_writeln err)
       (true result) (do
                       (-> dest fs.basename fs.mkdirp)
                       (a.spit dest result)))))
 
-(defn glob [src-expr src-dir dest-dir]
+(defn glob [src-expr src-dir dest-dir opts]
   "Match all files against the src-expr under the src-dir then compile
   them into the dest-dir as Lua."
   (each [_ path (ipairs (fs.relglob src-dir src-expr))]
@@ -63,4 +69,5 @@
         (.. src-dir path)
         (string.gsub
           (.. dest-dir path)
-          ".fnl$" ".lua")))))
+          ".fnl$" ".lua")
+        opts))))
