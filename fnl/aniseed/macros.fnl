@@ -62,9 +62,11 @@
         ;; If the module doesn't exist we're compiling and can skip interactive tooling.
         existing-mod (. package.loaded (tostring mod-name))
 
-        ;; We don't count userdata as a module, there seems to be a case where
-        ;; the module has userdata under it's name but I don't know why.
-        existing-mod? (and existing-mod (not= :userdata (type existing-mod)))
+        ;; We don't count userdata / other types as an existing module since we
+        ;; can't really work with anything other than a table. If it's not a
+        ;; table it's probably not a module Aniseed can work with in general
+        ;; since it's assumed all Aniseed modules are table based.
+        existing-mod? (= :table (type existing-mod))
 
         ;; The final result table that gets returned from the macro.
         ;; This is the best way I've found to introduce many (local ...) forms from one macro.
