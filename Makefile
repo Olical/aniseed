@@ -5,7 +5,7 @@ SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.f
 default: deps compile test
 
 deps:
-	scripts/dep.sh bakpakin Fennel 28911fade861a8dd14e36b91d21d438a90cea5d4
+	scripts/dep.sh bakpakin Fennel 887e7a427622458345c3b269488ea47002e65caa
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make build
 
