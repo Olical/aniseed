@@ -21,8 +21,7 @@
   (a.filter
     (fn [val]
       (if (a.table? val)
-        (and (not= compile.delete-marker (a.first val))
-             (not= compile.replace-marker (a.first val)))
+        (not= compile.delete-marker (a.first val))
         true))
     vals))
 
