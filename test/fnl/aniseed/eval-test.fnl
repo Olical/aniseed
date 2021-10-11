@@ -55,8 +55,9 @@
     (t.= (contains? last-error "ohno")))
 
   ;; Using Aniseed module macros.
+  ;; TODO These tests are flaky... why!?
   (let [eval-a! (eval.repl)
-        eval-b! (eval.repl) ]
+        eval-b! (eval.repl)]
     ;; Ensure you can run this test multiple times in one session.
     (tset package.loaded :eval-test-module nil)
 
