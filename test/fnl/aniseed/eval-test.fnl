@@ -55,27 +55,28 @@
     (t.= (contains? last-error "ohno")))
 
   ;; Using Aniseed module macros.
-  ;; TODO These tests are flaky... why!?
-  (let [eval-a! (eval.repl)
-        eval-b! (eval.repl)]
-    ;; Ensure you can run this test multiple times in one session.
-    (tset package.loaded :eval-test-module nil)
 
-    ;; Creating a new module
+  ;; Ensure you can run this test multiple times in one session.
+  (tset package.loaded :eval-test-module nil)
+  (tset package.preload :eval-test-module nil)
+
+  ;; Creating a new module
+  (let [eval-a! (eval.repl)]
     (t.pr= [] (eval-a! "(module eval-test-module)"))
     (t.pr= [] (eval-a! "(def world 25)"))
     (t.pr= [] (eval-a! "(def- shh 10)"))
-    (t.pr= [40] (eval-a! "(+ 15 world)"))
+    (t.pr= [40] (eval-a! "(+ 15 world)")))
 
-    ;; Entering an existing module
+  ;; Entering an existing module
+  (let [eval-b! (eval.repl)]
     (t.pr= [] (eval-b! "(module eval-test-module)"))
     (t.pr= [40] (eval-b! "(+ 15 world)"))
     (t.pr= [25] (eval-b! "(+ 15 shh)"))
     (t.pr= [] (eval-b! "(def world (+ world 20))"))
-    (t.pr= [] (eval-b! "(def- shh (+ shh 10))"))
+    (t.pr= [] (eval-b! "(def- shh (+ shh 10))")))
 
-    ;; And again!
-    (let [eval-c! (eval.repl)]
-      (t.pr= [] (eval-c! "(module eval-test-module)"))
-      (t.pr= [60] (eval-c! "(+ 15 world)"))
-      (t.pr= [35] (eval-c! "(+ 15 shh)")))))
+  ;; And again!
+  (let [eval-c! (eval.repl)]
+    (t.pr= [] (eval-c! "(module eval-test-module)"))
+    (t.pr= [60] (eval-c! "(+ 15 world)"))
+    (t.pr= [35] (eval-c! "(+ 15 shh)"))))

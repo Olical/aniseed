@@ -60,6 +60,7 @@ local function repl(opts)
   coroutine.resume(co, compile["macros-prefix"](nil, opts0))
   eval_values = nil
   local function _7_(code)
+    ANISEED_STATIC_MODULES = false
     coroutine.resume(co, code)
     local prev_eval_values = eval_values
     eval_values = nil

@@ -53,6 +53,7 @@
     (set eval-values nil)
 
     (fn [code]
+      (global ANISEED_STATIC_MODULES false)
       (coroutine.resume co code)
       (let [prev-eval-values eval-values]
         (set eval-values nil)
