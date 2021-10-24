@@ -8,13 +8,6 @@ Further documentation can be found in link:doc/aniseed.txt[`:help aniseed`]. The
 
 == Installation
 
-Use your favourite plugin manager, I recommend https://github.com/junegunn/vim-plug[vim-plug] if you don't have one already.
-
-[source,viml]
-----
-Plug 'Olical/aniseed', { 'tag': 'v3.23.0' }
-----
-
 For interactive evaluation you need to install https://github.com/Olical/conjure[Conjure]. It'll allow you to send portions of your code off for evaluation as well as see the results in an interactive log buffer.
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
@@ -22,6 +15,20 @@ You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-l
 ____
 I'm working on a Neovim + Aniseed + Conjure starter kit that contains everything you need over at https://github.com/Olical/magic-kit[Olical/magic-kit]. It's not finished yet but feel free to check it out and give me some early feedback! You can start your Neovim configuration at that point and grow it in your own direction from there.
 ____
+
+=== https://github.com/wbthomason/packer.nvim[packer.nvim]
+
+[source,lua]
+----
+use 'Olical/aniseed'
+----
+
+=== https://github.com/junegunn/vim-plug[vim-plug]
+
+[source,viml]
+----
+Plug 'Olical/aniseed'
+----
 
 == Loading Fennel Neovim configuration
 
