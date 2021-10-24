@@ -35,6 +35,7 @@
   code for evaluation. The results of the evaluations are returned in a table."
   (var eval-values nil)
   (let [fnl (fennel.impl)
+        opts (or opts {})
         co (coroutine.create
              (fn []
                (fnl.repl
