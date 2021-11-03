@@ -9,6 +9,7 @@
   (* (math.random) (or n 1)))
 
 (defn nil? [x]
+  "True if the value is equal to Lua `nil`."
   (= nil x))
 
 (defn number? [x]
