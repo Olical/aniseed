@@ -5,16 +5,31 @@
 (math.randomseed (os.time))
 
 (defn rand [n]
+  "Draw a random floating point number between 0 and `n`, where `n` is 1.0 if omitted."
   (* (math.random) (or n 1)))
-
-(defn string? [x]
-  (= "string" (type x)))
 
 (defn nil? [x]
   (= nil x))
 
+(defn number? [x]
+  "True if the value is of type 'number'."
+  (= "number" (type x)))
+
+(defn boolean? [x]
+  "True if the value is of type 'boolean'."
+  (= "boolean" (type x)))
+
+(defn string? [x]
+  "True if the value is of type 'string'."
+  (= "string" (type x)))
+
 (defn table? [x]
+  "True if the value is of type 'table'."
   (= "table" (type x)))
+
+(defn function? [value]
+  "True if the value is of type 'function'."
+  (= "function" (type value)))
 
 (defn count [xs]
   (if
