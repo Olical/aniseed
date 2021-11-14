@@ -63,6 +63,8 @@ Clojure namespaces. Here's what a module looks like.
      ;; Require macros for compile time.
      require-macros [fnl.my-proj.macros]})
 
+  ;; Only use def at the top level!
+  ;; It's not designed to be used within functions etc.
   (def- some-private-value 2)
 
   (defn- some-private-fn [x]
@@ -260,6 +262,11 @@ it is just very different to what you may have seen before.
 Not only does this make it a lot easier to require and export values from your
 module, it also allows tools like Conjure to evaluate your code within the
 right context.
+
+Bear in mind that these macros are not intended to be called dynamically at
+runtime from within functions. You should only refer to them at the very top
+level of your module file. They will almost definitely misbehave if you wrap
+them in any other forms.
 
 `(module name imports base)`
   This form should be the first thing in your file. The name should be exactly
