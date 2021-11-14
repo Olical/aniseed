@@ -37,7 +37,7 @@
     (t.pr= [nil] (eval! "(local foo 10)"))
 
     (t.= nil (eval! "(ohno)"))
-    (t.= (contains? last-error "attempt to call global 'ohno' (a nil value)"))
+    (t.= (contains? last-error "unknown identifier in strict mode: ohno"))
 
     (t.= nil (eval! "(())"))
     (t.= (contains? last-error "expected a function"))
