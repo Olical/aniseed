@@ -38,6 +38,7 @@ syn keyword FennelSpecialForm ->>
 syn keyword FennelSpecialForm -?>
 syn keyword FennelSpecialForm -?>>
 syn keyword FennelSpecialForm .
+syn keyword FennelSpecialForm ?.
 syn keyword FennelSpecialForm ..
 syn keyword FennelSpecialForm /
 syn keyword FennelSpecialForm //
