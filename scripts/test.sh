@@ -9,6 +9,9 @@
 nvim --headless -u NONE \
     $PREFIX \
     -c "set noswapfile" \
+    -c "let &runtimepath = &runtimepath . ',' . getcwd()" \
+    -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/test'" \
+    -c "let &runtimepath = &runtimepath . ',' . getcwd() . '/deps/aniseed'" \
     -c "lua package.path = package.path .. ';$(pwd)/lua/?.lua;$(pwd)/test/lua/?.lua;$(pwd)/deps/aniseed/lua/?.lua'" \
     -c "lua require('aniseed.compile').glob('**/*.fnl', 'test/fnl', 'test/lua')" \
     -c "lua require('aniseed.test').suite()" \
