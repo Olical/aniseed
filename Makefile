@@ -5,7 +5,7 @@ SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.f
 default: deps compile test
 
 deps:
-	scripts/dep.sh bakpakin Fennel a11d3658121296ee191cd0d5e3e66ba1a8abc099
+	scripts/dep.sh bakpakin Fennel 8d3c1c74e96fecb7a53620b536d2477b57546d07
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	cd deps/Fennel && make build
 
@@ -18,7 +18,6 @@ compile:
 	mkdir -p lua/aniseed/deps
 	cp fnl/aniseed/macros.fnl lua/aniseed
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
-	cp deps/Fennel/fennelview.lua lua/aniseed/deps/fennelview.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
 	sed -i "s/\"fennel\./\"aniseed.fennel./gI" lua/aniseed/deps/fennel.lua
 

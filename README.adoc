@@ -70,7 +70,6 @@ This will create some example Fennel source and tests as well as a `Makefile` to
 The following files are excluded from my license and ownership:
 
  * `lua/aniseed/deps/fennel.lua`
- * `lua/aniseed/deps/fennelview.lua`
  * `lua/aniseed/deps/nvim.lua`
 
 These files come from https://fennel-lang.org/[Fennel] and https://github.com/norcalli/nvim.lua[nvim.lua], *I did not write them*, all other files are from me and unlicenced. The aforementioned files should be considered under their respective project licences. They are copied into this repo to allow the plugin to work with systems that don't support symlinks correctly.

@@ -1,4 +1,5 @@
-(module aniseed.view)
+(module aniseed.view
+  {require {fnl aniseed.fennel}})
 
 (defn serialise [...]
-  ((require :aniseed.deps.fennelview) ...))
+  ((. (fnl.impl) :view) ...))
