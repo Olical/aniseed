@@ -193,9 +193,18 @@
      (print (.. "Elapsed time: " (/ (- end# start#) 1000000) " msecs"))
      result#))
 
+(fn wrap-module-body [...]
+   (let [body# [...]
+         last-expr# (table.remove body#)]
+     (table.insert body#
+                   `(let [original-return# (do ,last-expr#)]
+                      (or ,(sym "*module*") original-return#)))
+     `(do ,(unpack body#))))
+
 {:module module
  :def- def- :def def
  :defn- defn- :defn defn
  :defonce- defonce- :defonce defonce
+ :wrap-module-body wrap-module-body
  :deftest deftest
  :time time}

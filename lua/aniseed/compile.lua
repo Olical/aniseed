@@ -34,7 +34,7 @@ local function macros_prefix(code, opts)
       return "nil"
     end
   end
-  return ("(local *file* " .. _3_() .. ")" .. "(require-macros \"" .. macros_module .. "\")\n" .. (code or ""))
+  return ("(local *file* " .. _3_() .. ")" .. "(require-macros \"" .. macros_module .. "\")\n" .. "(wrap-module-body " .. (code or "") .. ")")
 end
 _2amodule_2a["macros-prefix"] = macros_prefix
 local marker_prefix = "ANISEED_"

@@ -15,7 +15,8 @@
           (.. "\"" (string.gsub filename "\\" "\\\\") "\"")
           "nil")
         ")"
-        "(require-macros \"" macros-module "\")\n" (or code ""))))
+        "(require-macros \"" macros-module "\")\n"
+        "(wrap-module-body " (or code "") ")")))
 
 ;; Magic strings from the macros that allow us to emit clean code.
 (def marker-prefix "ANISEED_")
