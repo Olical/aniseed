@@ -198,7 +198,7 @@
          last-expr# (table.remove body#)]
      (table.insert body#
                    `(let [original-return# (do ,last-expr#)]
-                      (or ,(sym "*module*") original-return#)))
+                      (or ,(in-scope? (sym "*module*")) original-return#)))
      `(do ,(unpack body#))))
 
 {:module module
