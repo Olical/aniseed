@@ -15,7 +15,8 @@
   (xpcall
     (fn []
       (-> (.. "(local *file* \"" opts.filename "\")"
-              "(require-macros :aniseed.macros)\n" content)
+              "(require-macros :aniseed.macros)\n"
+              "(wrap-module-body " content ")")
           (fennel.compileString opts)
           (string.gsub (.. delete-marker-pat "\n") "\n")
           (string.gsub (.. delete-marker-pat "$") "")))

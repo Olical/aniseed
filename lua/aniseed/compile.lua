@@ -78,3 +78,4 @@ local function glob(src_expr, src_dir, dest_dir, opts)
   return nil
 end
 _2amodule_2a["glob"] = glob
+return _2amodule_2a

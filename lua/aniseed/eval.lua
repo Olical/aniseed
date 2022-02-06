@@ -69,3 +69,4 @@ local function repl(opts)
   return _7_
 end
 _2amodule_2a["repl"] = repl
+return _2amodule_2a
