@@ -4,7 +4,7 @@
              nvim aniseed.nvim
              fennel aniseed.fennel}})
 
-(defn macros-prefix [code opts]
+(defn wrap-macros [code opts]
   (let [macros-module :aniseed.macros
         filename (-?> (a.get opts :filename)
                       (string.gsub
@@ -33,7 +33,7 @@
   (let [fnl (fennel.impl)]
     (xpcall
       (fn []
-        (-> (macros-prefix code opts)
+        (-> (wrap-macros code opts)
             (fnl.compileString
               (a.merge! {:allowedGlobals false
                          :compilerEnv _G} opts))

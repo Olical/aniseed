@@ -512,8 +512,9 @@ example.
 ------------------------------------------------------------------------------
 `aniseed.compile`
 
-  `(macros-prefix code)`
-    Prepends the given code with a require to the `aniseed.macros` module.
+  `(wrap-macros code)`
+    Surround the given code with a require to the `aniseed.macros` module
+    among other Aniseed macro tools.
 
   `(str code opts)`
     Compile some Fennel code as a string into Lua. Maps to

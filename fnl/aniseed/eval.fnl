@@ -13,7 +13,7 @@
     (xpcall
       (fn []
         (-> code
-            (compile.macros-prefix opts)
+            (compile.wrap-macros opts)
             (fnl.eval (a.merge {:compilerEnv _G} opts))))
       fnl.traceback)))
 
@@ -49,7 +49,7 @@
                           opts))))]
 
     (coroutine.resume co)
-    (coroutine.resume co (compile.macros-prefix nil opts))
+    (coroutine.resume co (compile.wrap-macros nil opts))
     (set eval-values nil)
 
     (fn [code]
