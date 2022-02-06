@@ -363,9 +363,9 @@ package.preload["aniseed.fennel.repl"] = package.preload["aniseed.fennel.repl"] 
           _571_ = _572_
         end
       end
-      if ((_G.type(_571_) == "table") and (nil ~= (_571_).source) and (nil ~= (_571_).linedefined) and ((_571_).what == "Lua") and (nil ~= (_571_).short_src)) then
-        local source = (_571_).source
+      if ((_G.type(_571_) == "table") and ((_571_).what == "Lua") and (nil ~= (_571_).linedefined) and (nil ~= (_571_).source) and (nil ~= (_571_).short_src)) then
         local line = (_571_).linedefined
+        local source = (_571_).source
         local src = (_571_).short_src
         local fnlsrc
         do
