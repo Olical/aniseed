@@ -291,8 +291,8 @@ them in any other forms.
        require-macros [fnl.foo.bar]}
       {:xyz "this will be the base table that gets exported"})
 <
-  You can access the current module table with `*module*` and the current
-  module name as a string with `*module-name*`. This can be useful for
+  You can access the current module table with `module` and the current
+  module name as a string with `module-name`. This can be useful for
   introspection or modification of the module table without coupling your code
   to the name of the module.
 
@@ -343,8 +343,8 @@ them in any other forms.
   time, just as a quick and easy to use tool during development.
 
 `(wrap-last-expr last-expr)`
-  Checks surrounding scope for *module* and, if found, makes sure *module* is
-  inserted after `last-expr` (and therefore *module* is returned)
+  Checks surrounding scope for module and, if found, makes sure module is
+  inserted after `last-expr` (and therefore module is returned)
 
 `(wrap-module-body ...)`
   Used by `aniseed.compile` to wrap the entire body of a file, replacing the
