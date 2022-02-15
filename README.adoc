@@ -12,9 +12,7 @@ For interactive evaluation you need to install https://github.com/Olical/conjure
 
 You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
 
-____
-I'm working on a Neovim + Aniseed + Conjure starter kit that contains everything you need over at https://github.com/Olical/magic-kit[Olical/magic-kit]. It's not finished yet but feel free to check it out and give me some early feedback! You can start your Neovim configuration at that point and grow it in your own direction from there.
-____
+Alternatively you can use https://github.com/Olical/magic-kit[Magic Kit], an opinionated starter kit that includes all sorts of essential tools.
 
 === https://github.com/wbthomason/packer.nvim[packer.nvim]
 
