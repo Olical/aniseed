@@ -12,5 +12,6 @@
 
 mkdir -p "lua/$2"
 rsync -avu --delete "deps/$1/${3:-lua/$1/}" "lua/$2/$1"
-find "lua/$2" -type f -name "*.lua" -exec sed -i '' "s/\"$1\./\"$2.$1./g" {} \;
-find "lua/$2" -type f -name "*.fnl" -exec sed -i '' "s/\"$1\./\"$2.$1./g" {} \;
+find "lua/$2" -type f -name "*.lua" -exec sed -i.aniseed_bak "s/\"$1\./\"$2.$1./g" {} \;
+find "lua/$2" -type f -name "*.fnl" -exec sed -i.aniseed_bak "s/\"$1\./\"$2.$1./g" {} \;
+find . -type f -name '*.aniseed_bak' -delete

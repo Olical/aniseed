@@ -28,10 +28,11 @@ cp deps/aniseed/seed/.gitignore .
 mv ./fnl/example ./fnl/$plug_name
 mv ./test/fnl/example ./test/fnl/$plug_name
 mv ./plugin/example.vim ./plugin/$plug_name.vim
-sed -i '' -e "s/example/$plug_name/g" ./test/fnl/$plug_name/main-test.fnl
-sed -i '' -e "s/example/$plug_name/g" ./fnl/$plug_name/main.fnl
-sed -i '' -e "s/example/$plug_name/g" ./plugin/$plug_name.vim
-sed -i '' -e "s/example/$plug_name/g" ./Makefile
+sed -i.aniseed_bak "s/example/$plug_name/g" ./test/fnl/$plug_name/main-test.fnl
+sed -i.aniseed_bak "s/example/$plug_name/g" ./fnl/$plug_name/main.fnl
+sed -i.aniseed_bak "s/example/$plug_name/g" ./plugin/$plug_name.vim
+sed -i.aniseed_bak "s/example/$plug_name/g" ./Makefile
+find . -type f -name '*.aniseed_bak' -delete
 
 printf "$(tput bold)Running Makefile...$(tput sgr0)\n\n"
 make -s &
