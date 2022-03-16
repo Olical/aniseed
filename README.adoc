@@ -28,6 +28,25 @@ use 'Olical/aniseed'
 Plug 'Olical/aniseed'
 ----
 
+== Module macros
+
+Aniseed ships with a set of module macros that make interactive evaluation not only possible, but rich and intuitive. You should read `:h aniseed` to learn the details but it's worth mentioning that you opt in by starting your file with a `(module ...)` block, you then export values from your module with the `(def...)` macros.
+
+Once you opt in your module will no longer operate like a regular Fennel module in the sense that you can't just return a table from the bottom of your file to export it like so.
+
+```fennel
+(local somemod {})
+(set somemod.foo 25)
+somemod
+```
+
+In vanilla Fennel, this will build and return a table from your module. If you use Aniseed's macro system your file must look like this instead.
+
+```fennel
+(module somemod)
+(def foo 25)
+```
+
 == Loading Fennel Neovim configuration
 
 Aniseed has a module called `aniseed.env` which will automatically compile and load Fennel code from your Neovim configuration directory as if it were natively supported by the editor, like Lua and VimL.
