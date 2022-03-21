@@ -90,6 +90,9 @@ syn keyword FennelSpecialForm while
 syn keyword FennelSpecialForm ~=
 syn keyword FennelSpecialForm with-open
 syn keyword FennelSpecialForm λ
+syn keyword FennelSpecialForm collect
+syn keyword FennelSpecialForm icollect
+syn keyword FennelSpecialForm accumulate
 
 " Aniseed macros
 syn keyword FennelSpecialForm module
