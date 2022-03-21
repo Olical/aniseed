@@ -25,6 +25,6 @@ setlocal formatoptions-=t
 setlocal comments=n:;
 setlocal commentstring=;\ %s
 
-setlocal lispwords+=collect,icollect,with-open,module
+setlocal lispwords+=collect,icollect,with-open,module,accumulate
 
 let &cpo = s:cpo_save
