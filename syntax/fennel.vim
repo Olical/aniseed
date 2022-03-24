@@ -17,10 +17,14 @@ endif
 sy match FennelComment ";.*$" contains=FennelCommentTodo,@Spell display
 sy keyword FennelCommentTodo contained FIXME XXX TODO FIXME: XXX: TODO:
 
-
-syntax match FennelStringEscape '\v\\%([abfnrtv'"\\]|x[[0-9a-fA-F]]\{2}|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])' contained
-syntax region FennelString matchgroup=FennelStringDelimiter start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=FennelStringEscape,@Spell
-syntax region FennelString matchgroup=FennelStringDelimiter start=/'/ skip=/\\\\\|\\'/ end=/'/ contains=FennelStringEscape,@Spell
+" strings
+sy region FennelString matchgroup=FennelStringDelimiter start=+"+ end=+"+
+            \ skip=+\\\\\|\\"+ contains=FennelStringEscape,FennelStringEscapeError,@Spell
+sy match FennelStringEscape +\\[abfnrtvz'"\\]+ contained
+sy match FennelStringEscape +\\x[[:xdigit:]]\{2}+ contained
+sy match FennelStringEscape +\\\%([0-1]\d\d\|2[0-4]\d\|25[0-5]\|\d\d\|\d\)+ contained
+sy match FennelStringEscapeError +\\[^abfnrtvz'"\\x0-9]+ contained
+sy match FennelStringEscapeError +\\\%([3-9]\d\d\|2[6-9]\d\|25[6-9]\)+ contained
 
 syn keyword FennelConstant nil
 
@@ -297,6 +301,8 @@ hi def link FennelString String
 hi def link FennelBuffer String
 hi def link FennelStringDelimiter String
 hi def link FennelBoolean Boolean
+hi def link FennelStringEscape Special
+hi def link FennelStringEscapeError Error
 
 hi def link FennelQuote SpecialChar
 hi def link FennelParen Delimiter
