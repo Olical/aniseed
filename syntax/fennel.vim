@@ -9,7 +9,7 @@ endif
 let s:cpo_sav = &cpo
 set cpo&vim
 
-if has("folding") && exists("g:fennel_fold") && g:fennel_fold > 0
+if get(g:, 'fennel_fold') > 0
     setlocal foldmethod=syntax
 endif
 
