@@ -13,10 +13,10 @@ if get(g:, 'fennel_fold') > 0
     setlocal foldmethod=syntax
 endif
 
-syntax keyword FennelCommentTodo contained FIXME XXX TODO FIXME: XXX: TODO:
+" comments
+sy match FennelComment ";.*$" contains=FennelCommentTodo,@Spell display
+sy keyword FennelCommentTodo contained FIXME XXX TODO FIXME: XXX: TODO:
 
-" FENNEL comments
-syn match FennelComment ";.*$" contains=FennelCommentTodo,@Spell
 
 syntax match FennelStringEscape '\v\\%([abfnrtv'"\\]|x[[0-9a-fA-F]]\{2}|25[0-5]|2[0-4][0-9]|[0-1][0-9][0-9])' contained
 syntax region FennelString matchgroup=FennelStringDelimiter start=/"/ skip=/\\\\\|\\"/ end=/"/ contains=FennelStringEscape,@Spell
