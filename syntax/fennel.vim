@@ -20,6 +20,11 @@ if get(g:, 'fennel_fold') > 0
   setlocal foldmethod=syntax
 endif
 
+" If not specified get lua version shipped with neovim
+let s:lua_version = str2float(split(luaeval("_VERSION"))[1])
+let g:fennel_lua_version = get(g:, 'fennel_lua_version', s:lua_version)
+unlet! s:lua_version
+
 " comments
 sy match FennelComment ";.*$" contains=FennelCommentTodo,@Spell display
 sy keyword FennelCommentTodo contained FIXME XXX TODO FIXME: XXX: TODO:
@@ -33,262 +38,113 @@ sy match FennelStringEscape +\\\%([0-1]\d\d\|2[0-4]\d\|25[0-5]\|\d\d\|\d\)+ cont
 sy match FennelStringEscapeError +\\[^abfnrtvz'"\\x0-9]+ contained
 sy match FennelStringEscapeError +\\\%([3-9]\d\d\|2[6-9]\d\|25[6-9]\)+ contained
 
-syn keyword FennelConstant nil
+" keywords
+sy keyword FennelConstant nil
+sy keyword FennelBoolean true false
+sy keyword FennelLogicalOperator and not or
+sy keyword FennelOperator >  <  >=  <=  =  not  not=  ~=
+sy keyword FennelOperator +  -  *  /  %  ^
+sy keyword FennelOperator .  ..  :
+sy keyword FennelDestructure & &as
 
-syn keyword FennelBoolean true
-syn keyword FennelBoolean false
+sy keyword FennelFunctionDefine fn hashfn lambda λ
+sy keyword FennelInclude import-macros include require-macros
+sy keyword FennelRepeat each for while
+sy keyword FennelConditional if match when
+sy keyword FennelDefine global local let var macros
+sy keyword FennelSpecialForm set set-forcibly! tset where #
+sy keyword FennelSpecialForm comment do eval-compiler length lua quote values
+sy keyword FennelMacro ->  ->>  -?>  -?>>  ?.
+sy keyword FennelMacro accumulate collect doto icollect macro macrodebug pick-args pick-values with-open partial
+sy match FennelQuote '`'
+sy match FennelUnquote ','
 
-" Fennel special forms
-syn keyword FennelSpecialForm #
-syn keyword FennelSpecialForm %
-syn keyword FennelSpecialForm *
-syn keyword FennelSpecialForm +
-syn keyword FennelSpecialForm -
-syn keyword FennelSpecialForm ->
-syn keyword FennelSpecialForm ->>
-syn keyword FennelSpecialForm -?>
-syn keyword FennelSpecialForm -?>>
-syn keyword FennelSpecialForm .
-syn keyword FennelSpecialForm ?.
-syn keyword FennelSpecialForm ..
-syn keyword FennelSpecialForm /
-syn keyword FennelSpecialForm //
-syn keyword FennelSpecialForm :
-syn keyword FennelSpecialForm <
-syn keyword FennelSpecialForm <=
-syn keyword FennelSpecialForm =
-syn keyword FennelSpecialForm >
-syn keyword FennelSpecialForm >=
-syn keyword FennelSpecialForm ^
-syn keyword FennelSpecialForm and
-syn keyword FennelSpecialForm comment
-syn keyword FennelSpecialForm do
-syn keyword FennelSpecialForm doc
-syn keyword FennelSpecialForm doto
-syn keyword FennelSpecialForm each
-syn keyword FennelSpecialForm eval-compiler
-syn keyword FennelSpecialForm fn
-syn keyword FennelSpecialForm for
-syn keyword FennelSpecialForm global
-syn keyword FennelSpecialForm hashfn
-syn keyword FennelSpecialForm if
-syn keyword FennelSpecialForm import-macros
-syn keyword FennelSpecialForm include
-syn keyword FennelSpecialForm lambda
-syn keyword FennelSpecialForm length
-syn keyword FennelSpecialForm let
-syn keyword FennelSpecialForm local
-syn keyword FennelSpecialForm lua
-syn keyword FennelSpecialForm macro
-syn keyword FennelSpecialForm macrodebug
-syn keyword FennelSpecialForm macros
-syn keyword FennelSpecialForm match
-syn keyword FennelSpecialForm not
-syn keyword FennelSpecialForm not=
-syn keyword FennelSpecialForm or
-syn keyword FennelSpecialForm partial
-syn keyword FennelSpecialForm pick-args
-syn keyword FennelSpecialForm pick-values
-syn keyword FennelSpecialForm quote
-syn keyword FennelSpecialForm require-macros
-syn keyword FennelSpecialForm set
-syn keyword FennelSpecialForm set-forcibly!
-syn keyword FennelSpecialForm tset
-syn keyword FennelSpecialForm values
-syn keyword FennelSpecialForm var
-syn keyword FennelSpecialForm when
-syn keyword FennelSpecialForm while
-syn keyword FennelSpecialForm ~=
-syn keyword FennelSpecialForm with-open
-syn keyword FennelSpecialForm λ
-syn keyword FennelSpecialForm collect
-syn keyword FennelSpecialForm icollect
-syn keyword FennelSpecialForm accumulate
+" Lua functions
+sy keyword FennelLuaGlobal _G _VERSION _ENV coroutine debug io math os package string table
+sy keyword FennelLuaGlobal package.config package.cpath package.loaded package.path package.preload package.searchpath
+sy keyword FennelLuaFunction assert collectgarbage dofile error getmetatable ipairs load
+sy keyword FennelLuaFunction loadfile next pairs pcall print rawequal rawget rawset require
+sy keyword FennelLuaFunction select setmetatable tonumber tostring type xpcall
+sy keyword FennelLuaFunction coroutine.create coroutine.isyieldable coroutine.resume
+sy keyword FennelLuaFunction coroutine.running coroutine.status coroutine.wrap coroutine.yield
+sy keyword FennelLuaFunction debug.debug debug.gethook debug.getinfo debug.getlocal debug.getmetatable
+sy keyword FennelLuaFunction debug.getregistry debug.getupvalue debug.sethook debug.setlocal debug.setmetatable
+sy keyword FennelLuaFunction debug.setupvalue debug.traceback debug.upvalueid debug.upvaluejoin
+sy keyword FennelLuaFunction io.close io.flush io.input io.lines io.open io.output io.popen io.read
+sy keyword FennelLuaFunction io.stderr io.stdin io.stdout io.tmpfile io.type io.write
+sy keyword FennelLuaFunction math.abs math.acos math.asin math.atan math.ceil math.cos math.deg math.exp
+sy keyword FennelLuaFunction math.floor math.fmod math.huge math.log math.max math.min math.modf math.pi
+sy keyword FennelLuaFunction math.rad math.random math.randomseed math.sin math.sqrt math.tan
+sy keyword FennelLuaFunction os.clock os.date os.difftime os.execute os.exit os.getenv os.remove
+sy keyword FennelLuaFunction os.rename os.setlocale os.time os.tmpname package.loadlib
+sy keyword FennelLuaFunction string.byte string.char string.dump string.find string.format
+sy keyword FennelLuaFunction string.gmatch string.gsub string.len string.lower string.match
+sy keyword FennelLuaFunction string.rep string.reverse string.sub string.upper
+sy keyword FennelLuaFunction table.concat table.insert table.move table.remove table.sort
 
-" Aniseed macros
-syn keyword FennelSpecialForm module
-syn keyword FennelSpecialForm defn
-syn keyword FennelSpecialForm defn-
-syn keyword FennelSpecialForm def
-syn keyword FennelSpecialForm def-
-syn keyword FennelSpecialForm defonce
-syn keyword FennelSpecialForm defonce-
-syn keyword FennelSpecialForm deftest
-syn keyword FennelSpecialForm time
-syn keyword FennelSpecialForm *module*
-syn keyword FennelSpecialForm *module-name*
-syn keyword FennelSpecialForm *file*
+if g:fennel_lua_version < 5.19 " 5.1 only
+  sy keyword FennelLuaGlobal package.loaders
+  sy keyword FennelLuaFunction getfenv loadstring module setfenv unpack debug.getfenv debug.setfenv
+  sy keyword FennelLuaFunction math.log10 package.seeall table.maxn
+endif
 
-" Lua keywords
-syntax keyword LuaSpecialValue
-	\ _G
-	\ _VERSION
-	\ assert
-	\ collectgarbage
-	\ dofile
-	\ error
-	\ getmetatable
-	\ ipairs
-	\ load
-	\ loadfile
-	\ next
-	\ pairs
-	\ pcall
-	\ print
-	\ rawequal
-	\ rawget
-	\ rawlen
-	\ rawset
-	\ require
-	\ autoload
-	\ select
-	\ setmetatable
-	\ tonumber
-	\ tostring
-	\ type
-	\ xpcall
-	\ coroutine
-	\ coroutine.create
-	\ coroutine.isyieldable
-	\ coroutine.resume
-	\ coroutine.running
-	\ coroutine.status
-	\ coroutine.wrap
-	\ coroutine.yield
-	\ debug
-	\ debug.debug
-	\ debug.gethook
-	\ debug.getinfo
-	\ debug.getlocal
-	\ debug.getmetatable
-	\ debug.getregistry
-	\ debug.getupvalue
-	\ debug.getuservalue
-	\ debug.sethook
-	\ debug.setlocal
-	\ debug.setmetatable
-	\ debug.setupvalue
-	\ debug.setuservalue
-	\ debug.traceback
-	\ debug.upvalueid
-	\ debug.upvaluejoin
-	\ io
-	\ io.close
-	\ io.flush
-	\ io.input
-	\ io.lines
-	\ io.open
-	\ io.output
-	\ io.popen
-	\ io.read
-	\ io.stderr
-	\ io.stdin
-	\ io.stdout
-	\ io.tmpfile
-	\ io.type
-	\ io.write
-	\ math
-	\ math.abs
-	\ math.acos
-	\ math.asin
-	\ math.atan
-	\ math.ceil
-	\ math.cos
-	\ math.deg
-	\ math.exp
-	\ math.floor
-	\ math.fmod
-	\ math.huge
-	\ math.log
-	\ math.max
-	\ math.maxinteger
-	\ math.min
-	\ math.mininteger
-	\ math.modf
-	\ math.pi
-	\ math.rad
-	\ math.random
-	\ math.randomseed
-	\ math.sin
-	\ math.sqrt
-	\ math.tan
-	\ math.tointeger
-	\ math.type
-	\ math.ult
-	\ os
-	\ os.clock
-	\ os.date
-	\ os.difftime
-	\ os.execute
-	\ os.exit
-	\ os.getenv
-	\ os.remove
-	\ os.rename
-	\ os.setlocale
-	\ os.time
-	\ os.tmpname
-	\ package
-	\ package.config
-	\ package.cpath
-	\ package.loaded
-	\ package.loadlib
-	\ package.path
-	\ package.preload
-	\ package.searchers
-	\ package.searchpath
-	\ string
-	\ string.byte
-	\ string.char
-	\ string.dump
-	\ string.find
-	\ string.format
-	\ string.gmatch
-	\ string.gsub
-	\ string.len
-	\ string.lower
-	\ string.match
-	\ string.pack
-	\ string.packsize
-	\ string.rep
-	\ string.reverse
-	\ string.sub
-	\ string.unpack
-	\ string.upper
-	\ table
-	\ table.concat
-	\ table.insert
-	\ table.move
-	\ table.pack
-	\ table.remove
-	\ table.sort
-	\ table.unpack
-	\ utf8
-	\ utf8.char
-	\ utf8.charpattern
-	\ utf8.codepoint
-	\ utf8.codes
-	\ utf8.len
-	\ utf8.offset
+if g:fennel_lua_version < 5.29 " 5.1 5.2
+  sy keyword FennelLuaFunction math.atan2 math.cosh math.frexp math.ldexp math.pow math.sinh
+endif
 
-" Fennel Symbols
-let s:symcharnodig = '\!\$%\&\#\*\+\-./:<=>?A-Z^_a-z|\x80-\U10FFFF'
-let s:symchar = '0-9' . s:symcharnodig
-execute 'syn match FennelSymbol "\v<%([' . s:symcharnodig . '])%([' . s:symchar . '])*>"'
-execute 'syn match FennelKeyword "\v<:%([' . s:symchar . '])*>"'
-unlet! s:symchar s:symcharnodig
+if g:fennel_lua_version > 5.19 && g:fennel_lua_version < 5.29 " 5.2 only
+  sy keyword FennelLuaGlobal bit32
+  sy keyword FennelLuaFunction bit32.arshift bit32.band bit32.bnot bit32.bor bit32.btest bit32.bxor
+  sy keyword FennelLuaFunction bit32.extract bit32.lrotate bit32.lshift bit32.replace bit32.rrotate bit32.rshift
+endif
 
-syn match FennelQuote "`"
-syn match FennelQuote "@"
+if g:fennel_lua_version > 5.19 " 5.2+
+  sy keyword FennelLuaGlobal package.searchers
+  sy keyword FennelLuaFunction debug.getuservalue debug.setuservalue table.pack table.unpack
+endif
 
+if g:fennel_lua_version > 5.29 " 5.3+
+  sy keyword FennelOperator //
+  sy keyword FennelLuaGlobal utf8
+  sy keyword FennelLuaFunction rawlen math.maxinteger math.mininteger math.tointeger math.type math.ult
+  sy keyword FennelLuaFunction string.pack string.packsize string.unpack
+  sy keyword FennelLuaFunction utf8.char utf8.charpattern utf8.codepoint utf8.codes utf8.len utf8.offset
+endif
+" if lua version is 5.3+ or explicitly required because they
+" could be activated for luajit with fennel compiler flag --use-bit-lib
+" or `useBitLib` in the options table
+if g:fennel_lua_version > 5.29 || get(g:, "fennel_bitwise")
+  sy keyword FennelBitwise lshift rshift band bor bxor bnot
+endif
 
-" Grammar root
-syntax cluster FennelTop contains=@Spell,FennelComment,FennelConstant,FennelQuote,FennelKeyword,LuaSpecialValue,FennelSymbol,FennelNumber,FennelString,FennelList,FennelArray,FennelTable,FennelSpecialForm,FennelBoolean
+if g:fennel_lua_version > 5.39 " 5.4
+  sy keyword FennelLuaFunction warn coroutine.close
+endif
 
-syntax region FennelList matchgroup=FennelParen start="("  end=")" contains=@FennelTop fold
-syntax region FennelArray matchgroup=FennelParen start="\[" end="]" contains=@FennelTop fold
-syntax region FennelTable matchgroup=FennelParen start="{"  end="}" contains=@FennelTop fold
+if get(g:, "fennel_highlight_luajit", 1)
+  sy keyword FennelLuajitFunction gcinfo newproxy table.foreach table.foreachi table.getn
+  sy keyword FennelLuajitFunction bit.arshift bit.band bit.bnot bit.bor bit.bswap bit.bxor
+  sy keyword FennelLuajitFunction bit.lshift bit.rol bit.ror bit.rshift bit.tobit bit.tohex
+  sy keyword FennelLuajitFunction jit.attach jit.flush jit.off jit.on jit.security jit.status
 
-" Highlight superfluous closing parens, brackets and braces.
+  hi def link FennelLuajitFunction FennelLuaFunction
+endif
+
+" Aniseed
+if get(g:, "fennel_highlight_aniseed", 1)
+  sy keyword FennelAniseedFunctionDefine defn[-] deftest
+  sy keyword FennelAniseedDefine def[-] defonce[-]
+  sy keyword FennelAniseedInclude module autoload
+  sy keyword FennelAniseedMacro time
+  sy keyword FennelAniseedVar *module* *module-name* *file*
+
+  hi def link FennelAniseedInclude FennelInclude
+  hi def link FennelAniseedDefine FennelDefine
+  hi def link FennelAniseedFunctionDefine FennelFunctionDefine
+  hi def link FennelAniseedMacro FennelMacro
+  hi def link FennelAniseedVar Special
+endif
+
 " symbols
 let s:allowed_chars = '-!\$%#*+./:<=>?^_|'
 let s:unicode_range = '\x80-\U10FFFF'
@@ -306,9 +162,20 @@ sy match FennelNumber "\c\<[-+]\?0x[0-9a-f]*\%(\.[0-9a-f]\+\)\?\%(p[-+]\?\d\+\)\
 sy match FennelNumber "\<[-+]\?\d\+\%(\.\d*\)\?\%([eE][-+]\?\d\+\)\?\>"
 sy match FennelNumber "\<[-+]\?\d*\%(\.\d\+\)\?\%([eE][-+]\?\d\+\)\?\>"
 
-syntax match FennelError "]\|}\|)"
+sy cluster FennelForm contains=FennelComment,FennelString,FennelDefine,FennelOperator,FennelNumber,
+      \FennelFunctionDefine,FennelInclude,FennelRepeat,FennelConditional,FennelKeyword,FennelMacro,
+      \FennelQuote,FennelUnquote,FennelBitwise,FennelSymbol,FennelList,FennelSeqTable,FennelTable,
+      \FennelLogicalOperator,FennelSpecialForm,FennelConstant,FennelBoolean,FennelDestructure
+sy cluster FennelAniseed contains=FennelAniseedFunctionDefine,FennelAniseedDefine,
+      \FennelAniseedInclude,FennelAniseedMacro,FennelAniseedVar
+sy cluster FennelLua contains=FennelLuaGlobal,FennelLuaFunction,FennelLuajitFunction
+sy cluster FennelTop contains=@FennelForm,@FennelAniseed,@FennelLua
+sy region FennelList matchgroup=FennelParen start="(" end=")" contains=@FennelTop fold
+sy region FennelSeqTable matchgroup=FennelParen start="\[" end="]" contains=@FennelTop fold
+sy region FennelTable matchgroup=FennelParen start="{"  end="}" contains=@FennelTop fold
 
-syntax sync fromstart
+" Superfluous closing parens, brackets and braces.
+syntax match FennelError "]\|}\|)"
 
 " Highlighting
 hi def link FennelComment Comment
@@ -316,17 +183,28 @@ hi def link FennelSymbol Identifier
 hi def link FennelNumber Number
 hi def link FennelConstant Constant
 hi def link FennelKeyword Keyword
-hi def link FennelSpecialForm Special
-hi def link LuaSpecialValue Special
 hi def link FennelString String
-hi def link FennelBuffer String
 hi def link FennelStringDelimiter String
 hi def link FennelBoolean Boolean
 hi def link FennelStringEscape Special
 hi def link FennelStringEscapeError Error
-
+hi def link FennelError Error
 hi def link FennelQuote SpecialChar
+hi def link FennelUnquote FennelQuote
 hi def link FennelParen Delimiter
+hi def link FennelInclude Include
+hi def link FennelRepeat Repeat
+hi def link FennelConditional Conditional
+hi def link FennelDefine Define
+hi def link FennelSpecialForm FennelDefine
+hi def link FennelMacro Macro
+hi def link FennelOperator Operator
+hi def link FennelLogicalOperator FennelOperator
+hi def link FennelBitwise FennelOperator
+hi def link FennelFunctionDefine Keyword
+hi def link FennelLuaGlobal Special
+hi def link FennelLuaFunction Special
+hi def link FennelDestructure Label
 
 let b:current_syntax = "fennel"
 
