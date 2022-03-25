@@ -280,9 +280,6 @@ unlet! s:symchar s:symcharnodig
 syn match FennelQuote "`"
 syn match FennelQuote "@"
 
-" FENNEL numbers
-syntax match FennelNumber "\v\c<[-+]?\d*\.?\d*%([eE][-+]?\d+)?>"
-syntax match FennelNumber "\v\c<[-+]?0x[0-9A-F]*\.?[0-9A-F]*>"
 
 " Grammar root
 syntax cluster FennelTop contains=@Spell,FennelComment,FennelConstant,FennelQuote,FennelKeyword,LuaSpecialValue,FennelSymbol,FennelNumber,FennelString,FennelList,FennelArray,FennelTable,FennelSpecialForm,FennelBoolean
@@ -301,6 +298,13 @@ if get(g:, "fennel_highlight_symbol", 1)
 endif
 exe printf('sy match FennelKeyword "\<:[%s0-9]*\>"', s:symchar)
 unlet! s:allowed_chars s:unicode_range s:symchar
+
+" hexadecimal constant
+sy match FennelNumber "\c\<[-+]\?0x[0-9a-f]\+\%(\.[0-9a-f]*\)\?\%(p[-+]\?\d\+\)\?\>"
+sy match FennelNumber "\c\<[-+]\?0x[0-9a-f]*\%(\.[0-9a-f]\+\)\?\%(p[-+]\?\d\+\)\?\>"
+" decimal and floating point constants
+sy match FennelNumber "\<[-+]\?\d\+\%(\.\d*\)\?\%([eE][-+]\?\d\+\)\?\>"
+sy match FennelNumber "\<[-+]\?\d*\%(\.\d\+\)\?\%([eE][-+]\?\d\+\)\?\>"
 
 syntax match FennelError "]\|}\|)"
 
