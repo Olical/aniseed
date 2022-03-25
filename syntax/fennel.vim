@@ -332,3 +332,5 @@ let b:current_syntax = "fennel"
 
 let &cpo = s:cpo_sav
 unlet! s:cpo_sav
+
+" vim: sw=2 et
