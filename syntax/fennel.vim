@@ -2,15 +2,22 @@
 " Language: FENNEL
 " Maintainer: Calvin Rose
 
+" TODO: find most simple way to highlight :until and :into in a proper places
+" TODO: highlight : in tables with FennelKeyword
+" TODO: remove . and : from FennelSymbol and highlight them separatly
+" then they are could be removed from iskeyword maybe? : not allowed in symbol
+" at all, `.` is allowed at the start and end of the symbol
 if exists("b:current_syntax")
-    finish
+  finish
 endif
 
 let s:cpo_sav = &cpo
 set cpo&vim
 
+syntax sync minlines=100
+
 if get(g:, 'fennel_fold') > 0
-    setlocal foldmethod=syntax
+  setlocal foldmethod=syntax
 endif
 
 " comments
