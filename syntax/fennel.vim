@@ -292,6 +292,16 @@ syntax region FennelArray matchgroup=FennelParen start="\[" end="]" contains=@Fe
 syntax region FennelTable matchgroup=FennelParen start="{"  end="}" contains=@FennelTop fold
 
 " Highlight superfluous closing parens, brackets and braces.
+" symbols
+let s:allowed_chars = '-!\$%#*+./:<=>?^_|'
+let s:unicode_range = '\x80-\U10FFFF'
+let s:symchar = s:allowed_chars .. 'A-Za-z' .. s:unicode_range
+if get(g:, "fennel_highlight_symbol", 1)
+  exe printf('sy match FennelSymbol "\<[%s][%s0-9]*\>"', s:symchar, s:symchar)
+endif
+exe printf('sy match FennelKeyword "\<:[%s0-9]*\>"', s:symchar)
+unlet! s:allowed_chars s:unicode_range s:symchar
+
 syntax match FennelError "]\|}\|)"
 
 syntax sync fromstart
