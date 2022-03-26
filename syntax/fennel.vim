@@ -155,13 +155,30 @@ endif
 exe printf('sy match FennelKeyword "\<:[%s0-9]*\>"', s:symchar)
 unlet! s:allowed_chars s:unicode_range s:symchar
 
-" hexadecimal constant
-sy match FennelNumber "\c\<[-+]\?0x[0-9a-f]\+\%(\.[0-9a-f]*\)\?\%(p[-+]\?\d\+\)\?\>"
-sy match FennelNumber "\c\<[-+]\?0x[0-9a-f]*\%(\.[0-9a-f]\+\)\?\%(p[-+]\?\d\+\)\?\>"
-" decimal and floating point constants
-sy match FennelNumber "\<[-+]\?\d\+\%(\.\d*\)\?\%([eE][-+]\?\d\+\)\?\>"
-sy match FennelNumber "\<[-+]\?\d*\%(\.\d\+\)\?\%([eE][-+]\?\d\+\)\?\>"
+" numbers
+let s:sign = '\%([-+]_*\)\?'
+let s:req_digit = '\%(\d_*\)\+'
+let s:unreq_digit = '\%(\d_*\)*'
+let s:req_fractional = '\%(\._*' .. s:req_digit .. '\)'
+let s:unreq_fractional = '\%(\._*' .. s:unreq_digit .. '\)\?'
+let s:number = '\%(' .. s:req_digit .. s:unreq_fractional .. '\|'
+      \ .. s:unreq_digit .. s:req_fractional .. '\)'
+let s:dec_exp = '\%([eE]_*' .. s:sign .. s:req_digit .. '\)\?'
+let s:decimal = '\<' .. s:sign .. s:number .. s:dec_exp .. '\>'
+let s:req_hex = '\%([[:xdigit:]]_*\)\+'
+let s:unreq_hex = '\%([[:xdigit:]]_*\)*'
+let s:req_hex_frac = '\%(\._*' .. s:req_hex .. '\)'
+let s:unreq_hex_frac = '\%(\._*' .. s:unreq_hex .. '\)\?'
+let s:hexnumber = '\%(' .. s:req_hex .. s:unreq_hex_frac .. '\|'
+      \ .. s:unreq_hex .. s:req_hex_frac .. '\)'
+let s:bin_exp = '\%([pP]_*' .. s:sign .. s:req_digit .. '\)\?'
+let s:hexadecimal = '\<' .. s:sign .. '0_*[xX]_*' .. s:hexnumber .. s:bin_exp .. '\>'
+exe 'sy match FennelNumber "' .. s:decimal .. '"'
+exe 'sy match FennelNumber "' .. s:hexadecimal .. '"'
+unlet! s:sign s:req_digit s:unreq_digit s:req_fractional s:unreq_fractional s:number s:dec_exp s:decimal
+unlet! s:req_hex s:unreq_hex s:req_hex_frac s:unreq_hex_frac s:hexnumber s:bin_exp s:hexadecimal
 
+" lists and tables
 sy cluster FennelForm contains=FennelComment,FennelString,FennelDefine,FennelOperator,FennelNumber,
       \FennelFunctionDefine,FennelInclude,FennelRepeat,FennelConditional,FennelKeyword,FennelMacro,
       \FennelQuote,FennelUnquote,FennelBitwise,FennelSymbol,FennelList,FennelSeqTable,FennelTable,
