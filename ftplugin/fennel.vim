@@ -11,7 +11,7 @@ let s:cpo_save = &cpo
 set cpo&vim
 
 "setlocal iskeyword+=!,_,%,?,-,*,!,+,/,=,<,>,.,:,$,^
-setlocal iskeyword=!,$,%,#,*,+,-,.,/,:,<,=,>,?,_,a-z,A-Z,48-57,128-247,124,126,38,94
+setlocal iskeyword=!,$,%,#,*,+,-,.,/,:,<,=,>,?,_,a-z,A-Z,48-57,128-247,124,94
 
 " There will be false positives, but this is better than missing the whole set
 " of user-defined def* definitions.
