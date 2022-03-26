@@ -16,6 +16,7 @@ CONTENTS                                                    *aniseed-contents*
     6. Macros ......................................... |aniseed-macros|
     7. Functions ................................... |aniseed-functions|
     8. Testing ....................................... |aniseed-testing|
+    9. Syntax ......................................... aniseed-syntax
 
 ==============================================================================
 INTRODUCTION                                            *aniseed-introduction*
@@ -695,5 +696,18 @@ functions.
 
 `(t.ok? result [description])`
   Check for some truthy value.
+
+==============================================================================
+SYNTAX                                                        *aniseed-syntax*
+
+Aniseed ships with embedded Fennel syntax support which is really just a fork
+of the official Fennel syntax with modifications and additions.
+https://github.com/bakpakin/fennel.vim
+
+This syntax support comes with various settings that allow you to tweak the
+behaviour. You can find all of these settings under the `g:fennel_*` prefix,
+the best way to find and understand them right now is to look through the
+source code. If there's enough interest in configuring the syntax support work
+can be done to expand and document each value.
 
 vim:tw=78:sw=2:ts=2:ft=help:norl:et:listchars=
