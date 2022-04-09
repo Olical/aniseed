@@ -1,6 +1,8 @@
 (module aniseed.macros-test)
 
 (deftest defonce
+  (set *module*.foo nil)
+
   (var calls 0)
   (fn inc []
     (set calls (+ calls 1))
