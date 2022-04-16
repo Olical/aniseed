@@ -61,8 +61,8 @@ Clojure namespaces. Here's what a module looks like.
      ;; Inline modules at compile time.
      include {some-dep my-other.dependency}
 
-     ;; Require macros for compile time.
-     require-macros [fnl.my-proj.macros]})
+     ;; Require macros from nvim/fnl/my-proj/macros.fnl for compile time 
+     require-macros [my-proj.macros]})
 
   ;; Only use def at the top level!
   ;; It's not designed to be used within functions etc.
@@ -289,7 +289,7 @@ them in any other forms.
     (module foo.bar
       {autoload {a aniseed.core}
        include {baz foo.baz}
-       require-macros [fnl.foo.bar]}
+       require-macros [foo.bar]}
       {:xyz "this will be the base table that gets exported"})
 <
   You can access the current module table with `*module*` and the current
