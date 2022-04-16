@@ -27,7 +27,15 @@ local function init()
   end
   nvim.create_user_command("AniseedEval", _1_, {nargs = 1})
   local function _3_(cmd)
-    local code = a.slurp(cmd.args)
+    local code
+    local function _4_()
+      if ("" == cmd.args) then
+        return nvim.buf_get_name(nvim.get_current_buf())
+      else
+        return cmd.args
+      end
+    end
+    code = a.slurp(_4_())
     if code then
       local ok_3f, res = eval.str(code, {})
       if ok_3f then

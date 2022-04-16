@@ -162,7 +162,8 @@ are if you can't or decide you don't want to do that.
 
   *AniseedEvalFile*
     Reads the Fennel file at the provided path and executes it, displaying
-    results in the same way to the |AniseedEval| command.
+    results in the same way to the |AniseedEval| command. If you don't provide
+    a file name it will default to your current file.
 
 ==============================================================================
 PLUGINS                                                      *aniseed-plugins*

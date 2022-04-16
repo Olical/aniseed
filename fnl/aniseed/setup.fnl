@@ -17,7 +17,10 @@
   (nvim.create_user_command
     :AniseedEvalFile
     (fn [cmd]
-      (let [code (a.slurp cmd.args)]
+      (let [code (a.slurp
+                   (if (= "" cmd.args)
+                     (nvim.buf_get_name (nvim.get_current_buf))
+                     cmd.args))]
         (if code
           (let [(ok? res) (eval.str code {})]
             (if ok?
