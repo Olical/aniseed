@@ -8,15 +8,16 @@
 ==============================================================================
 CONTENTS                                                    *aniseed-contents*
 
-    1. Introduction ............................. |aniseed-introduction|
-    2. Examples ..................................... |aniseed-examples|
-    3. Scripts ....................................... |aniseed-scripts|
-    4. Plugins ....................................... |aniseed-plugins|
-    5. Env ............................................... |aniseed-env|
-    6. Macros ......................................... |aniseed-macros|
-    7. Functions ................................... |aniseed-functions|
-    8. Testing ....................................... |aniseed-testing|
-    9. Syntax ......................................... aniseed-syntax
+     1. Introduction ............................ |aniseed-introduction|
+     2. Examples .................................... |aniseed-examples|
+     3. Scripts ...................................... |aniseed-scripts|
+     4. Commands .................................... |aniseed-commands|
+     5. Plugins ...................................... |aniseed-plugins|
+     6. Env .............................................. |aniseed-env|
+     7. Macros ........................................ |aniseed-macros|
+     8. Functions .................................. |aniseed-functions|
+     9. Testing ...................................... |aniseed-testing|
+    10. Syntax ........................................ |aniseed-syntax|
 
 ==============================================================================
 INTRODUCTION                                            *aniseed-introduction*
@@ -147,6 +148,21 @@ directory since it's used to fetch Aniseed itself.
            Make sure it's a valid Fennel symbol! (no spaces etc)
   Usage:
     `curl -fL https://raw.githubusercontent.com/Olical/aniseed/master/scripts/seed.sh | sh`
+
+==============================================================================
+COMMANDS                                                    *aniseed-commands*
+
+Aniseed provides a few very simple commands to allow you to quickly evaluate
+your Fennel code without having to restart your editor. I highly recommend
+that you install Conjure and use that for this purpose instead, but here they
+are if you can't or decide you don't want to do that.
+
+  *AniseedEval*
+    Evaluates the provided Fennel code, echoing the resulting value or error.
+
+  *AniseedEvalFile*
+    Reads the Fennel file at the provided path and executes it, displaying
+    results in the same way to the |AniseedEval| command.
 
 ==============================================================================
 PLUGINS                                                      *aniseed-plugins*

@@ -8,9 +8,9 @@ Further documentation can be found in link:doc/aniseed.txt[`:help aniseed`]. The
 
 == Installation
 
-For interactive evaluation you need to install https://github.com/Olical/conjure[Conjure]. It'll allow you to send portions of your code off for evaluation as well as see the results in an interactive log buffer.
+For interactive evaluation you need to install https://github.com/Olical/conjure[Conjure] as well. It'll allow you to send portions of your code off for evaluation as well as see the results in an interactive log buffer. You may also use the, far more minimal, `:AniseedEval {code}` and `:AniseedEvalFile {path}` commands to execute Fennel if you require.
 
-You may also be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
+You may be interested in https://github.com/Olical/nvim-local-fennel[nvim-local-fennel] which is essentially a Fennel based version of https://github.com/embear/vim-localvimrc[localvimrc].
 
 Alternatively you can use https://github.com/Olical/magic-kit[Magic Kit], an opinionated starter kit that includes all sorts of essential tools.
 
