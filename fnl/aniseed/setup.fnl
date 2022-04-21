@@ -5,30 +5,31 @@
              env aniseed.env}})
 
 (defn init []
-  (nvim.create_user_command
-    :AniseedEval
-    (fn [cmd]
-      (let [(ok? res) (eval.str cmd.args {})]
-        (if ok?
-          (nvim.echo res)
-          (nvim.err_writeln res))))
-    {:nargs 1})
+  (when (= 1 (nvim.fn.has "nvim-0.7"))
+    (nvim.create_user_command
+      :AniseedEval
+      (fn [cmd]
+        (let [(ok? res) (eval.str cmd.args {})]
+          (if ok?
+            (nvim.echo res)
+            (nvim.err_writeln res))))
+      {:nargs 1})
 
-  (nvim.create_user_command
-    :AniseedEvalFile
-    (fn [cmd]
-      (let [code (a.slurp
-                   (if (= "" cmd.args)
-                     (nvim.buf_get_name (nvim.get_current_buf))
-                     cmd.args))]
-        (if code
-          (let [(ok? res) (eval.str code {})]
-            (if ok?
-              (nvim.echo res)
-              (nvim.err_writeln res)))
-          (nvim.err_writeln (.. "File '" (or cmd.args "nil") "' not found")))))
-    {:nargs :?
-     :complete :file})
+    (nvim.create_user_command
+      :AniseedEvalFile
+      (fn [cmd]
+        (let [code (a.slurp
+                     (if (= "" cmd.args)
+                       (nvim.buf_get_name (nvim.get_current_buf))
+                       cmd.args))]
+          (if code
+            (let [(ok? res) (eval.str code {})]
+              (if ok?
+                (nvim.echo res)
+                (nvim.err_writeln res)))
+            (nvim.err_writeln (.. "File '" (or cmd.args "nil") "' not found")))))
+      {:nargs :?
+       :complete :file}))
 
   (when nvim.g.aniseed#env
     (env.init nvim.g.aniseed#env)))
