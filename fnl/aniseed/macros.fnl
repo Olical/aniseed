@@ -113,7 +113,7 @@
           (if (seq? args)
             ;; If it's sequential, we execute the fn for side effects.
             (each [_ arg (ipairs args)]
-              (=> :_ `(,mod-fn ,(tostring arg))))
+              (=> (sym :_) `(,mod-fn ,(tostring arg))))
 
             ;; Otherwise we need to bind the execution to a name.
             (sorted-each
