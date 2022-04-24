@@ -103,7 +103,7 @@
         keys []
         vals []
         => (fn [k v]
-             (table.insert keys (sym k))
+             (table.insert keys k)
              (table.insert vals v))]
 
     ;; For each function / value pair...
@@ -118,7 +118,7 @@
             ;; Otherwise we need to bind the execution to a name.
             (sorted-each
               (fn [bind arg]
-                (=> (tostring bind) `(,mod-fn ,(tostring arg))))
+                (=> bind `(,mod-fn ,(tostring arg))))
               args)))
          mod-fns)
 
