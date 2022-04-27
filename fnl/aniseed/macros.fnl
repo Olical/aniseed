@@ -118,7 +118,11 @@
             ;; Otherwise we need to bind the execution to a name.
             (sorted-each
               (fn [bind arg]
-                (=> bind `(,mod-fn ,(tostring arg))))
+                (=>
+                  (if (= :string (type bind))
+                    (sym bind)
+                    bind)
+                  `(,mod-fn ,(tostring arg))))
               args)))
          mod-fns)
 
