@@ -64,7 +64,19 @@ Now the following code in `~/.config/nvim/fnl/init.fnl` will be compiled and exe
 ----
 ;; The name is up to you.
 (module nvim-config
-  {autoload {a aniseed.core}})
+  {;; You can use Lua's regular require or Aniseed's autoload.
+   require {xyz some.cool.tool.xyz
+
+            ;; Fennel destructuring syntax works but defeats the point of autoload.
+            ;; Because a lookup is instantly invoked which triggers autoload at
+            ;; module load time instead of when you need it in your code.
+            {: some-fn} some-module}
+
+   ;; Autoload lazily loads the module when you try to use the module methods or values at runtime.
+   autoload {a aniseed.core
+
+             ;; Shorthand syntax for requiring under the same name.
+             : packer}})
 
 (a.println "Hello, World!")
 ----
