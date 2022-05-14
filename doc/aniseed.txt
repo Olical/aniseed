@@ -402,7 +402,8 @@ example.
 
   `(count xs)`
     Return the count of items in `xs`. Always returns a number, it's okay to
-    give it a `nil`.
+    give it a `nil`. It will count keys in associative table and items in a
+    sequential one.
 
   `(empty? xs)`
     Is the `count` of `xs` equal to `0`.

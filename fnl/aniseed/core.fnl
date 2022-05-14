@@ -32,9 +32,21 @@
   "True if the value is of type 'function'."
   (= "function" (type value)))
 
+(defn keys [t]
+  "Get all keys of a table."
+  (let [result []]
+    (when t
+      (each [k _ (pairs t)]
+        (table.insert result k)))
+    result))
+
 (defn count [xs]
   (if
-    (table? xs) (table.maxn xs)
+    (table? xs) (let [maxn (table.maxn xs)]
+                  ;; We only count the keys if maxn returns 0.
+                  (if (= 0 maxn)
+                    (table.maxn (keys xs))
+                    maxn))
     (not xs) 0
     (length xs)))
 
@@ -66,14 +78,6 @@
 
 (defn odd? [n]
   (not (even? n)))
-
-(defn keys [t]
-  "Get all keys of a table."
-  (let [result []]
-    (when t
-      (each [k _ (pairs t)]
-        (table.insert result k)))
-    result))
 
 (defn vals [t]
   "Get all values of a table."

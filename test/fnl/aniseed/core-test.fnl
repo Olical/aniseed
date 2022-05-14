@@ -138,7 +138,7 @@
   (t.= 4 (a.count [nil nil nil :a]) "mostly nils")
   (t.= 3 (a.count "foo") "strings")
   (t.= 0 (a.count "") "empty strings")
-  (t.= 0 (a.count {:a 1 :b 2}) "associative doesn't work"))
+  (t.= 2 (a.count {:a 1 :b 2}) "associative also works"))
 
 (deftest empty?
   (t.= true (a.empty? []) "empty table")
