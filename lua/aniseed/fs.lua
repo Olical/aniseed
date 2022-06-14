@@ -46,13 +46,15 @@ local function macro_file_path_3f(path)
 end
 _2amodule_2a["macro-file-path?"] = macro_file_path_3f
 local path_sep
-do
+if jit then
   local os = string.lower(jit.os)
   if (("linux" == os) or ("osx" == os) or ("bsd" == os)) then
     path_sep = "/"
   else
     path_sep = "\\"
   end
+else
+  path_sep = (package.config):sub(1, 1)
 end
 _2amodule_2a["path-sep"] = path_sep
 return _2amodule_2a
