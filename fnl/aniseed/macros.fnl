@@ -244,22 +244,38 @@
     (table.insert body# `(wrap-last-expr ,last-expr#))
     `(do ,(unpack body#))))
 
+(fn conditional-let [branch bindings ...]
+  (assert (= 2 (length bindings)) "expected a single binding pair")
+
+  (let [[bind-expr value-expr] bindings]
+    (if
+      (sym? bind-expr)
+      `(let [,bind-expr ,value-expr]
+         (,branch ,bind-expr ,...))
+
+      (list? bind-expr)
+      `(let [,bind-expr ,value-expr]
+         (,branch ,(. bind-expr 1) ,...))
+
+      (table? bind-expr)
+      `(let [value# ,value-expr
+             ,bind-expr (or value# {})]
+         (,branch value# ,...))
+
+      (assert (.. "unknown bind-expr type: " (type bind-expr))))))
+
+(fn if-let [bindings ...]
+  (assert (= 2 (length [...])) "expected two branches in if-let")
+  (conditional-let 'if bindings ...))
+
 (fn when-let [bindings ...]
-  ; (assert-compile (sequence? bindings) (.. "expected sequence for bindings, got " (type bindings)))
-  (assert-compile (= 0 (% (length bindings) 2)) "expected even number of bindings")
-  (if (< 0 (length bindings))
-    (let [[f t & r] bindings]
-      `(let [result# ,t]
-         (when result#
-           (let [,f result#]
-             (when-let ,r
-               ,...)))))
-    `(do ,...)))
+  (conditional-let 'when bindings ...))
 
 {:module module
  :def- def- :def def
  :defn- defn- :defn defn
  :defonce- defonce- :defonce defonce
+ :if-let if-let
  :when-let when-let
  :wrap-last-expr wrap-last-expr
  :wrap-module-body wrap-module-body

@@ -16,27 +16,34 @@
 
   (t.= :destructure-require (identity :destructure-require)))
 
+(deftest if-let
+  (t.= :ok
+       (if-let [foo :ok]
+         foo
+         :nope))
+  (t.= :nope
+       (if-let [foo false]
+         :first
+         :nope))
+  (t.= :yes
+       (if-let [{: a} {:a 1}]
+         :yes
+         :no))
+  (t.= :no
+       (if-let [{: a} nil]
+         :yes
+         :no)))
+
 (deftest when-let
-  (t.= :empty
-       (when-let []
-         :empty))
   (t.= :ok
        (when-let [foo :ok]
          foo))
   (t.= nil
        (when-let [foo false]
          :first))
-  (t.= :second
-       (when-let [foo true
-                  bar :second]
-         bar))
+  (t.= :yarp
+       (when-let [(ok? val) (pcall #:yarp)]
+         val))
   (t.= nil
-       (when-let [foo true
-                  bar nil
-                  qux :third]
-         bar))
-  (t.pr= [:first :second :third]
-         (when-let [foo :first
-                    bar :second
-                    qux :third]
-           [foo bar qux])))
+       (when-let [(ok? val) (pcall #(error :narp))]
+         val)))
