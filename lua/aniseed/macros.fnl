@@ -249,23 +249,38 @@
 
   (let [[bind-expr value-expr] bindings]
     (if
+      ;; Simple symbols
+      ;; [foo bar]
       (sym? bind-expr)
       `(let [,bind-expr ,value-expr]
          (,branch ,bind-expr ,...))
 
+      ;; List / values destructure
+      ;; [(a b) c]
       (list? bind-expr)
-      `(let [,bind-expr ,value-expr]
-         (,branch ,(. bind-expr 1) ,...))
+      (do
+        ;; Even if the user isn't using the first slot, we will.
+        ;; [(_ val) (pcall #:foo)]
+        ;;  => [(bindGENSYM12345 val) (pcall #:foo)]
+        (when (= '_ (. bind-expr 1))
+          (tset bind-expr 1 (gensym "bind")))
 
+        `(let [,bind-expr ,value-expr]
+           (,branch ,(. bind-expr 1) ,...)))
+
+      ;; Sequential and associative table destructure
+      ;; [[a b] c]
+      ;; [{: a : b} c]
       (table? bind-expr)
       `(let [value# ,value-expr
              ,bind-expr (or value# {})]
          (,branch value# ,...))
 
+      ;; We should never get here, but just in case.
       (assert (.. "unknown bind-expr type: " (type bind-expr))))))
 
 (fn if-let [bindings ...]
-  (assert (= 2 (length [...])) "expected two branches in if-let")
+  (assert (<= (length [...]) 2) (.. "if-let does not support more than two branches"))
   (conditional-let 'if bindings ...))
 
 (fn when-let [bindings ...]

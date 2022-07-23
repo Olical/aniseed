@@ -44,6 +44,9 @@
   (t.= :yarp
        (when-let [(ok? val) (pcall #:yarp)]
          val))
+  (t.= :yarp
+       (when-let [(_ val) (pcall #:yarp)]
+         val))
   (t.= nil
        (when-let [(ok? val) (pcall #(error :narp))]
          val)))
