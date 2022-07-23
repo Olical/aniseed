@@ -369,6 +369,13 @@ them in any other forms.
   last expression with `wrap-last-expr` which handles the module's return
   value.
 
+`(if-let [...] ...)`
+`(when-let [...] ...)`
+  A combination of `if`, `when` and `let` forms. This behaves in the same way
+  to Clojure's implementation, this means you can only bind ONE value to
+  branch on. You may use destructuring, if you are using list destructuring
+  like `[(ok? val) foo]` then the first value will be used for the branch.
+
 ==============================================================================
 FUNCTIONS                                                  *aniseed-functions*
 
