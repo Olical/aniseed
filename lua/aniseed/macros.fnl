@@ -244,10 +244,23 @@
     (table.insert body# `(wrap-last-expr ,last-expr#))
     `(do ,(unpack body#))))
 
+(fn when-let [bindings ...]
+  ; (assert-compile (sequence? bindings) (.. "expected sequence for bindings, got " (type bindings)))
+  (assert-compile (= 0 (% (length bindings) 2)) "expected even number of bindings")
+  (if (< 0 (length bindings))
+    (let [[f t & r] bindings]
+      `(let [result# ,t]
+         (when result#
+           (let [,f result#]
+             (when-let ,r
+               ,...)))))
+    `(do ,...)))
+
 {:module module
  :def- def- :def def
  :defn- defn- :defn defn
  :defonce- defonce- :defonce defonce
+ :when-let when-let
  :wrap-last-expr wrap-last-expr
  :wrap-module-body wrap-module-body
  :deftest deftest
