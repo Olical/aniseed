@@ -52,7 +52,7 @@
                   opts))
       (false err) (nvim.err_writeln err)
       (true result) (do
-                      (-> dest fs.basename fs.mkdirp)
+                      (fs.mkdirp (fs.basename dest))
                       (a.spit dest result)))))
 
 (defn glob [src-expr src-dir dest-dir opts]
@@ -61,11 +61,11 @@
   (each [_ path (ipairs (fs.relglob src-dir src-expr))]
     (if (fs.macro-file-path? path)
       ;; Copy macro files without compiling
-      (let [dest-path (.. dest-dir path)]
-        (-> dest-path fs.basename fs.mkdirp)
+      (let [dest (.. dest-dir path)]
+        (fs.mkdirp (fs.basename dest))
         (->> (.. src-dir path)
              (a.slurp)
-             (a.spit dest-path)))
+             (a.spit dest)))
 
       ;; Compile .fnl files to .lua
       (file
