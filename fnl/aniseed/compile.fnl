@@ -61,9 +61,11 @@
   (each [_ path (ipairs (fs.relglob src-dir src-expr))]
     (if (fs.macro-file-path? path)
       ;; Copy macro files without compiling
-      (->> (.. src-dir path)
-           (a.slurp)
-           (a.spit (.. dest-dir path)))
+      (let [dest-path (.. dest-dir path)]
+        (-> dest-path fs.basename fs.mkdirp)
+        (->> (.. src-dir path)
+             (a.slurp)
+             (a.spit dest-path)))
 
       ;; Compile .fnl files to .lua
       (file
