@@ -9,4 +9,4 @@
 
   (let [(success result) (compile.str "(+ 10 20")]
     (t.ok? (not success))
-    (t.= 28 (result:find "expected closing delimiter"))))
+    (t.= 31 (result:find "expected closing delimiter"))))
