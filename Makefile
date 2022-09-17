@@ -5,7 +5,7 @@ SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.f
 default: deps compile test
 
 deps:
-	scripts/dep.sh bakpakin Fennel 21c429235d49b2908c7e46442660b6f22da90efc
+	scripts/dep.sh bakpakin Fennel 75d9afc819bb587cd25ffceb278f8f7a947a21c8
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	scripts/dep.sh luafun luafun cb6a7e25d4b55d9578fd371d1474b00e47bd29f3
 	LUA=luajit cd deps/Fennel && make build
@@ -21,7 +21,7 @@ compile:
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
 	cp deps/luafun/fun.lua lua/aniseed/deps/fun.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
-	sed -i "s/\"fennel\./\"aniseed.fennel./gI" lua/aniseed/deps/fennel.lua
+	sed -I "" "s/\"fennel\./\"aniseed.fennel./gI" lua/aniseed/deps/fennel.lua
 
 test:
 	SUFFIX="test/fnl/foo.fnl" scripts/test.sh
