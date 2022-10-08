@@ -72,8 +72,19 @@
 
 (defn run-all []
   (-> (a.keys _G.package.loaded)
-      (->> (a.map run)
-           (a.filter #(and (a.table? $) (a.nil? (getmetatable $))))
+      (->> ;; Drop any module that isn't a table or has a metatable.
+           (a.remove (fn [mod-name]
+                       (let [mod (a.get _G.package.loaded mod-name)]
+                         (or (not (a.table? mod))
+                             (getmetatable mod)))))
+
+           ;; Run the tests for the module.
+           (a.map run)
+
+           ;; Only keep results that generated tables.
+           (a.filter a.table?)
+
+           ;; Reduce to a final set of counts.
            (a.reduce
              (fn [totals results]
                (each [k v (pairs results)]
@@ -83,6 +94,8 @@
               :tests-passed 0
               :assertions 0
               :assertions-passed 0}))
+
+      ;; And print them.
       (display-results "[total]")))
 
 (defn suite []

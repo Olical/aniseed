@@ -62,7 +62,7 @@ Clojure namespaces. Here's what a module looks like.
      ;; Inline modules at compile time.
      include {some-dep my-other.dependency}
 
-     ;; Require macros from nvim/fnl/my-proj/macros.fnl for compile time 
+     ;; Require macros from nvim/fnl/my-proj/macros.fnl for compile time
      require-macros [my-proj.macros]})
 
   ;; Only use def at the top level!
@@ -448,9 +448,17 @@ example.
   `(run! f xs)`
     Execute the function (for side effects) for every `xs`.
 
+  `(complement f)`
+    Takes a fn `f` and returns a fn that takes the same arguments as `f`, has
+    the same effects, if any, and returns the opposite truth value.
+
   `(filter f xs)`
     Filter `xs` down to a new sequential table containing every value that
-    `(f x)` returned true for.
+    `(f x)` returned truethy for.
+
+  `(remove f xs)`
+    Opposite of filter, filter `xs` down to a new sequential table containing
+    every value that `(f x)` returned falsy for.
 
   `(map f xs)`
     Map `xs` to a new sequential table by calling `(f x)` on each item.

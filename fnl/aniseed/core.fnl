@@ -103,6 +103,10 @@
         (for [i 1 nxs]
           (f (. xs i)))))))
 
+(defn complement [f]
+  (fn [...]
+    (not (f ...))))
+
 (defn filter [f xs]
   "Filter xs down to a new sequential table containing every value that (f x) returned true for."
   (let [result []]
@@ -112,6 +116,9 @@
           (table.insert result x)))
       xs)
     result))
+
+(defn remove [f xs]
+  (filter (complement f) xs))
 
 (defn map [f xs]
   "Map xs to a new sequential table by calling (f x) on each item."

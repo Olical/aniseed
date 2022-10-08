@@ -112,9 +112,17 @@
            [:a :b])
          "incrementing the index"))
 
+(deftest complement
+  (t.= true ((a.complement (fn [] false))))
+  (t.= false ((a.complement (fn [] true)))))
+
 (deftest filter
   (t.pr= [2 4 6] (a.filter #(= 0 (% $1 2)) [1 2 3 4 5 6]))
   (t.pr= [] (a.filter #(= 0 (% $1 2)) nil)))
+
+(deftest remove
+  (t.pr= [1 3 5] (a.remove #(= 0 (% $1 2)) [1 2 3 4 5 6]))
+  (t.pr= [] (a.remove #(= 0 (% $1 2)) nil)))
 
 (deftest identity
   (t.= :hello (a.identity :hello) "returns what you give it")
