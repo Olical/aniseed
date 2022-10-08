@@ -73,7 +73,7 @@
 (defn run-all []
   (-> (a.keys _G.package.loaded)
       (->> (a.map run)
-           (a.filter a.table?)
+           (a.filter #(and (a.table? $) (a.nil? (getmetatable $))))
            (a.reduce
              (fn [totals results]
                (each [k v (pairs results)]
