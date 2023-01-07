@@ -13,4 +13,8 @@
   (t.= true (fs.macro-file-path? "macro.fnl"))
   (t.= false (fs.macro-file-path? "macron.fnl"))
   (t.= false (fs.macro-file-path? "macro-thing.fnl"))
-  (t.= false (fs.macro-file-path? "macros-things.fnl")))
+  (t.= false (fs.macro-file-path? "macros-things.fnl"))
+
+  (t.= true (fs.macro-file-path? "foo/macros/bar.fnl"))
+  (t.= true (fs.macro-file-path? "foo/macro/bar.fnl"))
+  (t.= false (fs.macro-file-path? "foo/macroscopic/bar.fnl")))

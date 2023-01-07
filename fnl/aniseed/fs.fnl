@@ -24,12 +24,6 @@
       (set newer? true)))
   newer?)
 
-(defn macro-file-path? [path]
-  "Check if the path is a specially treated Aniseed / Fennel macros file.
-  We preserve these and don't try to compile them to Lua since you can't
-  do that."
-  (a.string? (string.match path "macros?.fnl$")))
-
 (def path-sep
   ;; https://github.com/nvim-lua/plenary.nvim/blob/8bae2c1fadc9ed5bfcfb5ecbd0c0c4d7d40cb974/lua/plenary/path.lua#L20-L31
   (let [os (string.lower jit.os)]
@@ -38,3 +32,10 @@
             (= :bsd os))
       "/"
       "\\")))
+
+(defn macro-file-path? [path]
+  "Check if the path is a specially treated Aniseed / Fennel macros file.
+  We preserve these and don't try to compile them to Lua since you can't
+  do that."
+  (or (a.string? (string.match path "macros?.fnl$"))
+      (a.string? (string.match path (.. path-sep "macros?" path-sep)))))
