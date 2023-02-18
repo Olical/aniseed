@@ -1,6 +1,6 @@
 .PHONY: deps compile test
 
-SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" ! -name "macros.fnl" | cut -d'/' -f2-))
+SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" | cut -d'/' -f2-))
 
 default: deps compile test
 
@@ -13,11 +13,15 @@ deps:
 compile:
 	rm -rf lua
 	for f in $(SRC_FILES); do \
-		mkdir -p lua/$$(dirname $$f); \
-		luajit deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
+		if [[ $$f != *macro* ]]; then \
+			mkdir -p lua/$$(dirname $$f); \
+			luajit deps/Fennel/fennel scripts/internal/compile.fnl fnl/$$f.fnl > lua/$$f.lua; \
+		fi \
 	done
 	mkdir -p lua/aniseed/deps
+	mkdir -p lua/aniseed/macros
 	cp fnl/aniseed/macros.fnl lua/aniseed
+	cp fnl/aniseed/macros/*.fnl lua/aniseed/macros
 	cp deps/Fennel/fennel.lua lua/aniseed/deps/fennel.lua
 	cp deps/luafun/fun.lua lua/aniseed/deps/fun.lua
 	cp deps/nvim.lua/lua/nvim.lua lua/aniseed/deps/nvim.lua
