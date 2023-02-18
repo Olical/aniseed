@@ -62,6 +62,12 @@ Clojure namespaces. Here's what a module looks like.
      ;; Inline modules at compile time.
      include {some-dep my-other.dependency}
 
+     ;; Require macros from nvim/fnl/aniseed/macros/autocmds.fnl
+     ;; and bind to the name `ac`.
+     import-macros [[ac :aniseed.macros.autocmds]
+                    [my-macros :my-proj.macros]
+
+     ;; Deprecated in Fennel 0.4.0
      ;; Require macros from nvim/fnl/my-proj/macros.fnl for compile time
      require-macros [my-proj.macros]})
 
@@ -125,7 +131,7 @@ directory since it's used to fetch Aniseed itself.
   `deps` directory via `dep.sh`. Any file path that ends in `macros.fnl` will
   be ignored, this allows you to store macro files alongside your source code.
   Fennel macro files cannot be directly compiled, they can only be executed at
-  compile time when referring to them with `require-macros` from a regular
+  compile time when referring to them with `import-macros` from a regular
   Fennel source file.
   Usage: `deps/aniseed/scripts/compile.sh`
 
@@ -297,7 +303,10 @@ them in any other forms.
 
   For side effecting functions or macros such as `require-macros` you can pass
   a sequential table as opposed to an associative one containing your required
-  macro module paths.
+  macro module paths. You can also provide sequential sub tables to pass
+  multiple arguments to the referenced function. So `import-macros [[a :b]]`
+  would translate to `(import-macros a :b)`, allowing you to import and bind
+  macros to a symbol.
 
   The final optional argument is a base table you would like Aniseed to merge
   your modules properties into, this can be useful for extending an existing
@@ -306,7 +315,7 @@ them in any other forms.
     (module foo.bar
       {autoload {a aniseed.core}
        include {baz foo.baz}
-       require-macros [foo.bar]}
+       import-macros [[fb :foo.bar]]}
       {:xyz "this will be the base table that gets exported"})
 <
   You can access the current module table with `*module*` and the current
@@ -685,6 +694,65 @@ You probably want to use the `test.sh` script.
   `(serialise ...)`
     Simply calls through to Fennel's `fennelview` module.
     Turns the input data into a string.
+
+------------------------------------------------------------------------------
+`aniseed.macros.autocmds`
+
+  `(autocmd event opt)`
+    Define an auto command.
+>
+    (autocmd
+      [:BufNewFile :BufRead] {:pattern [:*.txt :*.text] :command "setf text"})
+
+    ;; vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;   {pattern = {"*.txt", "*.text"}, command = "setf text"}
+    ;; )
+<
+  `(autocmds ...)`
+    Define many auto commands at once.
+>
+    (autocmds
+      [[:BufNewFile :BufRead] {:pattern [:*.txt :*.text] :command "setf text"     }]
+      [[:BufNewFile :BufRead] {:pattern [:*vifmrc]       :command "setf vifm"     }]
+      [[:BufNewFile :BufRead] {:pattern [:*/tmux/conf]   :command "setf tmux"     }]
+      [[:BufNewFile :BufRead] {:pattern [:*/git/config]  :command "setf gitconfig"}]
+      [[:BufNewFile :BufRead] {:pattern [:*fetchmail]    :command "setf fetchmail"}]
+      [[:BufNewFile :BufRead] {:pattern [:*procmailrc]   :command "setf procmail" }]
+      [[:BufNewFile :BufRead] {:pattern [:*muttrc]       :command "setf muttrc"   }])
+
+    ;; do
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*.txt", "*.text"}, command = "setf text"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*vifmrc"}, command = "setf vifm"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*/tmux/conf"}, command = "setf tmux"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*/git/config"}, command = "setf gitconfig"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*fetchmail"}, command = "setf fetchmail"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*procmailrc"}, command = "setf procmail"})
+    ;;   vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+    ;;     {pattern = {"*muttrc"}, command = "setf muttrc"})
+    ;; end
+<
+  `(augroup name ...)`
+    Defines an auto command group and lets you create autocommands that are a
+    part of that group.
+>
+    (augroup :my-group
+      [[:BufNewFile :BufRead] {:pattern [:*vifmrc]     :command "setf vifm"     }]
+      [[:BufNewFile :BufRead] {:pattern [:*/tmux/conf] :command "setf tmux"     }]
+      [[:BufNewFile :BufRead] {:pattern [:*muttrc]     :command "setf muttrc"   }])
+
+      ;; local group = vim.api.nvim_create_augroup("my-group", {clear = true})
+      ;; vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+      ;;   {pattern = {"*vifmrc"}, command = "setf vifm", group = group})
+      ;; vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+      ;;   {pattern = {"*/tmux/conf"}, command = "setf tmux", group = group})
+      ;; vim.api.nvim_create_autocmd({"BufNewFile", "BufRead"},
+      ;;   {pattern = {"*muttrc"}, command = "setf muttrc", group = group})
 
 ==============================================================================
 TESTING                                                      *aniseed-testing*
