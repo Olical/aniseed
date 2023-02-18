@@ -5,7 +5,7 @@ SRC_FILES := $(basename $(shell find fnl -type f -name "*.fnl" | cut -d'/' -f2-)
 default: deps compile test
 
 deps:
-	scripts/dep.sh bakpakin Fennel bf0bf069a77d8bced86468b918560b06f0b7ca94
+	scripts/dep.sh bakpakin Fennel 938a1e494ce9588e6668cbf54da56b3e52b05a91
 	scripts/dep.sh norcalli nvim.lua 5d57be0b6eea6c06977b1c5fe0752da909cf4154
 	scripts/dep.sh luafun luafun cb6a7e25d4b55d9578fd371d1474b00e47bd29f3
 	LUA=luajit cd deps/Fennel && make build
