@@ -17,6 +17,7 @@ _2amodule_locals_2a["env"] = env
 _2amodule_locals_2a["eval"] = eval
 _2amodule_locals_2a["nvim"] = nvim
 local function init()
+  require("aniseed.antifennel")
   if (1 == nvim.fn.has("nvim-0.7")) then
     local function _1_(cmd)
       local ok_3f, res = eval.str(cmd.args, {})

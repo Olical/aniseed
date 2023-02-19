@@ -5,6 +5,7 @@
              env aniseed.env}})
 
 (defn init []
+  (require :aniseed.antifennel)
   (when (= 1 (nvim.fn.has "nvim-0.7"))
     (nvim.create_user_command
       :AniseedEval
