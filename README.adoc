@@ -2,6 +2,14 @@
 
 Aniseed bridges the gap between https://fennel-lang.org/[Fennel] (a Lisp that compiles to Lua) and https://neovim.io/[Neovim]. Allowing you to easily write plugins or configuration in a https://clojure.org/[Clojure]-like Lisp with great runtime performance.
 
+____
+Note: You may be interested in my new project that attempts to be a successor to Aniseed, https://github.com/Olical/nfnl[nfnl].
+
+It does away with a bunch of decisions I regretted and builds upon the parts I really liked. I think you might like it too!
+
+Future development efforts will center around nfnl instead of Aniseed and things like Conjure will almost certainly transition over to being based on it instead over time.
+____
+
 https://asciinema.org/a/326401[image:https://asciinema.org/a/326401.svg[asciicast]]
 
 Further documentation can be found in link:doc/aniseed.txt[`:help aniseed`]. There you can learn about the scripts, macros, functions and use cases of Aniseed.
