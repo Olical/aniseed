@@ -50,12 +50,13 @@ sy keyword FennelDestructure & &as
 sy keyword FennelFunctionDefine fn hashfn lambda λ
 sy keyword FennelInclude import-macros include require-macros
 sy keyword FennelRepeat each for while
-sy keyword FennelConditional if match when
+sy keyword FennelConditional if case match when
 sy keyword FennelDefine global local let var macros
 sy keyword FennelSpecialForm set set-forcibly! tset where #
 sy keyword FennelSpecialForm comment do eval-compiler length lua quote values
 sy keyword FennelMacro ->  ->>  -?>  -?>>  ?.
-sy keyword FennelMacro accumulate collect doto icollect macro macrodebug pick-args pick-values with-open partial
+sy keyword FennelMacro doto macro macrodebug pick-args pick-values with-open partial
+sy keyword FennelMacro accumulate collect faccumulate fcollect icollect
 sy match FennelQuote '`'
 sy match FennelUnquote ','
 
