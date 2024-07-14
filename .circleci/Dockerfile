@@ -1,4 +1,4 @@
-FROM cimg/base:2020.01
+FROM cimg/base:2024.07
 
 RUN mkdir -p ~/bin ~/nvim && \
     cd ~/nvim && \
