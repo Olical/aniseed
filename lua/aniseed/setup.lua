@@ -11,8 +11,9 @@ do
   _2amodule_locals_2a = (_2amodule_2a)["aniseed/locals"]
 end
 local autoload = (require("aniseed.autoload")).autoload
-local a, env, eval, nvim = autoload("aniseed.core"), autoload("aniseed.env"), autoload("aniseed.eval"), autoload("aniseed.nvim")
+local a, antifennel, env, eval, nvim = autoload("aniseed.core"), autoload("aniseed.antifennel"), autoload("aniseed.env"), autoload("aniseed.eval"), autoload("aniseed.nvim")
 do end (_2amodule_locals_2a)["a"] = a
+_2amodule_locals_2a["antifennel"] = antifennel
 _2amodule_locals_2a["env"] = env
 _2amodule_locals_2a["eval"] = eval
 _2amodule_locals_2a["nvim"] = nvim
@@ -49,6 +50,8 @@ local function init()
       end
     end
     nvim.create_user_command("AniseedEvalFile", _3_, {nargs = "?", complete = "file"})
+    nvim.create_user_command("AniseedAntifennelBuffer", antifennel.lua_antifennel, {})
+    nvim.create_user_command("AniseedAntiluaBuffer", antifennel.fnl_antilua, {})
   else
   end
   if nvim.g["aniseed#env"] then
